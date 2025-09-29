@@ -7,15 +7,15 @@ from datetime import datetime
 
 class GeneMarkSRunner:
     """
-    GeneMarkS Linux 运行工具
-    用于基因组注释，输出 gff/fnn/faa 文件，供 CarveMe 等下游工具使用。
+    GeneMarkS Linux runner tool.
+    Used for genome annotation, outputs gff/fnn/faa files for downstream tools such as CarveMe.
     """
 
     def __init__(self, gms_script_path: Optional[str] = None, log_dir: str = "./logs"):
         """
-        初始化 GeneMarkS 运行器
-        :param gms_script_path: GeneMarkS 脚本路径 (gms2.pl)，如果为空则使用默认路径
-        :param log_dir: 日志输出目录
+        Initialize the GeneMarkS runner.
+        :param gms_script_path: Path to the GeneMarkS script (gms2.pl). If None, use the default path.
+        :param log_dir: Directory for log output.
         """
         self.gms_script_path = gms_script_path
         self.log_dir = os.path.abspath(log_dir)
@@ -26,7 +26,7 @@ class GeneMarkSRunner:
             self.gms_script_path = os.path.join(current_dir, "gms2_linux_64", "gms2.pl")
 
     def log(self, message: str):
-        """日志输出到屏幕和文件"""
+        """Log message to both console and file."""
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         msg = f"[{timestamp}] {message}"
         print(msg)
@@ -36,22 +36,25 @@ class GeneMarkSRunner:
     def run(self, input_fasta: str, output_dir: str,
             genome_type: str = "bacteria", gcode: str = "11") -> Dict[str, str]:
         """
-        运行 GeneMarkS 注释流程
-        :param input_fasta: 输入基因组 fasta 文件
-        :param output_dir: 输出目录
-        :param genome_type: 基因组类型 (bacteria, archaea 等)
-        :param gcode: 遗传密码表 (bacteria 常用 11)
-        :return: 输出文件路径字典 {gff, fnn, faa}
+        Run the GeneMarkS annotation process.
+        :param input_fasta: Input genome fasta file.
+        :param output_dir: Output directory.
+        :param genome_type: Genome type (bacteria, archaea, etc.).
+        :param gcode: Genetic code table (commonly 11 for bacteria).
+        :return: Dictionary of output file paths {gff, fnn, faa}.
         """
+        output_dir = os.path.join(output_dir, input_fasta.split("/")[-1].split(".fna")[0])
         os.makedirs(output_dir, exist_ok=True)
 
         if not os.path.exists(input_fasta):
-            raise FileNotFoundError(f"输入文件不存在: {input_fasta}")
+            raise FileNotFoundError(f"Input file does not exist: {input_fasta}")
 
         if not os.path.exists(self.gms_script_path):
-            raise FileNotFoundError(f"GeneMarkS脚本不存在: {self.gms_script_path}")
+            raise FileNotFoundError(f"GeneMarkS script does not exist: {self.gms_script_path}")
 
-        # 输出文件名
+        input_fasta = os.path.abspath(input_fasta)
+        output_dir = os.path.abspath(output_dir)
+
         prefix = os.path.splitext(os.path.basename(input_fasta))[0]
         output_files = {
             "gff": os.path.join(output_dir, f"{prefix}.gff"),
@@ -67,33 +70,41 @@ class GeneMarkSRunner:
             "--format", "gff",
             "--output", output_files["gff"],
             "--fnn", output_files["fnn"],
-            "--faa", output_files["faa"]
+            "--faa", output_files["faa"],
         ]
 
-        self.log(f"执行命令: {' '.join(command)}")
+        self.log(f"Executing command: {' '.join(command)}")
 
         try:
-            process = subprocess.run(command, capture_output=True, text=True)
+            temp_dir = os.path.abspath("src/GEMFactory/data/temp")
+            os.makedirs(temp_dir, exist_ok=True)
+
+            process = subprocess.run(
+                command,
+                capture_output=True,
+                text=True,
+                cwd=temp_dir
+            )
             self.log("stdout:\n" + process.stdout)
             self.log("stderr:\n" + process.stderr)
             if process.returncode == 0:
-                self.log("GeneMarkS 注释成功完成")
+                self.log("GeneMarkS annotation completed successfully")
                 return output_files
             else:
-                raise RuntimeError(f"GeneMarkS 执行失败，返回码: {process.returncode}")
+                raise RuntimeError(f"GeneMarkS execution failed, return code: {process.returncode}")
         except Exception as e:
-            raise RuntimeError(f"运行 GeneMarkS 时出错: {e}") from e
+            raise RuntimeError(f"Error occurred while running GeneMarkS: {e}") from e
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description="GeneMarkS Linux 基因组注释工具 (下游可对接 CarveMe)"
+        description="GeneMarkS Linux genome annotation tool (can be used with CarveMe downstream)"
     )
-    parser.add_argument("-i", "--input", required=True, help="输入基因组 fasta 文件路径")
-    parser.add_argument("-o", "--output", required=True, help="输出目录")
-    parser.add_argument("--script", default=None, help="GeneMarkS 脚本路径 (默认自动寻找)")
-    parser.add_argument("--genome-type", default="bacteria", help="基因组类型 (默认: bacteria)")
-    parser.add_argument("--gcode", default="11", help="遗传密码表编号 (默认: 11)")
+    parser.add_argument("-i", "--input", required=True, help="Input genome fasta file path")
+    parser.add_argument("-o", "--output", required=True, help="Output directory")
+    parser.add_argument("--script", default=None, help="GeneMarkS script path (auto-detect by default)")
+    parser.add_argument("--genome-type", default="bacteria", help="Genome type (default: bacteria)")
+    parser.add_argument("--gcode", default="11", help="Genetic code table number (default: 11)")
 
     args = parser.parse_args()
 
@@ -105,7 +116,7 @@ def main():
         gcode=args.gcode
     )
 
-    print("\n=== 运行完成，输出文件 ===")
+    print("\n=== Annotation completed, output files ===")
     for k, v in results.items():
         print(f"{k}: {v}")
 

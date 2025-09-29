@@ -2,7 +2,7 @@
 
 from langchain.tools import tool
 from typing import Tuple, Dict, Any
-from src.GeneMarks.GeneMarkSRunner import GeneMarkSRunner
+from src.GEMFactory.src.utils.GeneMarkS import GeneMarkSRunner
 import json
 import os
 import subprocess

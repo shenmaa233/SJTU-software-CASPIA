@@ -1,0 +1,1 @@
+python -m src.GEMFactory.src.utils.GeneMarkS -i src/GEMFactory/data/Genome/GCF_000005845.2_ASM584v2_genomic.fna -o src/GEMFactory/data/GeneMarkS/ --script /home/shenmaa/gms2_linux_64/gms2.pl

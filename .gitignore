@@ -69,3 +69,16 @@ logs/
 # Mac / Linux / Windows system files
 .DS_Store
 Thumbs.db
+
+# Data
+src/GEMFactory/data/
+
+# Logs
+logs/
+
+# Cache
+cache/
+
+# Output
+output/
+.gradio/
