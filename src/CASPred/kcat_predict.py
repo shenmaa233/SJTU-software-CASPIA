@@ -44,7 +44,7 @@ class KcatPredict(BaseTool):
     def __init__(self, tool_cfg=None):
         super().__init__(tool_cfg)
         current_dir = os.path.dirname(os.path.abspath(__file__))
-        self.egnn_dir = os.path.join(current_dir, 'EGNNkcat')
+        self.egnn_dir = os.path.join(current_dir, 'src')
         self.model_path = os.path.join(self.egnn_dir, 'model', 'best_model.pth')
         self.config_path = os.path.join(self.egnn_dir, 'config.json')
         self.predict_script = os.path.join(self.egnn_dir, 'src', 'predict.py')

@@ -1,55 +1,101 @@
 # webui.py
-
 import gradio as gr
 
+import os
+os.environ["NO_PROXY"] = "localhost,127.0.0.1,::1"
+os.environ["no_proxy"] = "localhost,127.0.0.1,::1"
+
 # 从 tabs 目录导入各个 Tab 的创建函数
-from tabs.agent_tab import create_agent_tab
+from tabs.agent_tab import agent_tab
 from tabs.gemfactory_tab import gemfactory_tab
 
-# --- 从 Agent 标签页提取出的共享 CSS ---
-# 将其放在主文件中，以便应用于所有标签页
+# --- 全局 CSS 样式 ---
 CSS = """
-/* --- 全局字体与背景 --- */
+/* 字体与背景 */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 body, .gradio-container { 
     font-family: 'Inter', sans-serif; 
     background-color: #F5F7FA; 
     color: #111827;
 }
-/* ... (您提供的其余所有 CSS 样式) ... */
 
-/* --- 聊天窗口卡片化 --- */
+/* 聊天窗口卡片化 */
 #chatbot {
     background-color: #FFFFFF !important;
     border-radius: 16px !important;
     box-shadow: 0 2px 12px rgba(0,0,0,0.06) !important;
     padding: 12px !important;
 }
-/* ... etc ... */
+
+/* 自定义文件上传提示 */
+#my_unique_file_uploader button > div {
+    font-size: 0 !important; /* 隐藏原始文字 */
+}
+#my_unique_file_uploader button > div::after {
+    content: "将您的报告拖拽至此 或 点击选择";
+    font-size: 1rem;
+    color: #666;
+}
+#my_unique_file_uploader .icon-wrap {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+}
+
+/* 隐藏 Gradio 默认 footer */
+footer { visibility: hidden; }
+
+/* 页面标题 */
+#app-title h1 {
+    font-size: 2.8em;
+    color: #2c3e50;
+    margin-bottom: 2px;
+    font-weight: 600;
+}
+#app-title .author {
+    font-size: 1.1em;
+    color: #7f8c8d;
+    text-align: left;
+}
+
+/* 功能区标题 */
+#section-title {
+    text-align: center;
+    font-size: 2em;
+    color: #34495e;
+    margin-top: 10px;
+    margin-bottom: 0px;
+}
 """
 
 # --- 主 UI 构建 ---
 with gr.Blocks(theme=gr.themes.Soft(primary_hue="blue"), css=CSS, fill_height=True) as demo:
-    gr.Markdown("# CASPIA")
     
+    # 顶部标题区
+    with gr.Row(show_progress=True):
+        gr.Image(
+            value="static/logo.png",
+            height=150,
+            width=150,
+            show_download_button=False,
+            show_fullscreen_button=False,
+            interactive=False,
+            show_label=False
+        )
+        with gr.Column(scale=5, elem_id="app-title"):
+            gr.Markdown(
+                '<h1>CASPIA — 2025 SJTU-Software</h1>'
+                '<p class="author">by <a href="https://github.com/victorzhu30" target="_blank">VictorZhu</a></p>'
+            )
+    
+    # 标签页
     with gr.Tabs():
-        # --- Agent Tab ---
-        with gr.TabItem("Agent"):
-            create_agent_tab() # 调用函数来构建这个 Tab 的内容
-
-        # --- GEMFactory Tab ---
-        with gr.TabItem("GEMFactory"):
-            gemfactory_tab() # 调用函数来构建这个 Tab 的内容
-
-        # --- 预留的 Tab ---
-        with gr.TabItem("Data Visualization (Reserved)"):
-            gr.Markdown("## 此处为数据可视化功能面板")
-            gr.Markdown("未来可以集成如 Plotly、Matplotlib 等图表展示功能。")
-            
-        with gr.TabItem("Model Comparison (Reserved)"):
-            gr.Markdown("## 此处为模型比较功能面板")
-            gr.Markdown("可以上传多个模型文件（如 ecGEM.json），并对它们的性能指标进行比较。")
-
+        with gr.TabItem("🤖 CASPIAgent"):
+            agent_tab()
+        with gr.TabItem("🧬 GEMFactory"):
+            gemfactory_tab()
+        with gr.TabItem("🔍 CASPIA-RAG"):
+            gr.Markdown("## CASPIA-RAG")
 
 # --- 启动应用 ---
 if __name__ == "__main__":

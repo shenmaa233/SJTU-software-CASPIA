@@ -1,4 +1,4 @@
-# src/tools.py
+# src/CASPIAgent/tools.py
 
 from langchain.tools import tool
 from typing import Tuple, Dict, Any
@@ -6,8 +6,9 @@ from src.GEMFactory.src.utils.GeneMarkS import GeneMarkSRunner
 import json
 import os
 import subprocess
+from functools import partial
+from langchain_core.tools import StructuredTool
 
-# --- 关键改动：移除了 @tool 装饰器，并重命名 ---
 # 这是一个内部实现函数，Agent不应该直接看到它。
 def _run_gene_prediction_implementation(genome_file) -> Dict[str, str]:
     """
@@ -18,7 +19,7 @@ def _run_gene_prediction_implementation(genome_file) -> Dict[str, str]:
         return {"message": "错误：没有提供基因组文件对象。", "protein_faa_path": ""}
     
     genome_path = genome_file.name
-    output_dir = "./genemarks_output"
+    output_dir = os.path.join(os.path.dirname(genome_path), "genemarks_output")
     runner = GeneMarkSRunner(gms_script_path="/home/shenmaa/gms2_linux_64/gms2.pl")
     try:
         results = runner.run(
@@ -31,6 +32,15 @@ def _run_gene_prediction_implementation(genome_file) -> Dict[str, str]:
     except Exception as e:
         return {"message": f"GeneMarkS 执行出错: {e}", "protein_faa_path": ""}
 
+
+def make_file_prediction_tool(uploaded_file):
+    run_prediction_partial = partial(_run_gene_prediction_implementation, genome_file=uploaded_file)
+
+    def wrapper():
+        """当用户要求对刚上传的基因组文件进行基因注释时，调用此工具。无需参数。"""
+        return run_prediction_partial()
+
+    return StructuredTool.from_function(func=wrapper, name="run_gene_prediction_real")
 
 @tool
 def extract_protein_from_predicted_file(predicted_protein_path: str, protein_id: str) -> str:

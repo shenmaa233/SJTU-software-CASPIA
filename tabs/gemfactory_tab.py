@@ -1,66 +1,80 @@
 import gradio as gr
-import os
-from src.GEMFactory.src.build_GEM_tool import build_gem
-
-# === 主函数：带进度条 ===
-def run_pipeline(genome_file, gapfill_medium):
-    logs = []
-    try:
-        if genome_file is None:
-            return "❌ Please upload a genome file (.fna).", ""
-
-        genome_path = genome_file.name
-
-        # === Step 1: GeneMarkS ===
-        logs.append("🔬 Step 1: Running GeneMarkS...")
-        yield "\n".join(logs), ""
-
-        results = build_gem(
-            genome_fasta=genome_path,
-            gms_script="/home/shenmaa/gms2_linux_64/gms2.pl",
-            gapfill=gapfill_medium if gapfill_medium != "None" else None
-        )
-
-        logs.append("✅ GeneMarkS annotation completed.")
-        yield "\n".join(logs), ""
-
-        # === Step 2: Clean FASTA ===
-        logs.append("🧹 Step 2: Cleaning protein FASTA headers...")
-        yield "\n".join(logs), ""
-        logs.append(f"✅ Clean FASTA saved: {results['clean_faa']}")
-        yield "\n".join(logs), ""
-
-        # === Step 3: CarveMe ===
-        logs.append("🛠️ Step 3: Running CarveMe reconstruction...")
-        yield "\n".join(logs), ""
-        logs.append(f"✅ GEM built successfully: {results['gem']}")
-        yield "\n".join(logs), results['gem']
-
-    except Exception as e:
-        logs.append(f"❌ Error: {e}")
-        yield "\n".join(logs), ""
+from src.utils import LogManager, TaskRunner
+from src.GEMFactory.src.build_GEM_tool import clean_faa, run_carveme
+from src.GEMFactory.src.utils.GeneMarkS import GeneMarkSRunner
+from pathlib import Path
 
 
-# === Gradio Tab 界面 ===
+def gem_pipeline(logger, genome_path: str, gapfill: str):
+    logger.info(f"🚀 Pipeline started. genome={genome_path}, medium={gapfill}")
+
+    # 1. Run GeneMarkS
+    logger.info("🔬 Step 1: Running GeneMarkS...")
+    gms_runner = GeneMarkSRunner(gms_script_path="/home/shenmaa/gms2_linux_64/gms2.pl")
+    gms_outputs = gms_runner.run(
+        input_fasta=genome_path,
+        output_dir="src/GEMFactory/data/GeneMarkS",
+        genome_type="bacteria",
+        gcode="11"
+    )
+    logger.info("✅ GeneMarkS annotation completed.")
+
+    # 2. Clean FASTA
+    logger.info("🧹 Step 2: Cleaning protein FASTA headers...")
+    clean_faa_path = clean_faa(gms_outputs["faa"])
+    logger.info(f"✅ Clean FASTA saved: {clean_faa_path}")
+
+    # 3. Run CarveMe
+    prefix = Path(genome_path).stem
+    gem_output = f"src/GEMFactory/data/CarveMe/{prefix}_draft.xml"
+    logger.info("🛠️ Step 3: Running CarveMe reconstruction...")
+    run_carveme(clean_faa_path, gem_output, gapfill=gapfill, tmpdir="src/GEMFactory/data/temp")
+    logger.info(f"✅ GEM built successfully: {gem_output}")
+
+    return gem_output
+
+
+# --- Setup ---
+logs = LogManager("./logs")
+runner = TaskRunner(logs)
+
+
+# --- Gradio Callbacks ---
+def start_pipeline(genome_file, gapfill, _sid):
+    if genome_file is None or genome_file == "":
+        return "", "❌ Please upload a genome file (.fna).", ""
+    sid = runner.start(gem_pipeline, genome_file, gapfill, prefix="gem-")
+    return sid, f"🚧 Running (sid={sid})", logs.read_tail(sid)
+
+
+def poll_pipeline(sid: str):
+    return runner.poll(sid)
+
+
+# --- Gradio UI ---
 def gemfactory_tab():
-    with gr.Tab("🧬 GEM Factory"):
+    with gr.Blocks():
         gr.Markdown("## Genome → GEM Pipeline\nUpload a genome and build GEM automatically with GeneMarkS + CarveMe.")
+
+        sid_state = gr.State("")
 
         with gr.Row():
             genome_file = gr.File(label="Upload Genome (.fna)", type="filepath", file_types=[".fna"])
-            gapfill_medium = gr.Dropdown(
-                choices=["None", "M9", "LB", "M9,LB"],
-                value="None",
-                label="Gapfill Medium"
-            )
+            gapfill = gr.Dropdown(choices=["None", "M9", "LB", "M9,LB"], value="None", label="Gapfill Medium")
 
         run_btn = gr.Button("🚀 Run Pipeline")
 
-        progress = gr.Textbox(label="Progress Log", lines=15, interactive=False)
-        result = gr.Textbox(label="Generated GEM Path")
+        logs_box = gr.Textbox(label="Progress Log", lines=15, interactive=False)
+        status_box = gr.Textbox(label="Status", interactive=False)
+        result_box = gr.Textbox(label="Generated GEM Path", interactive=False)
 
         run_btn.click(
-            fn=run_pipeline,
-            inputs=[genome_file, gapfill_medium],
-            outputs=[progress, result],
+            fn=start_pipeline,
+            inputs=[genome_file, gapfill, sid_state],
+            outputs=[sid_state, status_box, logs_box]
         )
+
+        timer = gr.Timer(1.0)
+        timer.tick(fn=poll_pipeline,
+                   inputs=[sid_state],
+                   outputs=[logs_box, status_box, result_box])
