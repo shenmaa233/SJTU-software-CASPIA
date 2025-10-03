@@ -2,7 +2,7 @@ from ast import main
 import re
 import cobra
 import argparse
-from utils import *
+from .utils import *
 
 def run_ecGEM_fba(ecModel_output_file, result_folder, obj=None,
                   use_substrate="EX_glc__D_e", concentration=10):
@@ -24,6 +24,7 @@ def run_ecGEM_fba(ecModel_output_file, result_folder, obj=None,
                 obj = reaction.id
                 break
     enz_model.objective = obj
+    # print(enz_model.objective)
 
     # 修改底物供给条件
     ori_obj_id, ori_substrate_id_list, ori_sub_concentration, ori_ATPM = get_model_substrate_obj(enz_model)
@@ -55,7 +56,7 @@ def main():
     )
     parser.add_argument("--ecModel_output_file", type=str, required=True,
                         help="Path to the ecGEM JSON file")
-    parser.add_argument("--result_folder", type=str, required=True,
+    parser.add_argument("--result_folder", type=str, default=None,
                         help="Path to the result folder")
     parser.add_argument("--obj", type=str, default=None,
                         help="The objective function")
@@ -65,6 +66,10 @@ def main():
                         help="The concentration")
     args = parser.parse_args()
 
+    if args.result_folder is None:
+        args.result_folder = os.path.dirname(args.ecModel_output_file) + "/result"
+    os.makedirs(args.result_folder, exist_ok=True)
+    
     optimal_value = run_ecGEM_fba(
         args.ecModel_output_file, args.result_folder,
         obj=args.obj,

@@ -1,0 +1,1 @@
+python -m src.GEMFactory.src.ecGEM.run_ecGEM --ecModel_output_file src/GEMFactory/data/ecGEM/GCF_000005845.2_ASM584v2_genomic/ecModel.json 
