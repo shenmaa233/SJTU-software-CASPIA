@@ -1,6 +1,6 @@
 import gradio as gr
 from src.utils import LogManager, TaskRunner
-from src.GEMFactory.src.build_GEM_tool import clean_faa, run_carveme
+from src.GEMFactory.src.build_GEM import clean_faa, run_carveme
 from src.GEMFactory.src.utils.GeneMarkS import GeneMarkSRunner
 from pathlib import Path
 

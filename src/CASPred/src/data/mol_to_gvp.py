@@ -3,7 +3,7 @@ from rdkit import Chem
 from rdkit.Chem import AllChem
 import numpy as np
 
-from data.smile_to_3D import smiles_to_3d_conformer
+from .smile_to_3D import smiles_to_3d_conformer
 
 # --- 特征提取函数 ---
 

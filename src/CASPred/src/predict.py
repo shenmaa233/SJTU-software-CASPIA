@@ -6,9 +6,9 @@ import argparse
 import numpy as np
 from rdkit import Chem
 
-from src.data.smile_to_3D import smiles_to_3d_conformer
-from src.data.mol_to_gvp import mol_to_gvp_graph
-from src.model.kcat_model import KcatPredictionModel
+from .data.smile_to_3D import smiles_to_3d_conformer
+from .data.mol_to_gvp import mol_to_gvp_graph
+from .model.kcat_model import KcatPredictionModel
 from esm.models.esmc import ESMC
 from esm.sdk.api import ESMProtein, LogitsConfig
 
