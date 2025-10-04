@@ -1,8 +1,37 @@
+import shutil
+from pathlib import Path
+
 import gradio as gr
-from src.utils import LogManager, TaskRunner
+
 from src.GEMFactory.src.build_GEM import clean_faa, run_carveme
 from src.GEMFactory.src.utils.GeneMarkS import GeneMarkSRunner
-from pathlib import Path
+from src.utils import LogManager, TaskRunner
+
+GENOME_DIR = "src/GEMFactory/data/Genome"
+
+
+def list_genomes():
+    p = Path(GENOME_DIR)
+    p.mkdir(parents=True, exist_ok=True)
+    exts = {".fna", ".fa", ".fasta"}
+    return [str(f.resolve()) for f in sorted(p.iterdir()) if f.is_file() and f.suffix.lower() in exts]
+
+
+def save_and_refresh(uploaded_path):
+    if uploaded_path is None or uploaded_path == "":
+        return gr.update()
+    src = Path(uploaded_path)
+    if not src.exists():
+        return gr.update()
+    dest_dir = Path(GENOME_DIR)
+    dest_dir.mkdir(parents=True, exist_ok=True)
+    dest = dest_dir / src.name
+    try:
+        shutil.copy(src, dest)
+    except Exception:
+        pass
+    genomes = list_genomes()
+    return gr.update(choices=genomes, value=str(dest.resolve()))
 
 
 def gem_pipeline(logger, genome_path: str, gapfill: str):
@@ -15,7 +44,7 @@ def gem_pipeline(logger, genome_path: str, gapfill: str):
         input_fasta=genome_path,
         output_dir="src/GEMFactory/data/GeneMarkS",
         genome_type="bacteria",
-        gcode="11"
+        gcode="11",
     )
     logger.info("✅ GeneMarkS annotation completed.")
 
@@ -59,8 +88,12 @@ def gemfactory_tab():
         sid_state = gr.State("")
 
         with gr.Row():
-            genome_file = gr.File(label="Upload Genome (.fna)", type="filepath", file_types=[".fna"])
+            genome_upload = gr.File(label="Upload Genome (.fna/.fa/.fasta)", type="filepath", file_types=[".fna", ".fa", ".fasta"])
+            existing = list_genomes()
+            genome_file = gr.Dropdown(choices=existing, value=(existing[0] if existing else None), label="Genome")
             gapfill = gr.Dropdown(choices=["None", "M9", "LB", "M9,LB"], value="None", label="Gapfill Medium")
+
+        genome_upload.change(fn=save_and_refresh, inputs=[genome_upload], outputs=[genome_file])
 
         run_btn = gr.Button("🚀 Run Pipeline")
 
@@ -68,13 +101,7 @@ def gemfactory_tab():
         status_box = gr.Textbox(label="Status", interactive=False)
         result_box = gr.Textbox(label="Generated GEM Path", interactive=False)
 
-        run_btn.click(
-            fn=start_pipeline,
-            inputs=[genome_file, gapfill, sid_state],
-            outputs=[sid_state, status_box, logs_box]
-        )
+        run_btn.click(fn=start_pipeline, inputs=[genome_file, gapfill, sid_state], outputs=[sid_state, status_box, logs_box])
 
         timer = gr.Timer(1.0)
-        timer.tick(fn=poll_pipeline,
-                   inputs=[sid_state],
-                   outputs=[logs_box, status_box, result_box])
+        timer.tick(fn=poll_pipeline, inputs=[sid_state], outputs=[logs_box, status_box, result_box])
