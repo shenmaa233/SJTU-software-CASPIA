@@ -89,16 +89,28 @@ def main():
                         help="Average enzyme saturation factor")
     parser.add_argument("--lowerbound", type=float, default=0.0,
                         help="Lower bound of enzyme usage constraints")
+    parser.add_argument("--is_etc", type=bool, default=False,
+                        help="Whether to build enzyme-temperature-constrained GEM")
+    parser.add_argument("--T", type=float, default=None,
+                        help="Optimal temperature")
     
     args = parser.parse_args()
 
+    if args.is_etc and args.T is None:
+        print("Optimal temperature is required when building enzyme-temperature-constrained GEM. Exiting.")
+        exit(1)
+
     if args.result_folder is None:
-        args.result_folder = f"src/GEMFactory/data/ecGEM/{os.path.basename(args.model_file).split('_draft.xml')[0]}"
+        if args.is_etc:
+            # create folder
+            os.makedirs(f"src/GEMFactory/data/etcGEM", exist_ok=True)
+            args.result_folder = f"src/GEMFactory/data/etcGEM/{os.path.basename(args.model_file).split('_draft.xml')[0]}_T={args.T}"
+        else:
+            args.result_folder = f"src/GEMFactory/data/ecGEM/{os.path.basename(args.model_file).split('_draft.xml')[0]}"
 
     if args.protein_clean_file is None:
         args.protein_clean_file = f"src/GEMFactory/data/GeneMarkS/{os.path.basename(args.model_file).split('_draft.xml')[0]}/{os.path.basename(args.model_file).split('_draft.xml')[0]}_protein_clean.fasta"
 
-    # 创建结果目录
     os.makedirs(args.result_folder, exist_ok=True)
 
     # Step 1: 检查模型是否适合构建ecGEM
@@ -115,16 +127,17 @@ def main():
     gprdf = split_and_pair_substrate_with_protein(args.model_file, args.result_folder)
 
     # Step 3: 预测 kcat
-    gprdf_with_kcat = kcat_predict(gprdf, args.protein_clean_file, args.model_file, args.result_folder)
+    gprdf_with_kcat = parameter_predict(gprdf, args.protein_clean_file, args.model_file, args.result_folder, args.is_etc, args.T)
     gprdf_with_kcat = pd.read_csv(f"{args.result_folder}/full_metabolites_reactions.csv")
-    
+
     # Step 4: 获得 kcat 与分子量
     reaction_kcat_mw = get_kcat_mw(gprdf_with_kcat, args.result_folder)
 
     # Step 5: 构建 ecGEM
     ecModel_output_file = build_ecGEM(
         args.model_file, args.result_folder,
-        f=args.f, ptot=args.ptot, sigma=args.sigma, lowerbound=args.lowerbound
+        f=args.f, ptot=args.ptot, sigma=args.sigma, lowerbound=args.lowerbound,
+        is_etc=args.is_etc, T=args.T
     )
     print(f"ecGEM built and saved at {ecModel_output_file}")
 

@@ -65,7 +65,7 @@ def collate_fn(batch):
         'kcat': torch.stack([item['kcat'] for item in batch])
     }
 
-def train_model(config_path, output_dir, cache_dir=None, log_transform=True, checkpoint_path=None):
+def train_model(config_path, output_dir, train_cache_dir=None, val_cache_dir=None, log_transform=True, checkpoint_path=None):
     os.makedirs(output_dir, exist_ok=True)
     # Setup logging
     logging.basicConfig(
@@ -90,17 +90,17 @@ def train_model(config_path, output_dir, cache_dir=None, log_transform=True, che
     logger.info(f"Using device: {device}")
     
     # Create datasets
-    if cache_dir is not None:
+    if train_cache_dir is not None and val_cache_dir is not None:
         # Use cache folders for train and validation
-        train_cache_dir = os.path.join(cache_dir, 'train_cache')
-        val_cache_dir = os.path.join(cache_dir, 'val_cache')
+        train_cache_dir = os.path.join(train_cache_dir, 'train_cache')
+        val_cache_dir = os.path.join(val_cache_dir, 'val_cache')
         
         train_dataset = KcatDataset(config['data_path'], cache_dir=train_cache_dir, log_transform=log_transform)
         val_dataset = KcatDataset(config['data_path'], cache_dir=val_cache_dir, log_transform=log_transform)
     else:
         # Use single dataset for both train and validation (original behavior)
-        train_dataset = KcatDataset(config['data_path'], cache_dir=cache_dir, log_transform=log_transform)
-        val_dataset = KcatDataset(config['data_path'], cache_dir=cache_dir, log_transform=log_transform)
+        train_dataset = KcatDataset(config['data_path'], cache_dir=train_cache_dir, log_transform=log_transform)
+        val_dataset = KcatDataset(config['data_path'], cache_dir=val_cache_dir, log_transform=log_transform)
     
     # Print kcat statistics for debugging
     if log_transform:
@@ -193,7 +193,8 @@ def train_model(config_path, output_dir, cache_dir=None, log_transform=True, che
             
             # 更新模型调用
             predictions = model(node_s, node_v, edge_index, edge_s, edge_v, batch_map, protein_embeddings)
-
+            if model.training:
+                predictions = predictions + 0.01 * torch.randn_like(predictions)
             # Compute loss
             # When using log transformation, targets are already log-transformed in the dataset
             # So we only need to ensure predictions are positive
@@ -304,13 +305,14 @@ def main():
     parser = argparse.ArgumentParser(description='Train kcat prediction model')
     parser.add_argument('--config', type=str, required=True, help='Path to configuration file')
     parser.add_argument('--output', type=str, required=True, help='Output directory for model checkpoints')
-    parser.add_argument('--cache_dir', type=str, default=None, help='Directory containing precomputed embeddings')
+    parser.add_argument('--train_cache_dir', type=str, default=None, help='Directory containing precomputed embeddings')
+    parser.add_argument('--val_cache_dir', type=str, default=None, help='Directory containing precomputed embeddings')
     parser.add_argument('--log_transform', action='store_true', help='Whether to apply log10 transformation to kcat values')
     parser.add_argument('--checkpoint', type=str, default=None, help='Path to checkpoint file to resume training')
     
     args = parser.parse_args()
     
-    train_model(args.config, args.output, args.cache_dir, args.log_transform, args.checkpoint)
+    train_model(args.config, args.output, args.train_cache_dir, args.val_cache_dir, args.log_transform, args.checkpoint)
 
 if __name__ == '__main__':
     main()

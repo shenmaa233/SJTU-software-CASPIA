@@ -1,17 +1,10 @@
 import os
 import pandas as pd
 import torch
-import sys
 from tqdm import tqdm
-import json
-
-# Add the CASPred src directory to the path
-sys.path.append(os.path.join(os.path.dirname(__file__), '../../../../CASPred/src'))
-
-from hyena.tokenizer import CharacterTokenizer
-from hyena.model import HyenaDNAModel
+from src.CASPred.src.hyena.tokenizer import CharacterTokenizer
+from src.CASPred.src.hyena.model import HyenaDNAModel
 from .protein_utils import get_protein_sequences_from_fasta
-from .io_utils import load_model
 
 # === 模型加载函数 ===
 def load_topt_model(model_path, device=None):
@@ -94,26 +87,24 @@ def predict_single_topt(protein_sequence, model, tokenizer, device, max_length=1
         print(f"Error predicting Topt for sequence: {e}")
         return None
 
-# === 批量预测函数 ===
-def topt_predict_batch(gprdf, model_path, max_length=1000):
+# === Batch prediction function ===
+def topt_predict_batch(protein_sequences, model_path, max_length=1000):
     """
-    Predict optimal temperatures for multiple protein sequences in a DataFrame.
-    
+    Batch predict optimal temperatures for multiple protein sequences.
+
     Args:
-        gprdf (pd.DataFrame): DataFrame containing protein sequences
+        protein_sequences (List[str]): List of protein sequences
         model_path (str): Path to the model checkpoint file
         max_length (int): Maximum length of the sequence
-        
+
     Returns:
-        pd.DataFrame: DataFrame with added 'Topt' column
+        List[float]: List of predicted Topt values for each protein sequence
     """
     model, tokenizer, device = load_topt_model(model_path)
     results = []
-    
-    for idx, row in tqdm(gprdf.iterrows(), total=len(gprdf), desc="Predicting Topt"):
-        protein_sequence = row.get("protein_sequence", None)
-        
-        if protein_sequence is None or str(protein_sequence).strip() == "":
+
+    for idx, protein_sequence in enumerate(tqdm(protein_sequences, total=len(protein_sequences), desc="Predicting Topt")):
+        if protein_sequence is None or str(protein_sequence).strip() == "" or len(protein_sequence) > max_length:
             pred = 37.0  # Default temperature (human body temperature)
         else:
             try:
@@ -124,80 +115,5 @@ def topt_predict_batch(gprdf, model_path, max_length=1000):
                 print(f"⚠️ Failed at index {idx}: {e}")
                 pred = 37.0
         results.append(pred)
-    
-    gprdf["Topt"] = results
-    return gprdf
 
-# === 主入口函数 ===
-def topt_predict(gprdf, protein_clean_file, model_file, result_folder):
-    """
-    Main function to predict optimal temperatures for proteins in the GPR DataFrame.
-    
-    Args:
-        gprdf (pd.DataFrame): GPR DataFrame containing gene information
-        protein_clean_file (str): Path to the cleaned protein FASTA file
-        model_file (str): Path to the model file (not used for Topt, but kept for consistency)
-        result_folder (str): Folder to save results
-        
-    Returns:
-        pd.DataFrame: Updated GPR DataFrame with Topt predictions
-    """
-    # 1. 获取蛋白质序列
-    protein_sequences = get_protein_sequences_from_fasta(protein_clean_file)
-    
-    sequences = []
-    for idx, row in gprdf.iterrows():
-        gene_id = row["genes"]
-        if gene_id in protein_sequences:
-            seq = protein_sequences[gene_id]
-            sequences.append(seq)
-        else:
-            sequences.append(None)
-    
-    gprdf["protein_sequence"] = sequences
-    
-    # 2. 预测 Topt
-    gprdf = topt_predict_batch(
-        gprdf,
-        model_path="src/CASPred/model/HEATMAPData/model_1.pt"
-    )
-    
-    # 3. 保存结果
-    os.makedirs(result_folder, exist_ok=True)
-    out_path = os.path.join(result_folder, "full_metabolites_reactions_with_topt.csv")
-    gprdf.to_csv(out_path, index=False)
-    return gprdf
-
-def get_topt_data(gprdf, result_folder):
-    """
-    Extract Topt data for ecGEM construction.
-    
-    Args:
-        gprdf (pd.DataFrame): DataFrame with Topt predictions
-        result_folder (str): Folder to save results
-        
-    Returns:
-        pd.DataFrame: DataFrame with Topt data for reactions
-    """
-    gprdf_topt = gprdf.copy()
-    
-    # Remove rows with 'None' in Topt value
-    gprdf_topt = gprdf_topt[gprdf_topt['Topt'].notna()]
-    
-    # Convert Topt value to float
-    gprdf_topt['Topt'] = gprdf_topt['Topt'].astype(float)
-    
-    # Sort by Topt value and keep only the first occurrence of each reaction
-    gprdf_topt = gprdf_topt.sort_values('Topt', ascending=True).drop_duplicates(subset=['reactions'], keep='first')
-    
-    # Prepare Topt DataFrame
-    reaction_topt = pd.DataFrame()
-    reaction_topt['reactions'] = gprdf_topt['reactions']
-    reaction_topt['data_type'] = 'Topt'
-    reaction_topt['Topt'] = gprdf_topt['Topt']
-    reaction_topt.reset_index(drop=True, inplace=True)
-    
-    reaction_topt_file = f'{result_folder}/reaction_topt.csv'
-    reaction_topt.to_csv(reaction_topt_file, index=False)
-    print('reaction_topt generated')
-    return reaction_topt
+    return results

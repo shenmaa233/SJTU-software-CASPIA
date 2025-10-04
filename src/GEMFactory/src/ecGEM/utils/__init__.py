@@ -4,6 +4,7 @@ from .ec_utils import *
 from .metabolite_utils import *
 from .protein_utils import *
 from .kcat_utils import *
+from .parameter_utils import *
 
 # 进行EC算法前的模型适用性判断
 # 第二个参数为固定值（bigg_models_metabolites.txt这个文件）

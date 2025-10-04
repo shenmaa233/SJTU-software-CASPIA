@@ -8,137 +8,195 @@ from src.CASPred.src.data.mol_to_gvp import mol_to_gvp_graph
 from esm.sdk.api import ESMProtein, LogitsConfig
 import json
 from src.CASPred.src.model.kcat_model import KcatPredictionModel
-from .metabolite_utils import get_smiles_for_gprdf
-from .protein_utils import get_protein_sequences_from_fasta
-from .protein_utils import calculate_protein_molecular_weight
-from .io_utils import load_model
+import numpy as np
+from typing import List
 
-# === 模型加载函数 ===
-def load_models(model_path, config_path, device=None):
-    with open(config_path, 'r') as f:
+def prepare_inference_batch(smiles_list: List[str], protein_list: List[str], esm_model) -> dict:
+    """
+    Prepare molecular graphs and protein embeddings for batched inference.
+
+    Args:
+        smiles_list (List[str]): List of SMILES strings representing substrates.
+        protein_list (List[str]): List of protein sequences aligned with SMILES list.
+        esm_model: Preloaded ESMC model for protein embedding extraction.
+
+    Returns:
+        dict: Batched tensors containing node/edge features, protein embeddings, and batch mapping.
+    """
+    node_s_list, node_v_list = [], []
+    edge_index_list, edge_s_list, edge_v_list = [], [], []
+    batch_map, protein_embeddings = [], []
+    node_offset = 0
+
+    for i, (smiles, seq) in enumerate(zip(smiles_list, protein_list)):
+        # === Convert SMILES to 3D molecular graph ===
+        mol_3d = smiles_to_3d_conformer(smiles)
+        if mol_3d is None:
+            raise ValueError(f"Failed to generate 3D conformer for SMILES: {smiles}")
+
+        (node_s, node_v), edge_index, (edge_s, edge_v) = mol_to_gvp_graph(mol_3d)
+
+        node_s_list.append(node_s)
+        node_v_list.append(node_v)
+        edge_s_list.append(edge_s)
+        edge_v_list.append(edge_v)
+
+        num_nodes = node_s.shape[0]
+        edge_index_list.append(edge_index + node_offset)
+        batch_map.append(torch.full((num_nodes,), i, dtype=torch.long))
+        node_offset += num_nodes
+
+        # === Encode protein sequence with ESM ===
+        protein = ESMProtein(sequence=seq)
+        with torch.no_grad():
+            protein_tensor = esm_model.encode(protein)
+            logits_output = esm_model.logits(
+                protein_tensor, LogitsConfig(sequence=True, return_embeddings=True)
+            )
+            protein_embedding = logits_output.embeddings.squeeze(0)  # Shape: (L, D)
+        protein_embeddings.append(protein_embedding)
+
+    # === Pad protein embeddings to the same length ===
+    max_length = max(emb.shape[0] for emb in protein_embeddings)
+    padded_embeddings = []
+    for emb in protein_embeddings:
+        pad_len = max_length - emb.shape[0]
+        padded_emb = torch.nn.functional.pad(emb, (0, 0, 0, pad_len), value=0)
+        padded_embeddings.append(padded_emb)
+
+    return {
+        "node_s": torch.cat(node_s_list, dim=0),
+        "node_v": torch.cat(node_v_list, dim=0),
+        "edge_index": torch.cat(edge_index_list, dim=1),
+        "edge_s": torch.cat(edge_s_list, dim=0),
+        "edge_v": torch.cat(edge_v_list, dim=0),
+        "batch_map": torch.cat(batch_map, dim=0),
+        "protein_embedding": torch.stack(padded_embeddings),
+    }
+
+
+def load_model(config_path: str, model_path: str, device: torch.device):
+    """
+    Load a trained KcatPredictionModel from checkpoint.
+
+    Args:
+        config_path (str): Path to JSON config file.
+        model_path (str): Path to model checkpoint (.pth file).
+        device (torch.device): Torch device.
+
+    Returns:
+        model: Loaded model ready for inference.
+    """
+    with open(config_path, "r") as f:
         config = json.load(f)
 
-    if device is None:
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    print(f"Using device: {device}")
-
-    # Load ESM model
-    esm_model_name = config.get("esm_model_name", "esmc_300m")
-    esm_model = ESMC.from_pretrained(esm_model_name).to(device)
-    esm_model.eval()
-
-    # Load GVP model
-    gvp_params = config["gvp_params"]
     model = KcatPredictionModel(
-        gvp_params=gvp_params,
+        gvp_params=config["gvp_params"],
         esm_embedding_dim=config["esm_embedding_dim"],
         hidden_dim=config["hidden_dim"],
-        dropout=config["dropout"]
+        dropout=config["dropout"],
     ).to(device)
-    model.load_state_dict(torch.load(model_path, map_location=device))
+
+    checkpoint = torch.load(model_path, map_location=device)
+    if isinstance(checkpoint, dict) and "model_state_dict" in checkpoint:
+        model.load_state_dict(checkpoint["model_state_dict"])
+    else:
+        model.load_state_dict(checkpoint)
     model.eval()
 
-    return esm_model, model, config, device
+    return model
 
 
-# === 单条预测函数 ===
-def predict_single(smiles, protein_sequence, esm_model, model, device, log_transform=True):
-    mol_3d = smiles_to_3d_conformer(smiles)
-    if mol_3d is None:
-        return None
-
-    graph_data = mol_to_gvp_graph(mol_3d)
-    if graph_data is None:
-        return None
-
-    (node_s, node_v), edge_index, (edge_s, edge_v) = graph_data
-
-    # 蛋白质 embedding
-    protein = ESMProtein(sequence=protein_sequence)
-    with torch.no_grad():
-        protein_tensor = esm_model.encode(protein)
-        logits_output = esm_model.logits(
-            protein_tensor, LogitsConfig(sequence=True, return_embeddings=True)
-        )
-        protein_embedding = logits_output.embeddings.squeeze(0)
-
-    with torch.no_grad():
-        node_s, node_v = node_s.to(device), node_v.to(device)
-        edge_index, edge_s, edge_v = edge_index.to(device), edge_s.to(device), edge_v.to(device)
-        protein_embeddings = protein_embedding.unsqueeze(0).to(device)
-        batch_map = torch.zeros(node_s.size(0), dtype=torch.long, device=device)
-
-        pred = model(node_s, node_v, edge_index, edge_s, edge_v, batch_map, protein_embeddings)
-        if log_transform:
-            pred = 10 ** pred
-
-    return pred.item()
-
-
-# === caspred: 批量预测 ===
-def caspred(gprdf, model_path, config_path, log_transform=True):
-    esm_model, model, config, device = load_models(model_path, config_path)
+def run_in_batches(smiles, proteins, model, esm_model, batch_size, device, log_transform=True):
+    """
+    Run inference in mini-batches to avoid OOM issues.
+    If a SMILES or protein is None, directly assign kcat=10 for that sample.
+    """
     results = []
 
-    for idx, row in tqdm(gprdf.iterrows(), total=len(gprdf), desc="Predicting kcat"):
-        smiles = row.get("SMILES", None)
-        seq = row.get("protein_sequence", None)
+    for start in range(0, len(smiles), batch_size):
+        end = min(start + batch_size, len(smiles))
+        batch_smiles = smiles[start:end]
+        batch_proteins = proteins[start:end]
 
-        if smiles is None or seq is None or str(smiles).strip() == "" or str(seq).strip() == "":
-            pred = 10.0  # 默认值
+        valid_indices = [i for i, (s, p) in enumerate(zip(batch_smiles, batch_proteins)) if s is not None and p is not None]
+        invalid_indices = [i for i in range(len(batch_smiles)) if i not in valid_indices]
+
+        batch_preds = np.zeros(len(batch_smiles), dtype=np.float32)
+
+        # === 如果有有效样本才跑模型 ===
+        if valid_indices:
+            valid_smiles = [batch_smiles[i] for i in valid_indices]
+            valid_proteins = [batch_proteins[i] for i in valid_indices]
+
+            batch = prepare_inference_batch(valid_smiles, valid_proteins, esm_model)
+            batch = {k: v.to(device) for k, v in batch.items()}
+
+            with torch.no_grad():
+                preds = model(
+                    batch["node_s"],
+                    batch["node_v"],
+                    batch["edge_index"],
+                    batch["edge_s"],
+                    batch["edge_v"],
+                    batch["batch_map"],
+                    batch["protein_embedding"],
+                )
+            preds = preds.squeeze(-1).cpu().numpy()
+            if log_transform:
+                preds = np.power(10, preds)
+
+            # 填入有效预测
+            for idx, val in zip(valid_indices, preds):
+                batch_preds[idx] = val
+
+        # === None 样本直接置为 10 ===
+        for idx in invalid_indices:
+            batch_preds[idx] = 10.0
+
+        results.append(batch_preds)
+
+    return np.concatenate(results, axis=0)
+
+
+def ensemble_inference(smiles, proteins, model_paths, config_path, batch_size=32, log_transform=True):
+    """
+    Perform ensemble inference with multiple models and estimate confidence.
+    If a SMILES or protein is None, assign kcat=10 and std/CI=None for that sample.
+    """
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    esm_model = ESMC.from_pretrained("esmc_300m").to(device)
+
+    # 收集每个模型的预测
+    all_preds = []
+    for model_path in model_paths:
+        model = load_model(config_path, model_path, device)
+        preds = run_in_batches(smiles, proteins, model, esm_model, batch_size, device, log_transform)
+        all_preds.append(preds)
+
+    all_preds = np.stack(all_preds, axis=0)  # (num_models, num_samples)
+
+    mean_preds, std_preds, ci95 = [], [], []
+    num_models = len(model_paths)
+
+    for i, (s, p) in enumerate(zip(smiles, proteins)):
+        if s is None or p is None:
+            mean_preds.append(10.0)
+            std_preds.append(None)
+            ci95.append((None, None))
         else:
-            try:
-                pred = predict_single(smiles, seq, esm_model, model, device, log_transform)
-                if pred is None:
-                    pred = 10.0
-            except Exception as e:
-                print(f"⚠️ Failed at index {idx}: {e}")
-                pred = 10.0
-        results.append(pred)
+            preds_i = all_preds[:, i]
+            mean_val = np.mean(preds_i)
+            std_val = np.std(preds_i)
+            ci_val = (
+                mean_val - 1.96 * std_val / np.sqrt(num_models),
+                mean_val + 1.96 * std_val / np.sqrt(num_models),
+            )
+            mean_preds.append(mean_val)
+            std_preds.append(std_val)
+            ci95.append(ci_val)
 
-    gprdf["Kcat value (1/s)"] = results
-    return gprdf
-
-
-# === 主入口函数 ===
-def kcat_predict(gprdf, protein_clean_file, model_file, result_folder):
-    model = load_model(model_file)
-    # 1. 获取 SMILES
-    cache_file = "src/GEMFactory/src/ecGEM/utils/smiles_cache.json"
-    smiles_list = get_smiles_for_gprdf(gprdf, model, cache_file)
-    gprdf["SMILES"] = smiles_list
-
-    # 2. 获取蛋白质序列
-    protein_sequences = get_protein_sequences_from_fasta(protein_clean_file)
-
-    sequences, molecular_weights = [], []
-    for idx, row in gprdf.iterrows():
-        gene_id = row["genes"]
-        if gene_id in protein_sequences:
-            seq = protein_sequences[gene_id]
-            sequences.append(seq)
-            mw = calculate_protein_molecular_weight(seq)
-            molecular_weights.append(mw)
-        else:
-            sequences.append(None)
-            molecular_weights.append(None)
-
-    gprdf["protein_sequence"] = sequences
-    gprdf["mass"] = molecular_weights
-
-    # 3. 预测 kcat
-    gprdf = caspred(
-        gprdf,
-        model_path="src/CASPred/model/EnzyExtractData/model_1.pth",
-        config_path="src/CASPred/config.json",
-        log_transform=True
-    )
-
-    # 4. 保存结果
-    os.makedirs(result_folder, exist_ok=True)
-    out_path = os.path.join(result_folder, "full_metabolites_reactions.csv")
-    gprdf.to_csv(out_path, index=False)
-    return gprdf
+    return {"mean": np.array(mean_preds), "std": std_preds, "95CI": ci95}
 
 def get_kcat_mw(gprdf, result_folder):
     '''
