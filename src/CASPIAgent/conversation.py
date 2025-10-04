@@ -1,4 +1,4 @@
-# src/agents/conversation.py
+# src/CASPIAgent/conversation.py
 import json
 from langchain.schema import HumanMessage, AIMessage
 
