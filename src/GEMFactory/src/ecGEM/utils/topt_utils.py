@@ -46,7 +46,7 @@ def load_topt_model(model_path, device=None):
     model.to(device)
     
     # Load the model checkpoint
-    checkpoint = torch.load(model_path, map_location=device)
+    checkpoint = torch.load(model_path, map_location=device, weights_only=False)
     model.load_state_dict(checkpoint['model_state_dict'])
     model.eval()
     

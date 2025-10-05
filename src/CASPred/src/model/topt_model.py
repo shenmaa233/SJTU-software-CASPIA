@@ -23,7 +23,7 @@ def load_checkpoint(model, checkpoint_path, optimizer=None):
         epoch (int): The epoch number at which the checkpoint was saved.
         loss (float): The loss value when the checkpoint was saved.
     """
-    checkpoint = torch.load(checkpoint_path, map_location=torch.device('cpu'))
+    checkpoint = torch.load(checkpoint_path, map_location=torch.device('cpu'), weights_only=False)
     model.load_state_dict(checkpoint['model_state_dict'])
     if optimizer:
         optimizer.load_state_dict(checkpoint['optimizer_state_dict'])

@@ -124,7 +124,10 @@ def main():
         exit(1)
 
     # Step 2: 拆分并匹配底物与蛋白
-    gprdf = split_and_pair_substrate_with_protein(args.model_file, args.result_folder)
+    if not os.path.exists(f"{args.result_folder}/metabolites_reactions_gpr.csv"):
+        gprdf = split_and_pair_substrate_with_protein(args.model_file, args.result_folder)
+    else:
+        gprdf = pd.read_csv(f"{args.result_folder}/metabolites_reactions_gpr.csv")
 
     # Step 3: 预测 kcat
     gprdf_with_kcat = parameter_predict(gprdf, args.protein_clean_file, args.model_file, args.result_folder, args.is_etc, args.T)
@@ -136,8 +139,7 @@ def main():
     # Step 5: 构建 ecGEM
     ecModel_output_file = build_ecGEM(
         args.model_file, args.result_folder,
-        f=args.f, ptot=args.ptot, sigma=args.sigma, lowerbound=args.lowerbound,
-        is_etc=args.is_etc, T=args.T
+        f=args.f, ptot=args.ptot, sigma=args.sigma, lowerbound=args.lowerbound
     )
     print(f"ecGEM built and saved at {ecModel_output_file}")
 

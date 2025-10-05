@@ -23,10 +23,7 @@ def run_command(cmd: str, logger) -> None:
 
 
 class TaskRunner:
-    """
-    Manage background tasks with independent logging.
-    Enhanced with metadata tracking for better task management.
-    """
+    """Manage background tasks with independent logging and metadata tracking."""
 
     def __init__(self, log_manager: LogManager):
         self.log_manager = log_manager

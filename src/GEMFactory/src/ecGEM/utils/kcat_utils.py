@@ -11,6 +11,15 @@ from src.CASPred.src.model.kcat_model import KcatPredictionModel
 import numpy as np
 from typing import List
 
+def silent_smiles_to_3d(smiles):
+    import os
+    from contextlib import redirect_stdout, redirect_stderr
+    with open(os.devnull, "w") as fnull:
+        with redirect_stdout(fnull), redirect_stderr(fnull):
+            mol = smiles_to_3d_conformer(smiles)
+    return mol
+
+
 def prepare_inference_batch(smiles_list: List[str], protein_list: List[str], esm_model) -> dict:
     """
     Prepare molecular graphs and protein embeddings for batched inference.
@@ -30,7 +39,7 @@ def prepare_inference_batch(smiles_list: List[str], protein_list: List[str], esm
 
     for i, (smiles, seq) in enumerate(zip(smiles_list, protein_list)):
         # === Convert SMILES to 3D molecular graph ===
-        mol_3d = smiles_to_3d_conformer(smiles)
+        mol_3d = silent_smiles_to_3d(smiles)
         if mol_3d is None:
             raise ValueError(f"Failed to generate 3D conformer for SMILES: {smiles}")
 
@@ -74,6 +83,36 @@ def prepare_inference_batch(smiles_list: List[str], protein_list: List[str], esm
         "protein_embedding": torch.stack(padded_embeddings),
     }
 
+def precompute_batch(smiles, proteins, esm_model, device, batch_size=32):
+    """
+    一次性预处理所有分子和蛋白质，供多模型复用
+    """
+    results = []
+
+    iterator = range(0, len(smiles), batch_size)
+    iterator = tqdm(iterator, total=(len(smiles)+batch_size-1)//batch_size, desc="Preprocessing")
+
+    for start in iterator:
+        end = min(start + batch_size, len(smiles))
+        batch_smiles = smiles[start:end]
+        batch_proteins = proteins[start:end]
+
+        valid_indices = [i for i, (s, p) in enumerate(zip(batch_smiles, batch_proteins)) if s and p]
+        invalid_indices = [i for i in range(len(batch_smiles)) if i not in valid_indices]
+
+        if valid_indices:
+            valid_smiles = [batch_smiles[i] for i in valid_indices]
+            valid_proteins = [batch_proteins[i] for i in valid_indices]
+
+            batch = prepare_inference_batch(valid_smiles, valid_proteins, esm_model)
+            batch = {k: v.to(device) for k, v in batch.items()}
+        else:
+            batch = None
+
+        results.append((valid_indices, invalid_indices, batch))
+
+    return results
+
 
 def load_model(config_path: str, model_path: str, device: torch.device):
     """
@@ -107,50 +146,26 @@ def load_model(config_path: str, model_path: str, device: torch.device):
     return model
 
 
-def run_in_batches(smiles, proteins, model, esm_model, batch_size, device, log_transform=True):
-    """
-    Run inference in mini-batches to avoid OOM issues.
-    If a SMILES or protein is None, directly assign kcat=10 for that sample.
-    """
+def run_in_batches_precomputed(precomputed_batches, model, device, log_transform=True):
     results = []
 
-    for start in range(0, len(smiles), batch_size):
-        end = min(start + batch_size, len(smiles))
-        batch_smiles = smiles[start:end]
-        batch_proteins = proteins[start:end]
+    for valid_indices, invalid_indices, batch in precomputed_batches:
+        batch_preds = np.zeros(len(valid_indices) + len(invalid_indices), dtype=np.float32)
 
-        valid_indices = [i for i, (s, p) in enumerate(zip(batch_smiles, batch_proteins)) if s is not None and p is not None]
-        invalid_indices = [i for i in range(len(batch_smiles)) if i not in valid_indices]
-
-        batch_preds = np.zeros(len(batch_smiles), dtype=np.float32)
-
-        # === 如果有有效样本才跑模型 ===
-        if valid_indices:
-            valid_smiles = [batch_smiles[i] for i in valid_indices]
-            valid_proteins = [batch_proteins[i] for i in valid_indices]
-
-            batch = prepare_inference_batch(valid_smiles, valid_proteins, esm_model)
-            batch = {k: v.to(device) for k, v in batch.items()}
-
+        if batch is not None:
             with torch.no_grad():
                 preds = model(
-                    batch["node_s"],
-                    batch["node_v"],
-                    batch["edge_index"],
-                    batch["edge_s"],
-                    batch["edge_v"],
-                    batch["batch_map"],
-                    batch["protein_embedding"],
+                    batch["node_s"], batch["node_v"],
+                    batch["edge_index"], batch["edge_s"], batch["edge_v"],
+                    batch["batch_map"], batch["protein_embedding"],
                 )
             preds = preds.squeeze(-1).cpu().numpy()
             if log_transform:
                 preds = np.power(10, preds)
 
-            # 填入有效预测
             for idx, val in zip(valid_indices, preds):
                 batch_preds[idx] = val
 
-        # === None 样本直接置为 10 ===
         for idx in invalid_indices:
             batch_preds[idx] = 10.0
 
@@ -160,18 +175,15 @@ def run_in_batches(smiles, proteins, model, esm_model, batch_size, device, log_t
 
 
 def ensemble_inference(smiles, proteins, model_paths, config_path, batch_size=32, log_transform=True):
-    """
-    Perform ensemble inference with multiple models and estimate confidence.
-    If a SMILES or protein is None, assign kcat=10 and std/CI=None for that sample.
-    """
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     esm_model = ESMC.from_pretrained("esmc_300m").to(device)
 
-    # 收集每个模型的预测
+    precomputed_batches = precompute_batch(smiles, proteins, esm_model, device, batch_size)
+
     all_preds = []
     for model_path in model_paths:
         model = load_model(config_path, model_path, device)
-        preds = run_in_batches(smiles, proteins, model, esm_model, batch_size, device, log_transform)
+        preds = run_in_batches_precomputed(precomputed_batches, model, device, log_transform)
         all_preds.append(preds)
 
     all_preds = np.stack(all_preds, axis=0)  # (num_models, num_samples)
@@ -205,21 +217,21 @@ def get_kcat_mw(gprdf, result_folder):
 
     gprdf_rex = gprdf.copy()
     # Remove rows with 'None' in Kcat value or molecular weight
-    gprdf_rex = gprdf_rex[gprdf_rex['Kcat value (1/s)'] != 'None']
+    gprdf_rex = gprdf_rex[gprdf_rex['kcat'] != 'None']
     gprdf_rex = gprdf_rex[gprdf_rex['mass'].notna()]
 
     # Convert Kcat value to float
-    gprdf_rex['Kcat value (1/s)'] = gprdf_rex['Kcat value (1/s)'].astype(float)
+    gprdf_rex['kcat'] = gprdf_rex['kcat'].astype(float)
 
     # Sort by Kcat value and keep only the first occurrence of each reaction
-    gprdf_rex = gprdf_rex.sort_values('Kcat value (1/s)', ascending=False).drop_duplicates(subset=['reactions'], keep='first')
-    gprdf_rex['kcat_mw'] = gprdf_rex['Kcat value (1/s)'] * 3600 * 1000 / gprdf_rex['mass']
+    gprdf_rex = gprdf_rex.sort_values('kcat', ascending=False).drop_duplicates(subset=['reactions'], keep='first')
+    gprdf_rex['kcat_mw'] = gprdf_rex['kcat'] * 3600 * 1000 / gprdf_rex['mass']
 
     # Prepare DL_reaction_kact_mw DataFrame
     reaction_kcat_mw = pd.DataFrame()
     reaction_kcat_mw['reactions'] = gprdf_rex['reactions']
     reaction_kcat_mw['data_type'] = 'DLkcat'
-    reaction_kcat_mw['kcat'] = gprdf_rex['Kcat value (1/s)']
+    reaction_kcat_mw['kcat'] = gprdf_rex['kcat']
     reaction_kcat_mw['MW'] = gprdf_rex['mass']
     reaction_kcat_mw['kcat_MW'] = gprdf_rex['kcat_mw']
     reaction_kcat_mw.reset_index(drop=True, inplace=True)
