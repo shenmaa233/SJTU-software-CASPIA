@@ -8,7 +8,15 @@ from src.CASPIAgent.tools import _run_gene_prediction_implementation
 
 def build_agent(model, tools, prompt):
     agent = create_openai_tools_agent(model, tools, prompt)
-    return AgentExecutor(agent=agent, tools=tools, verbose=True, handle_parsing_errors=True)
+    return AgentExecutor(
+        agent=agent, 
+        tools=tools, 
+        verbose=True, 
+        handle_parsing_errors=True,
+        max_iterations=15,  # 限制最大迭代次数，防止无限循环
+        max_execution_time=300,  # 最大执行时间 5 分钟
+        early_stopping_method="generate"  # 达到限制时生成最终答案
+    )
 
 
 

@@ -5,7 +5,7 @@ import gradio as gr
 
 from src.GEMFactory.src.build_GEM import clean_faa, run_carveme
 from src.GEMFactory.src.utils.GeneMarkS import GeneMarkSRunner
-from src.utils import LogManager, TaskRunner
+from src.utils import get_task_manager
 
 GENOME_DIR = "src/GEMFactory/data/Genome"
 
@@ -14,7 +14,7 @@ def list_genomes():
     p = Path(GENOME_DIR)
     p.mkdir(parents=True, exist_ok=True)
     exts = {".fna", ".fa", ".fasta"}
-    return [str(f.resolve()) for f in sorted(p.iterdir()) if f.is_file() and f.suffix.lower() in exts]
+    return [str(f.name) for f in sorted(p.iterdir()) if f.is_file() and f.suffix.lower() in exts]
 
 
 def save_and_refresh(uploaded_path):
@@ -64,16 +64,27 @@ def gem_pipeline(logger, genome_path: str, gapfill: str):
 
 
 # --- Setup ---
-logs = LogManager("./logs")
-runner = TaskRunner(logs)
+# Use global task manager for consistency across all tabs
+runner = get_task_manager()
 
 
 # --- Gradio Callbacks ---
 def start_pipeline(genome_file, gapfill, _sid):
     if genome_file is None or genome_file == "":
         return "", "❌ Please upload a genome file (.fna).", ""
-    sid = runner.start(gem_pipeline, genome_file, gapfill, prefix="gem-")
-    return sid, f"🚧 Running (sid={sid})", logs.read_tail(sid)
+    
+    genome_name = Path(genome_file).name
+    sid = runner.start(
+        gem_pipeline, 
+        genome_file, 
+        gapfill, 
+        prefix="gem-",
+        task_name=f"GEM Pipeline: {genome_name}",
+        task_type="gem_pipeline"
+    )
+    
+    logs, status, _ = runner.poll(sid)
+    return sid, status, logs
 
 
 def poll_pipeline(sid: str):
