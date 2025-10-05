@@ -178,7 +178,7 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="slate"), css=CSS, fill_height=T
         with gr.Column(scale=5, elem_id="app-title"):
             gr.Markdown(
                 '<h1>CASPIA — 2025 SJTU-Software</h1>'
-                '<p class="author">by <a href="https://github.com/victorzhu30" target="_blank">VictorZhu</a></p>'
+                '<p class="author">GitHub <a href="https://github.com/shenmaa233/SJTU-software-CASPIA" target="_blank">SJTU-software-CASPIA</a></p>'
             )
     
     # 标签页

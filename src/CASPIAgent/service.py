@@ -11,7 +11,14 @@ from src.CASPIAgent.tools import (
     predict_kcat, 
     submit_gene_annotation,
     submit_gem_build,
+    submit_ecgem_build,
+    submit_etcgem_build,
     check_task_status,
+    check_model_suitability,
+    list_draft_gem_models,
+    list_ecgem_models,
+    list_etcgem_models,
+    get_model_statistics,
     make_file_prediction_tool
 )
 
@@ -34,7 +41,16 @@ CRITICAL RULES FOR TASK SUBMISSION:
 Available task submission tools:
 - submit_gene_annotation: Submit GeneMarkS annotation job (call ONCE only)
 - submit_gem_build: Submit full GEM building pipeline (call ONCE only)
+- submit_ecgem_build: Submit enzyme-constrained GEM construction (call ONCE only)
+- submit_etcgem_build: Submit enzyme-temperature-constrained GEM construction (call ONCE only)
 - check_task_status: Check status of a submitted task
+
+Model management tools:
+- check_model_suitability: Check if a model is suitable for ecGEM/etcGEM construction
+- list_draft_gem_models: List all available draft GEM models
+- list_ecgem_models: List all built ecGEM models
+- list_etcgem_models: List all built etcGEM models
+- get_model_statistics: Get detailed statistics for a model
 
 For quick operations (like kcat prediction), you can use synchronous tools directly.
 
@@ -61,11 +77,25 @@ class AgentService:
             ("system", "{chat_history}")
         ])
         self.base_tools = [
-            multiply, 
-            predict_kcat, 
+            # Basic tools
+            multiply,
+            
+            # Prediction tools
+            predict_kcat,
+            
+            # Task submission tools
             submit_gene_annotation,
             submit_gem_build,
-            check_task_status
+            submit_ecgem_build,
+            submit_etcgem_build,
+            check_task_status,
+            
+            # Model management tools
+            check_model_suitability,
+            list_draft_gem_models,
+            list_ecgem_models,
+            list_etcgem_models,
+            get_model_statistics
         ]
 
     async def run(self, message, history, uploaded_file, session_state):

@@ -13,9 +13,10 @@ Tools are organized into two categories:
 """
 
 from langchain.tools import tool
-from typing import Dict, Any
+from typing import Dict, Any, List, Optional
 from src.GEMFactory.src.utils.GeneMarkS import GeneMarkSRunner
 from src.GEMFactory.src.build_GEM import clean_faa, run_carveme
+from src.GEMFactory.src.ecGEM.ecgem_service import ECGEMService
 from pathlib import Path
 import os
 import subprocess
@@ -23,8 +24,9 @@ from functools import partial
 from langchain_core.tools import StructuredTool
 from src.utils import get_task_manager
 
-# Get global task manager instance
+# Get global service instances
 _task_manager = get_task_manager()
+_ecgem_service = ECGEMService()
 
 
 # ========================================
@@ -326,6 +328,366 @@ def predict_kcat(smiles: str, protein_sequence: str, log_transform: bool = True)
         }
     finally:
         os.chdir(original_cwd)
+
+
+@tool
+def submit_ecgem_build(
+    model_file_path: str,
+    f: float = 0.405,
+    ptot: float = 0.56,
+    sigma: float = 1.0,
+    lowerbound: float = 0.0
+) -> Dict[str, Any]:
+    """
+    Submit an enzyme-constrained GEM (ecGEM) construction task.
+    Adds enzyme kinetic constraints to improve flux predictions.
+    This is a long-running task (30-120 minutes).
+    
+    Args:
+        model_file_path: Path to draft GEM model file (.xml)
+        f: Fraction of enzymes with available kcat values (0.1-1.0, default: 0.405)
+        ptot: Total protein fraction of cell dry weight in g/gDW (0.1-1.0, default: 0.56)
+        sigma: Average enzyme saturation factor (0.1-2.0, default: 1.0)
+        lowerbound: Lower bound for enzyme constraints (0.0-0.1, default: 0.0)
+        
+    Returns:
+        Dict containing task_id and status message
+    """
+    if not os.path.exists(model_file_path):
+        return {
+            "success": False,
+            "message": f"Model file not found: {model_file_path}"
+        }
+    
+    # Check model suitability first
+    is_suitable, messages = _ecgem_service.check_model_suitability(model_file_path)
+    if not is_suitable:
+        return {
+            "success": False,
+            "message": f"Model is not suitable for ecGEM construction:\n" + "\n".join(messages)
+        }
+    
+    try:
+        task_id = _ecgem_service.build_ecgem(
+            model_file=model_file_path,
+            f=f,
+            ptot=ptot,
+            sigma=sigma,
+            lowerbound=lowerbound
+        )
+        
+        model_name = Path(model_file_path).stem.replace("_draft", "")
+        
+        return {
+            "success": True,
+            "task_id": task_id,
+            "message": f"✅ ecGEM building task submitted successfully.\n"
+                      f"Task ID: {task_id}\n"
+                      f"Model: {model_name}\n"
+                      f"Parameters: f={f}, ptot={ptot}, sigma={sigma}\n"
+                      f"Estimated time: 30-120 minutes\n"
+                      f"Please check progress in the 'Tasks Monitor' tab or use check_task_status tool."
+        }
+    except Exception as e:
+        return {
+            "success": False,
+            "message": f"Failed to submit ecGEM task: {str(e)}"
+        }
+
+
+@tool
+def submit_etcgem_build(
+    model_file_path: str,
+    temperature: float,
+    f: float = 0.405,
+    ptot: float = 0.56,
+    sigma: float = 1.0,
+    lowerbound: float = 0.0
+) -> Dict[str, Any]:
+    """
+    Submit an enzyme-temperature-constrained GEM (etcGEM) construction task.
+    Adds both enzyme kinetics AND temperature-dependent constraints.
+    This is a long-running task (40-150 minutes).
+    
+    Args:
+        model_file_path: Path to draft GEM model file (.xml)
+        temperature: Optimal growth temperature in Celsius (0-100, e.g., 37 for E. coli)
+        f: Fraction of enzymes with available kcat values (0.1-1.0, default: 0.405)
+        ptot: Total protein fraction of cell dry weight in g/gDW (0.1-1.0, default: 0.56)
+        sigma: Average enzyme saturation factor (0.1-2.0, default: 1.0)
+        lowerbound: Lower bound for enzyme constraints (0.0-0.1, default: 0.0)
+        
+    Returns:
+        Dict containing task_id and status message
+    """
+    if not os.path.exists(model_file_path):
+        return {
+            "success": False,
+            "message": f"Model file not found: {model_file_path}"
+        }
+    
+    if temperature < 0 or temperature > 100:
+        return {
+            "success": False,
+            "message": f"Invalid temperature: {temperature}. Must be between 0-100°C"
+        }
+    
+    # Check model suitability first
+    is_suitable, messages = _ecgem_service.check_model_suitability(model_file_path)
+    if not is_suitable:
+        return {
+            "success": False,
+            "message": f"Model is not suitable for etcGEM construction:\n" + "\n".join(messages)
+        }
+    
+    try:
+        task_id = _ecgem_service.build_etcgem(
+            model_file=model_file_path,
+            temperature=temperature,
+            f=f,
+            ptot=ptot,
+            sigma=sigma,
+            lowerbound=lowerbound
+        )
+        
+        model_name = Path(model_file_path).stem.replace("_draft", "")
+        
+        return {
+            "success": True,
+            "task_id": task_id,
+            "message": f"✅ etcGEM building task submitted successfully.\n"
+                      f"Task ID: {task_id}\n"
+                      f"Model: {model_name}\n"
+                      f"Temperature: {temperature}°C\n"
+                      f"Parameters: f={f}, ptot={ptot}, sigma={sigma}\n"
+                      f"Estimated time: 40-150 minutes\n"
+                      f"Please check progress in the 'Tasks Monitor' tab or use check_task_status tool."
+        }
+    except Exception as e:
+        return {
+            "success": False,
+            "message": f"Failed to submit etcGEM task: {str(e)}"
+        }
+
+
+@tool
+def check_model_suitability(model_file_path: str) -> Dict[str, Any]:
+    """
+    Check if a draft GEM model is suitable for enzyme-constrained model construction.
+    Validates metabolite coverage and reaction annotation quality.
+    
+    Args:
+        model_file_path: Path to draft GEM model file (.xml)
+        
+    Returns:
+        Dict containing suitability status and detailed messages
+    """
+    if not os.path.exists(model_file_path):
+        return {
+            "success": False,
+            "is_suitable": False,
+            "message": f"Model file not found: {model_file_path}"
+        }
+    
+    try:
+        is_suitable, messages = _ecgem_service.check_model_suitability(model_file_path)
+        
+        return {
+            "success": True,
+            "is_suitable": is_suitable,
+            "model_file": model_file_path,
+            "details": messages,
+            "message": "✅ Model is suitable for ecGEM/etcGEM construction" if is_suitable 
+                      else "❌ Model is NOT suitable for ecGEM/etcGEM construction",
+            "recommendation": "You can proceed with ecGEM or etcGEM construction." if is_suitable
+                            else "Please use a model with better metabolite and reaction coverage (>25%)."
+        }
+    except Exception as e:
+        return {
+            "success": False,
+            "message": f"Error checking suitability: {str(e)}"
+        }
+
+
+@tool
+def list_draft_gem_models() -> Dict[str, Any]:
+    """
+    List all available draft GEM models that can be used for ecGEM/etcGEM construction.
+    
+    Returns:
+        Dict containing list of draft GEM models with metadata
+    """
+    try:
+        models = _ecgem_service.list_draft_models()
+        
+        if not models:
+            return {
+                "success": True,
+                "count": 0,
+                "models": [],
+                "message": "No draft GEM models found. Please build a draft GEM first using submit_gem_build tool."
+            }
+        
+        model_list = []
+        for model in models:
+            model_list.append({
+                "name": model["name"],
+                "path": model["path"],
+                "size_mb": round(model["size"] / 1024 / 1024, 2),
+                "modified": model["modified"]
+            })
+        
+        return {
+            "success": True,
+            "count": len(models),
+            "models": model_list,
+            "message": f"Found {len(models)} draft GEM model(s)"
+        }
+    except Exception as e:
+        return {
+            "success": False,
+            "message": f"Error listing models: {str(e)}"
+        }
+
+
+@tool
+def list_ecgem_models() -> Dict[str, Any]:
+    """
+    List all built enzyme-constrained GEM (ecGEM) models.
+    
+    Returns:
+        Dict containing list of ecGEM models with metadata
+    """
+    try:
+        models = _ecgem_service.list_ecgem_models()
+        
+        if not models:
+            return {
+                "success": True,
+                "count": 0,
+                "models": [],
+                "message": "No ecGEM models found. Build one using submit_ecgem_build tool."
+            }
+        
+        model_list = []
+        for model in models:
+            model_list.append({
+                "name": model["name"],
+                "path": model["path"],
+                "folder": model["folder"],
+                "size_mb": round(model["size"] / 1024 / 1024, 2),
+                "modified": model["modified"]
+            })
+        
+        return {
+            "success": True,
+            "count": len(models),
+            "models": model_list,
+            "message": f"Found {len(models)} ecGEM model(s)"
+        }
+    except Exception as e:
+        return {
+            "success": False,
+            "message": f"Error listing ecGEM models: {str(e)}"
+        }
+
+
+@tool
+def list_etcgem_models() -> Dict[str, Any]:
+    """
+    List all built enzyme-temperature-constrained GEM (etcGEM) models.
+    
+    Returns:
+        Dict containing list of etcGEM models with metadata
+    """
+    try:
+        models = _ecgem_service.list_etcgem_models()
+        
+        if not models:
+            return {
+                "success": True,
+                "count": 0,
+                "models": [],
+                "message": "No etcGEM models found. Build one using submit_etcgem_build tool."
+            }
+        
+        model_list = []
+        for model in models:
+            model_list.append({
+                "name": model["name"],
+                "path": model["path"],
+                "folder": model["folder"],
+                "temperature": model.get("temperature"),
+                "size_mb": round(model["size"] / 1024 / 1024, 2),
+                "modified": model["modified"]
+            })
+        
+        return {
+            "success": True,
+            "count": len(models),
+            "models": model_list,
+            "message": f"Found {len(models)} etcGEM model(s)"
+        }
+    except Exception as e:
+        return {
+            "success": False,
+            "message": f"Error listing etcGEM models: {str(e)}"
+        }
+
+
+@tool
+def get_model_statistics(model_folder_path: str) -> Dict[str, Any]:
+    """
+    Get detailed statistics for a built ecGEM or etcGEM model.
+    Shows information about intermediate files and model construction results.
+    
+    Args:
+        model_folder_path: Path to the model result folder
+        
+    Returns:
+        Dict containing model statistics and file information
+    """
+    if not os.path.exists(model_folder_path):
+        return {
+            "success": False,
+            "message": f"Model folder not found: {model_folder_path}"
+        }
+    
+    try:
+        stats = _ecgem_service.get_model_stats(model_folder_path)
+        
+        if not stats:
+            return {
+                "success": False,
+                "message": f"Unable to retrieve statistics for: {model_folder_path}"
+            }
+        
+        # Format file information
+        files_info = []
+        for filename, info in stats.get("files", {}).items():
+            if info.get("exists"):
+                file_info = {
+                    "filename": filename,
+                    "size_kb": round(info["size"] / 1024, 2),
+                    "path": info["path"]
+                }
+                if "rows" in info:
+                    file_info["rows"] = info["rows"]
+                if "columns" in info:
+                    file_info["columns"] = info["columns"]
+                files_info.append(file_info)
+        
+        return {
+            "success": True,
+            "folder": stats["folder"],
+            "files": files_info,
+            "message": f"Retrieved statistics for {len(files_info)} file(s) in model folder"
+        }
+    except Exception as e:
+        return {
+            "success": False,
+            "message": f"Error getting model statistics: {str(e)}"
+        }
 
 
 @tool
