@@ -134,7 +134,7 @@ async def chat_with_agent(message, history, uploaded_file_path, session_state):
             elif event_name == "on_tool_end":
                 tool_name = event.get("name", "unknown")
                 output = str(event["data"].get("output", ""))[:200]
-                tool_calls_text += f"✅ {tool_name} finished\n{output}\n\n"
+                tool_calls_text += f"✅ {tool_name} finished\n"
                 yield history, tool_calls_text, session_state
             
             # Streaming content

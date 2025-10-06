@@ -15,11 +15,17 @@ class LogManager:
 
     def new_session(self, prefix: str = "task-") -> str:
         """Create a new session with its own log file."""
-        sid = (prefix + uuid.uuid4().hex)[:12]
+        # Generate unique ID: prefix + 8 chars of UUID (ensures uniqueness even with long prefix)
+        unique_id = uuid.uuid4().hex[:8]
+        sid = f"{prefix}{unique_id}"
         log_file = self.log_dir / f"{sid}.log"
 
         logger = logging.getLogger(sid)
         logger.setLevel(logging.INFO)
+        logger.propagate = False  # Prevent propagation to root logger
+        
+        # Clear existing handlers to avoid conflicts
+        logger.handlers.clear()
 
         handler = TimedRotatingFileHandler(
             filename=log_file,
@@ -31,10 +37,8 @@ class LogManager:
         fmt = logging.Formatter("[%(asctime)s] %(levelname)s - %(message)s",
                                 datefmt="%Y-%m-%d %H:%M:%S")
         handler.setFormatter(fmt)
-
-        # Avoid duplicate handlers
-        if not logger.handlers:
-            logger.addHandler(handler)
+        
+        logger.addHandler(handler)
 
         self._loggers[sid] = (logger, log_file)
         return sid

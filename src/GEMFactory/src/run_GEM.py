@@ -19,7 +19,12 @@ if not jpype.isJVMStarted():
     )
 
 import straindesign as sd
-from .utils import *
+from .ecGEM.utils import (
+    get_enzyme_constraint_model,
+    get_model_substrate_obj,
+    get_fluxes_detail_in_model,
+    load_model
+)
 
 # ===============================================================
 # ecGEM FBA 功能

@@ -9,7 +9,7 @@ Provides clean API for Web UI integration.
 import os
 import pandas as pd
 from pathlib import Path
-from typing import Dict, Optional, Tuple
+from typing import Dict, Optional, Tuple, List
 from src.utils import get_task_manager
 from .utils import *
 
@@ -420,4 +420,270 @@ class ECGEMService:
                 stats["files"][filename] = {"exists": False}
         
         return stats
+    
+    def run_gem_analysis(
+        self,
+        model_file: str,
+        algorithm: str,
+        obj: Optional[str] = None,
+        substrate: str = "EX_glc__D_e",
+        concentration: float = 10.0,
+        result_folder: Optional[str] = None
+    ) -> str:
+        """
+        Submit GEM analysis task (FBA/pFBA/FVA for draft GEM, ecGEM for ec/etcGEM).
+        
+        Args:
+            model_file: Path to model file (draft GEM XML or ecGEM JSON)
+            algorithm: Algorithm to use ("FBA", "pFBA", "FVA", "ecGEM")
+            obj: Target reaction ID (default: auto-detect biomass)
+            substrate: Substrate reaction ID (for ecGEM only)
+            concentration: Substrate concentration (for ecGEM only)
+            result_folder: Optional custom output folder
+            
+        Returns:
+            Task ID
+        """
+        model_name = os.path.basename(model_file).replace("_draft.xml", "").replace(".xml", "").replace(".json", "")
+        
+        if result_folder is None:
+            model_dir = os.path.dirname(model_file)
+            result_folder = f"{model_dir}/analysis_result"
+        
+        task_id = self.task_manager.start(
+            self._run_gem_analysis_task,
+            model_file,
+            algorithm,
+            obj,
+            substrate,
+            concentration,
+            result_folder,
+            prefix="gem-analysis-",
+            task_name=f"GEM Analysis: {model_name} ({algorithm})",
+            task_type="gem_analysis"
+        )
+        
+        return task_id
+    
+    def _run_gem_analysis_task(
+        self,
+        logger,
+        model_file: str,
+        algorithm: str,
+        obj: Optional[str],
+        substrate: str,
+        concentration: float,
+        result_folder: str
+    ) -> str:
+        """Background task for running GEM analysis"""
+        import sys
+        import jpype
+        
+        os.makedirs(result_folder, exist_ok=True)
+        
+        logger.info("="*60)
+        logger.info(f"🔬 Running GEM Analysis: {algorithm}")
+        logger.info("="*60)
+        logger.info(f"Model: {model_file}")
+        logger.info(f"Output: {result_folder}")
+        
+        # 确保 JVM 启动（用于 straindesign）
+        if algorithm in ["FBA", "pFBA", "FVA"]:
+            java_install_path = os.getenv("JAVA_HOME")
+            if java_install_path:
+                os.environ['JAVA_HOME'] = java_install_path
+                logger.info(f"JAVA_HOME set to: {java_install_path}")
+            
+            if not jpype.isJVMStarted():
+                try:
+                    jpype.startJVM(
+                        jpype.getDefaultJVMPath(),
+                        "--enable-native-access=ALL-UNNAMED"
+                    )
+                    logger.info("JVM started successfully")
+                except Exception as e:
+                    logger.warning(f"JVM startup warning: {e}")
+        
+        # 导入必要的模块
+        from ..run_GEM import run_ecGEM_fba, run_straindesign
+        
+        if algorithm == "ecGEM":
+            logger.info(f"Parameters: obj={obj}, substrate={substrate}, concentration={concentration}")
+            optimal_value = run_ecGEM_fba(
+                model_file, result_folder,
+                obj=obj, use_substrate=substrate, concentration=concentration
+            )
+            logger.info(f"✅ Optimal value (ecGEM pFBA): {optimal_value}")
+            result_file = f"{result_folder}/ECMpy_solution_{obj or 'biomass'}_pfba.csv"
+        else:
+            logger.info(f"Parameters: obj={obj}")
+            optimal_value = run_straindesign(
+                model_file, algorithm=algorithm,
+                target_reaction_id=obj, result_folder=result_folder
+            )
+            if optimal_value is not None:
+                logger.info(f"✅ Optimal value ({algorithm}): {optimal_value}")
+            else:
+                logger.info(f"✅ {algorithm} analysis completed")
+            result_file = f"{result_folder}/straindesign_{algorithm}_solution.csv"
+        
+        logger.info("="*60)
+        logger.info(f"✅ Analysis Complete!")
+        logger.info(f"Results saved to: {result_file}")
+        logger.info("="*60)
+        
+        return result_file
+    
+    def run_ko_oe_analysis(
+        self,
+        model_file: str,
+        analysis_type: str,
+        target_ids: Optional[List[str]] = None,
+        production_target: Optional[str] = None,
+        knockout_threshold: float = 0.01,
+        oe_fold_changes: List[float] = None,
+        result_folder: Optional[str] = None
+    ) -> str:
+        """
+        Submit KO/OE analysis task
+        
+        Args:
+            model_file: Path to model file
+            analysis_type: Type of analysis ("knockout_reaction", "knockout_gene", "overexpression", "comprehensive")
+            target_ids: Specific target IDs to analyze (if None, analyze all)
+            production_target: Target reaction ID for production optimization
+            knockout_threshold: Threshold for essential identification
+            oe_fold_changes: Fold changes for overexpression (default: [2.0, 5.0, 10.0])
+            result_folder: Optional custom output folder
+            
+        Returns:
+            Task ID
+        """
+        if oe_fold_changes is None:
+            oe_fold_changes = [2.0, 5.0, 10.0]
+        
+        model_name = os.path.basename(model_file).replace("_draft.xml", "").replace(".xml", "").replace(".json", "")
+        
+        if result_folder is None:
+            model_dir = os.path.dirname(model_file)
+            result_folder = f"{model_dir}/ko_oe_analysis"
+        
+        task_id = self.task_manager.start(
+            self._run_ko_oe_analysis_task,
+            model_file,
+            analysis_type,
+            target_ids,
+            production_target,
+            knockout_threshold,
+            oe_fold_changes,
+            result_folder,
+            prefix="ko-oe-",
+            task_name=f"KO/OE Analysis: {model_name} ({analysis_type})",
+            task_type="ko_oe_analysis"
+        )
+        
+        return task_id
+    
+    def _run_ko_oe_analysis_task(
+        self,
+        logger,
+        model_file: str,
+        analysis_type: str,
+        target_ids: Optional[List[str]],
+        production_target: Optional[str],
+        knockout_threshold: float,
+        oe_fold_changes: List[float],
+        result_folder: str
+    ) -> str:
+        """Background task for running KO/OE analysis"""
+        from ..ko_oe_analysis import (
+            load_model,
+            batch_knockout_reactions,
+            batch_knockout_genes,
+            batch_overexpression_analysis,
+            analyze_ko_oe_targets,
+            find_essential_reactions,
+            find_essential_genes
+        )
+        
+        os.makedirs(result_folder, exist_ok=True)
+        
+        logger.info("="*60)
+        logger.info(f"🧬 Running KO/OE Analysis: {analysis_type}")
+        logger.info("="*60)
+        logger.info(f"Model: {model_file}")
+        logger.info(f"Output: {result_folder}")
+        logger.info(f"Knockout Threshold: {knockout_threshold}")
+        
+        # Load model
+        logger.info("Loading model...")
+        model = load_model(model_file)
+        
+        # Set objective if production target is specified
+        if production_target:
+            logger.info(f"Setting objective to: {production_target}")
+            model.objective = production_target
+        
+        result_files = []
+        
+        if analysis_type == "knockout_reaction":
+            logger.info("Performing reaction knockout analysis...")
+            df = batch_knockout_reactions(model, target_ids, result_folder)
+            logger.info(f"Analyzed {len(df)} reactions")
+            
+            # Find essential reactions
+            essential = find_essential_reactions(model, df, knockout_threshold)
+            logger.info(f"Found {len(essential)} essential reactions")
+            
+            result_files.append(f"{result_folder}/knockout_reaction_results.csv")
+            
+        elif analysis_type == "knockout_gene":
+            logger.info("Performing gene knockout analysis...")
+            df = batch_knockout_genes(model, target_ids, result_folder)
+            logger.info(f"Analyzed {len(df)} genes")
+            
+            # Find essential genes
+            essential = find_essential_genes(model, df, knockout_threshold)
+            logger.info(f"Found {len(essential)} essential genes")
+            
+            result_files.append(f"{result_folder}/knockout_gene_results.csv")
+            
+        elif analysis_type == "overexpression":
+            logger.info(f"Performing overexpression analysis with fold changes: {oe_fold_changes}")
+            df = batch_overexpression_analysis(model, target_ids, oe_fold_changes, result_folder)
+            logger.info(f"Analyzed {len(df)} overexpression scenarios")
+            
+            result_files.append(f"{result_folder}/overexpression_results.csv")
+            
+        elif analysis_type == "comprehensive":
+            logger.info("Performing comprehensive KO/OE analysis...")
+            results = analyze_ko_oe_targets(
+                model, result_folder, production_target,
+                knockout_threshold, oe_fold_changes
+            )
+            
+            logger.info(f"✅ Reaction knockouts: {len(results['reaction_knockout'])}")
+            logger.info(f"✅ Gene knockouts: {len(results['gene_knockout'])}")
+            logger.info(f"✅ Essential reactions: {len(results['essential_reactions'])}")
+            logger.info(f"✅ Essential genes: {len(results['essential_genes'])}")
+            logger.info(f"✅ Overexpression scenarios: {len(results['overexpression'])}")
+            
+            result_files = [
+                f"{result_folder}/knockout_reaction_results.csv",
+                f"{result_folder}/knockout_gene_results.csv",
+                f"{result_folder}/essential_reactions.csv",
+                f"{result_folder}/essential_genes.csv",
+                f"{result_folder}/overexpression_results.csv"
+            ]
+        else:
+            raise ValueError(f"Unknown analysis type: {analysis_type}")
+        
+        logger.info("="*60)
+        logger.info("✅ KO/OE Analysis Complete!")
+        logger.info(f"Results saved to: {result_folder}")
+        for f in result_files:
+            logger.info(f"  - {f}")
+        logger.info("="*60)
+        
+        return result_folder
 
