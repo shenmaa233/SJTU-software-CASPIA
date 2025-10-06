@@ -35,6 +35,193 @@ _ecgem_service = ECGEMService()
 # These tools submit tasks to background workers and return immediately.
 # Users should check the "Tasks Monitor" tab for progress.
 
+@tool
+def submit_gem_analysis(
+    model_file_path: str,
+    algorithm: str,
+    obj: Optional[str] = None,
+    substrate: str = "EX_glc__D_e",
+    concentration: float = 10.0,
+    result_folder: Optional[str] = None
+) -> Dict[str, Any]:
+    """
+    Submit GEM analysis task (FBA/pFBA/FVA for draft GEM, ecGEM for ec/etcGEM).
+    This is a long-running task. The tool returns immediately with a task ID.
+    
+    Args:
+        model_file_path: Path to model file (draft GEM XML or ecGEM JSON)
+        algorithm: Algorithm to use, options: "FBA", "pFBA", "FVA", "ecGEM"
+        obj: Target reaction ID (default: auto-detect biomass reaction)
+        substrate: Substrate reaction ID (for ecGEM only, default: "EX_glc__D_e")
+        concentration: Substrate concentration in mmol/gDW/h (for ecGEM only, default: 10.0)
+        result_folder: Optional custom output folder (default: model_dir/analysis_result)
+        
+    Returns:
+        Dict containing task_id and status message
+    """
+    if not os.path.exists(model_file_path):
+        return {
+            "success": False,
+            "message": f"Model file not found: {model_file_path}"
+        }
+    
+    # Validate algorithm
+    valid_algorithms = ["FBA", "pFBA", "FVA", "ecGEM"]
+    if algorithm not in valid_algorithms:
+        return {
+            "success": False,
+            "message": f"Invalid algorithm: {algorithm}. Must be one of {valid_algorithms}"
+        }
+    
+    # Validate file type matches algorithm
+    if algorithm in ["FBA", "pFBA", "FVA"] and not model_file_path.endswith(".xml"):
+        return {
+            "success": False,
+            "message": f"Algorithm {algorithm} requires a draft GEM XML file, but got: {model_file_path}"
+        }
+    
+    if algorithm == "ecGEM" and not model_file_path.endswith(".json"):
+        return {
+            "success": False,
+            "message": f"Algorithm ecGEM requires an ecGEM JSON file, but got: {model_file_path}"
+        }
+    
+    try:
+        task_id = _ecgem_service.run_gem_analysis(
+            model_file=model_file_path,
+            algorithm=algorithm,
+            obj=obj,
+            substrate=substrate,
+            concentration=concentration,
+            result_folder=result_folder
+        )
+        
+        model_name = Path(model_file_path).stem
+        
+        result_msg = f"✅ GEM analysis task submitted successfully.\n"
+        result_msg += f"Task ID: {task_id}\n"
+        result_msg += f"Model: {model_name}\n"
+        result_msg += f"Algorithm: {algorithm}\n"
+        
+        if algorithm == "ecGEM":
+            result_msg += f"Parameters: substrate={substrate}, concentration={concentration}\n"
+        
+        if algorithm == "FVA":
+            result_msg += "Estimated time: 5-20 minutes (FVA takes longer than FBA/pFBA)\n"
+        else:
+            result_msg += "Estimated time: 1-10 minutes\n"
+        
+        result_msg += "Please check progress in the 'Tasks Monitor' tab or use check_task_status tool."
+        
+        return {
+            "success": True,
+            "task_id": task_id,
+            "message": result_msg
+        }
+    except Exception as e:
+        return {
+            "success": False,
+            "message": f"Failed to submit GEM analysis task: {str(e)}"
+        }
+
+
+@tool
+def submit_ko_oe_analysis(
+    model_file_path: str,
+    analysis_type: str,
+    target_ids: Optional[List[str]] = None,
+    production_target: Optional[str] = None,
+    knockout_threshold: float = 0.01,
+    oe_fold_changes: Optional[List[float]] = None,
+    result_folder: Optional[str] = None
+) -> Dict[str, Any]:
+    """
+    Submit KO (Knockout) or OE (Overexpression) analysis task for metabolic engineering.
+    Identifies essential genes/reactions and optimal overexpression targets.
+    This is a long-running task. The tool returns immediately with a task ID.
+    
+    Args:
+        model_file_path: Path to model file (draft GEM XML or ecGEM JSON)
+        analysis_type: Type of analysis, options: "knockout_reaction", "knockout_gene", "overexpression", "comprehensive"
+        target_ids: List of specific target IDs to analyze (if None, analyze all)
+        production_target: Target reaction ID for production optimization (optional)
+        knockout_threshold: Threshold for essential identification (default: 0.01, means <1% of original growth)
+        oe_fold_changes: List of fold changes for overexpression (default: [2.0, 5.0, 10.0])
+        result_folder: Optional custom output folder (default: model_dir/ko_oe_analysis)
+        
+    Returns:
+        Dict containing task_id and status message
+    """
+    if not os.path.exists(model_file_path):
+        return {
+            "success": False,
+            "message": f"Model file not found: {model_file_path}"
+        }
+    
+    # Validate analysis type
+    valid_types = ["knockout_reaction", "knockout_gene", "overexpression", "comprehensive"]
+    if analysis_type not in valid_types:
+        return {
+            "success": False,
+            "message": f"Invalid analysis type: {analysis_type}. Must be one of {valid_types}"
+        }
+    
+    # Validate knockout threshold
+    if knockout_threshold < 0 or knockout_threshold > 1:
+        return {
+            "success": False,
+            "message": f"Invalid knockout threshold: {knockout_threshold}. Must be between 0 and 1"
+        }
+    
+    try:
+        task_id = _ecgem_service.run_ko_oe_analysis(
+            model_file=model_file_path,
+            analysis_type=analysis_type,
+            target_ids=target_ids,
+            production_target=production_target,
+            knockout_threshold=knockout_threshold,
+            oe_fold_changes=oe_fold_changes,
+            result_folder=result_folder
+        )
+        
+        model_name = Path(model_file_path).stem
+        
+        result_msg = f"✅ KO/OE analysis task submitted successfully.\n"
+        result_msg += f"Task ID: {task_id}\n"
+        result_msg += f"Model: {model_name}\n"
+        result_msg += f"Analysis Type: {analysis_type}\n"
+        
+        if production_target:
+            result_msg += f"Production Target: {production_target}\n"
+        
+        if target_ids:
+            result_msg += f"Target Count: {len(target_ids)} specific targets\n"
+        else:
+            result_msg += "Target Count: All targets (genome-wide analysis)\n"
+        
+        if analysis_type == "overexpression":
+            fold_changes = oe_fold_changes if oe_fold_changes else [2.0, 5.0, 10.0]
+            result_msg += f"Fold Changes: {fold_changes}\n"
+        
+        if analysis_type == "comprehensive":
+            result_msg += "Estimated time: 10-60 minutes (comprehensive analysis)\n"
+        elif analysis_type == "overexpression":
+            result_msg += "Estimated time: 5-30 minutes (depending on targets)\n"
+        else:
+            result_msg += "Estimated time: 5-20 minutes (depending on targets)\n"
+        
+        result_msg += "Please check progress in the 'Tasks Monitor' tab or use check_task_status tool."
+        
+        return {
+            "success": True,
+            "task_id": task_id,
+            "message": result_msg
+        }
+    except Exception as e:
+        return {
+            "success": False,
+            "message": f"Failed to submit KO/OE analysis task: {str(e)}"
+        }
 
 def _gene_annotation_task(logger, genome_path: str) -> str:
     """
@@ -50,7 +237,7 @@ def _gene_annotation_task(logger, genome_path: str) -> str:
     logger.info(f"Starting GeneMarkS annotation for: {genome_path}")
     
     output_dir = os.path.join(os.path.dirname(genome_path), "genemarks_output")
-    runner = GeneMarkSRunner(gms_script_path="/home/shenmaa/gms2_linux_64/gms2.pl")
+    runner = GeneMarkSRunner(gms_script_path=os.environ.get("GMS_SCRIPT_PATH"))
     
     results = runner.run(
         input_fasta=genome_path,
@@ -80,7 +267,7 @@ def _gem_build_task(logger, genome_path: str, gapfill: str = "None") -> str:
     
     # Step 1: GeneMarkS
     logger.info("🔬 Step 1/3: Running GeneMarkS annotation...")
-    gms_runner = GeneMarkSRunner(gms_script_path="/home/shenmaa/gms2_linux_64/gms2.pl")
+    gms_runner = GeneMarkSRunner(gms_script_path=os.environ.get("GMS_SCRIPT_PATH"))
     gms_outputs = gms_runner.run(
         input_fasta=genome_path,
         output_dir="src/GEMFactory/data/GeneMarkS",
@@ -688,21 +875,6 @@ def get_model_statistics(model_folder_path: str) -> Dict[str, Any]:
             "success": False,
             "message": f"Error getting model statistics: {str(e)}"
         }
-
-
-@tool
-def multiply(x: int, y: int) -> int:
-    """
-    Multiply two numbers (demo tool for testing).
-    
-    Args:
-        x: First number
-        y: Second number
-        
-    Returns:
-        Product of x and y
-    """
-    return x * y
 
 
 # ========================================

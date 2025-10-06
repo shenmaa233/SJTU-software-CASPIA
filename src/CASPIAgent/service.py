@@ -7,12 +7,13 @@ from langchain_openai import ChatOpenAI
 from src.CASPIAgent.utils import build_agent
 from src.CASPIAgent.conversation import format_input_message, convert_history
 from src.CASPIAgent.tools import (
-    multiply, 
     predict_kcat, 
     submit_gene_annotation,
     submit_gem_build,
     submit_ecgem_build,
     submit_etcgem_build,
+    submit_gem_analysis,
+    submit_ko_oe_analysis,
     check_task_status,
     check_model_suitability,
     list_draft_gem_models,
@@ -43,6 +44,8 @@ Available task submission tools:
 - submit_gem_build: Submit full GEM building pipeline (call ONCE only)
 - submit_ecgem_build: Submit enzyme-constrained GEM construction (call ONCE only)
 - submit_etcgem_build: Submit enzyme-temperature-constrained GEM construction (call ONCE only)
+- submit_gem_analysis: Submit GEM analysis task (FBA/pFBA/FVA for draft GEM, ecGEM for ec/etcGEM) (call ONCE only)
+- submit_ko_oe_analysis: Submit knockout/overexpression analysis for metabolic engineering (call ONCE only)
 - check_task_status: Check status of a submitted task
 
 Model management tools:
@@ -77,9 +80,6 @@ class AgentService:
             ("system", "{chat_history}")
         ])
         self.base_tools = [
-            # Basic tools
-            multiply,
-            
             # Prediction tools
             predict_kcat,
             
@@ -88,6 +88,8 @@ class AgentService:
             submit_gem_build,
             submit_ecgem_build,
             submit_etcgem_build,
+            submit_gem_analysis,
+            submit_ko_oe_analysis,
             check_task_status,
             
             # Model management tools
