@@ -1,0 +1,358 @@
+[
+    {
+        "type": "text",
+        "text": "In Silico Identification of Gene Amplification Targets for Improvement of Lycopene Production∇† ",
+        "text_level": 1,
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "Hyung Seok Choi $^ { 1 , 2 }$ Sang Yup Lee,12,3\\* Tae Yong Kim, 12 and Han Min Wo01,2 ",
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "Metabolic and Biomolecular Engineering National Research Laboratory, Department of Chemical and Biomolecular Engineering (BK21 Program), KAIST, Daejeon 305-701, Republic of Korea1; Center for Systems and Synthetic Biotechnology, Institute for the BioCentury, KAIST, Daejeon 305-701, Republic of Korea²; and Department of Bio and Brain Engineering, BioProcess Engineering Research Center and Bioinformatics Research Center, KAIST, Daejeon 305-701, Republic of Korea3 ",
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "Received 16 January 2010/Accepted 15 March 2010 ",
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "The identifcation of genes to be deleted or amplified is an essential step in metabolic engineering for strain improvement toward the enhanced production of desired bioproducts. In the past, several methods based on fux analysis of genome-scale metabolic models have been developed for identifying gene targets for deletion. Genome-wide identifcation of gene targets for amplifcation, on the other hand, has been rather diff cult. Here, we report a strategy called flux scanning based on enforced objective flux (FSEOF) to identify gene amplification targets. FSEOF scans all the metabolic fuxes in the metabolic model and selects fuxes that increase when the fux toward product formation is enforced as an aditional constraint during flux analysis. This strategy was successfully employed for the identifcation of gene amplifcation targets for the enhanced production of the red-colored antioxidant lycopene. Additional metabolic engineering based on gene knockout simulation resulted in further synergistic enhancement of lycopene production. Thus, FSEOF can be used as a general strategy for selecting genome-wide gene amplifcation targets in silico. ",
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "One of the ultimate objectives of industrial biotechnology is the improvement of the yields and productivities of bioproducts. Toward this end, metabolic engineering has been successfully employed in improving industrial strains and has recently become more powerful due to the integration of omics and computational methods at the systems level (19, 27). Metabolic engineering improves the metabolic phenotype toward the overproduction of a desired product by the amplification and/or deletion of certain metabolic genes, together with the rewiring of regulatory circuits (10, 14). ",
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "Recent systemic approaches employing genome-scale metabolic models (7) have enabled researchers to identify gene deletion targets for improving microbial strains (1, 4, 30, 31) by utilizing various algorithms. For example, the nested optimization framework using mixed-integer linear programming (OptKnock)(4, 25) and a sequential gene deletion strategy based on the formalism of minimization of metabolic adjustment (MOMA) (1, 31) allowed successful identification of the genes to be deleted among a large number of gene candidates. Using this strategy in combination with regulatory engineering and omics analysis, systems-level metabolic engineering was performed for developing L-valine- and L-threonine-overproducing Escherichia coli strains (16, 24). ",
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "However, it has been difficult to identify gene amplification targets by similar approaches. This is because predicting the metabolic phenotypes after gene deletion is much easier than predicting the metabolic phenotype after gene amplification; gene deletion causes the corresponding flux to become zero, while gene amplification does not necessarily increase the corresponding metabolic fluxes, due to complex regulation of the metabolic network. Additionally, it is even more difficult to predict how much the flux will increase upon gene amplification. A creative algorithm, OptReg, has been developed (26), but its use in actual strain development has not been reported. $^ { 1 3 } \\mathrm { C }$ -based metabolic flux analysis (3) can also be used to identify gene amplification targets, but it is difficult to make predictions in a genome-scale metabolic network. Recently, Fowler and coworkers suggested a strategy for identifying gene overexpression targets based on the necessity ratio, defined as the ratio of a pathway flux under two different objective functions (9). The approach is simple and useful when the relationship between the perturbed intracellular fl ux and the product formation rate is monotonic. However, the relationship between the intracellular flux and the product formation rate has various patterns which are nonmonotonic and can result in erroneous predictions when using the necessity ratio. Here, we report the development of a strategy for identifying gene amplifi cation targets and its application in strain development to enhance the production of a target product, using the red-colored antioxidant lycopene as an example. Also, the results of the combined application of both gene amplification and gene knockout simulation for lycopene overproduction are reported. ",
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "",
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "MATERIALS AND METHODS ",
+        "text_level": 1,
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "Strains and media. All strains used in this study are listed in Table $1 , E$ coli XL1-Blue was used as a host strain for recombinant DNA work. It was routinely cultured in Luria-Bertani (LB) medium ( $_ { \\textrm { \\scriptsize 1 0 g } }$ Bacto tryptone, $5 \\mathrm { \\textrm { g } }$ yeast extract, and $1 0 \\mathrm { ~ g ~ N a C l }$ per liter; Difco) at $3 7 ^ { \\circ } \\mathrm { C }$ . $E$ coli $\\mathrm { D H } 5 \\alpha$ and wL3110 (lacI mutant of w3110) (16) were used as host strains for lycopene production. Cells were cultured at $3 0 ^ { \\circ } \\mathrm { C }$ for $4 8 \\mathrm { ~ h ~ }$ in a $2 5 0 \\mathrm { - m l }$ fl ask containing $5 0 \\mathrm { m l }$ of $2 \\times \\mathrm { Y T }$ medium $\\boldsymbol { 1 6 \\mathrm { \\ g } }$ Bacto tryptone, $1 0 \\ \\mathrm { g }$ yeast extract, $5 \\ \\mathrm { g \\ N a C l }$ per liter; Difco) (6). All mutant strains were constructed from $E$ coli W3110 by the one-step inactivation method using the RED recombinase system (5). For the batch fermentation, recombinant $E$ . coli W3110 strains were cultivated at $3 0 ^ { \\circ } \\mathrm { C }$ in a 6.6-liter Bioflo 3000 fermentor (New Brunswick Scientific) containing 2 liters of R/2 medium plus $2 0 \\mathrm { ~ g ~ l i t e r ^ { - 1 } }$ glucose and $2 \\ { \\mathrm { g } } \\ { \\mathrm { l i t e r } } ^ { - 1 }$ yeast extract. $\\mathrm { R } / 2$ medium $\\mathrm { ( p H ~ 6 . 8 ) }$ contains, per iter, $\\mathrm { ~ 2 ~ g ~ ( N H _ { 4 } ) _ { 2 } H P O _ { 4 } }$ , $6 . 7 5 \\mathrm { ~ g ~ }$ ${ \\mathrm { K H } } _ { 2 } { \\mathrm { P O } } _ { 4 }$ , $0 . 8 5 \\ \\mathrm { g }$ citric acid, $0 . 7 \\mathrm { ~ g ~ M g S O } _ { 4 } \\cdot 7 \\mathrm { H } _ { 2 } \\mathrm { O }$ ,and $5 ~ \\mathrm { m l }$ of a trace metal solution $[ 1 0 \\mathrm { ~ g ~ F e S O } _ { 4 } \\cdot 7 \\mathrm { H } _ { 2 } \\mathrm { O }$ $, 2 . 2 5 \\mathrm { ~ g ~ Z n S O _ { 4 } \\cdot 7 H _ { 2 } O }$ , $1 \\mathrm { ~ g ~ C u S O } _ { 4 } \\cdot 5 \\mathrm { H } _ { 2 } \\mathrm { O }$ $_ { 0 . 5 \\mathrm { ~ g ~ } }$ $\\mathrm { M n S O } _ { 4 } \\cdot 5 \\mathrm { H } _ { 2 } \\mathrm { O }$ ,0 $. 2 3 \\textrm {  { g } } \\mathrm { N a _ { 2 } B _ { 4 } O _ { 7 } \\cdot 1 0 H _ { 2 } O }$ $\\mathrm { 2 g ~ \\ C a C l _ { 2 } } \\cdot \\mathrm { 2 H _ { 2 } O }$ $_ { \\mathrm { ~ 0 . 1 ~ g ~ } }$ $( \\mathrm { N H } _ { 4 } ) _ { 6 } \\mathrm { M O } _ { 7 } \\mathrm { O } _ { 2 4 }$ per liter of $5 \\mathrm { ~ M ~ H C l } ]$ . Ampicillin $( 5 0 \\ \\mu \\mathrm { g } \\ \\mathrm { l i t e r } ^ { - 1 } .$ ), chloram$( 3 4 ~ \\mu \\mathrm { g } \\mathrm { ~ l i t e r ^ { - 1 } } ,$ , anamycin $( 2 5 ~ \\mu \\mathrm { g } ~ \\mathrm { l i t e r } ^ { - 1 }$ $( 5 ~ \\mu \\mathrm { g }$ liter−1) was added depending on the antibiotic markers. Cell growth was monitored by measuring the absorbance at $6 0 0 ~ \\mathrm { { n m } }$ (Ultraspec3000 spectrophotometer; Pharmacia Biotech). The dry cell weight (DCw) was determined by measuring the weight of dried cells after the culture broth was filtered through an ultrafine fi lter $_ { 0 . 7 - \\mu \\mathrm { { m } } }$ -pore-size GF/F; Whatman). ",
+        "page_idx": 0
+    },
+    {
+        "type": "table",
+        "img_path": "images/deabff21feeaaadfd0f24a34d98e1e1e2bde4b636559c61e6644fd5c5244ee02.jpg",
+        "table_caption": [
+            "TABLE 1. Strains used in this study "
+        ],
+        "table_footnote": [],
+        "table_body": "<html><body><table><tr><td>E. coli strain</td><td>Relevant properties</td><td>Source or reference</td></tr><tr><td>W3110</td><td>F− mcrA mcrB IN(∆rrnD rrnE)1λ−</td><td>Stratagene</td></tr><tr><td>WL3110</td><td>W3110 (∆lacI)</td><td>16</td></tr><tr><td>WLG</td><td>W3110 (∆lacI ∆gdhA)</td><td>This study</td></tr><tr><td>WLA</td><td>W3110 (∆lacI ∆gpmA)</td><td>This study</td></tr><tr><td>WLB</td><td>W3110 (∆lacI ∆gpmB)</td><td>This study</td></tr><tr><td>WLGA</td><td>W3110 (∆lacI ∆gdhA ∆gpmA)</td><td>This study</td></tr><tr><td>WLGB</td><td>W3110 (∆lacI ∆gdhA ∆gpmB)</td><td>This study</td></tr><tr><td>WLAB WLGB-RP</td><td>W3110 (∆lacI ∆gpmA ∆gpmB)</td><td>This study This study</td></tr><tr><td></td><td>W3110 (∆lacI ∆gdhA ∆gpmB ptrc dxs idi ispA)</td><td></td></tr><tr><td>WLGB-RPP</td><td>W3110 (∆lacI ∆gdhA ∆gpmB ptrc dxs idi ispA pps)</td><td>This study</td></tr><tr><td>DH5α</td><td>F− φ80dlacZΔM15 ∆(lacZYAI argF)U169 deoR recA1 endA1 hsdR17(rk− m +) ph0A</td><td>New England Biolabs</td></tr><tr><td>XL1-Blue</td><td>∆supE44 thi-1 gyrA96 relA1 recA1 endAI gyrA96 thi hsdR17(k mk +) supE44 relA1 lac [F&#x27; proAB+</td><td>Stratagene</td></tr></table></body></html>",
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "",
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "Plasmids. The plasmids constructed and used in this study are listed in Table 2. All DNA manipulations were carried out using the standard protocols (29). Restriction enzymes were purchased from New England Biolabs. PCR was performed using a PTC-200 DNA Engine (PharmaTech) with the expand high fidelity PCR system (Roche Molecular Biochemicals). E. coli W3110 genomic DNA was used as a template for the PCR amplification of the dxs, fbaA, icdA, idi, mdh, pfkA, pgi, and tpiA genes using the primers listed in Table S1 in the supplemental material. The crt operon (crtE, crtX, crtY, crtI, crtB, and crtZ) was amplified by PCR using the genomic DNA of Erwinia uredovora as a template and the primers Car-F and Car-R and was cloned into the EcoRI site of pACYC184 to construct pCar184. The crtXY genes were removed from pCar184 to construct pLyc184. The crtEIB genes in pLyc184 were constitutively expressed from its own promoter. The dxs gene was cloned into the EcoRI and KpnI sites of pTrc99A under the trc promoter to construct pTrcDx (6.5 kb). The amplification target genes identified by an algorithm called flux scanning based on enforced objective flux (FSEOF) (see \"FSEOF\" below) were cloned into pTrcDx to construct pTrcDx-pfkA, pTrcDx-pgi, pTrcDx-fbaA, pTrcDx-tpiA, pTrcDx-icdA, pTrcDx-idi, pTrcDx-mdh, pTrcDx-idi-fbaA, pTrcDx-idi-tpiA, and pTrcDx-idi-mdh (Table 2). All genes under the $t r c$ promoter were expressed constitutively in $E$ coli DH5α because it is not a $l a c I ^ { \\mathrm { q } }$ strain. The sequences of the cloned genes were confirmed by using an ABI PRISM 7700 sequencer (Applied Biosystems). ",
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "",
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "Batch-fed fermentation. For the production of lycopene using the final strains, batch-fed cultures were grown in a 6.6-liter jar fermenter (Bioffo 3000; New Brunswick Scientific Co.) containing 2 liters of $\\mathrm { R } / 2$ medium supplemented with $2 0 \\mathrm { g l i t e r } ^ { - 1 }$ glucose, $1 0 \\mathrm { m g } \\mathrm { l i t e r } ^ { - 1 }$ tetracycline, and $5 0 \\mathrm { m g } \\mathrm { l i t e r } ^ { - 1 }$ ampicillin. The R/2 medium $\\mathrm { ( p H ~ 6 . 8 ) }$ contains, per liter,, $( \\mathrm { N H } _ { 4 } ) _ { 2 } \\mathrm { H P O } _ { 4 }$ $_ { 2 \\mathrm { ~ g ~ } }$ $\\mathrm { K H } _ { 2 } \\mathrm { P O } _ { 4 }$ $6 . 7 5 \\ \\mathrm { g }$ citric acid, $0 . 8 5 \\ \\mathrm { g }$ $\\mathrm { M g S O } _ { 4 } \\cdot 7 \\mathrm { H } _ { 2 } \\mathrm { O }$ $0 . 7 \\ \\mathrm { g } ;$ and trace metal solution [per liter of 5 $\\textbf { M H C l }$ , $\\mathrm { F e S O } _ { 4 } \\cdot 7 \\mathrm { H } _ { 2 } \\mathrm { O }$ $_ { \\mathrm { ~ 1 0 ~ g ~ } }$ $\\mathrm { Z n S O } _ { 4 } \\cdot \\mathrm { 7 H } _ { 2 } \\mathrm { O }$ $2 . 2 5 \\mathrm { ~ g ~ }$ $\\mathrm { C u S O } _ { 4 } \\cdot 5 \\mathrm { H } _ { 2 } \\mathrm { O }$ , $_ \\mathrm { ~ 1 ~ g ~ }$ $\\mathrm { M n S O } _ { 4 } \\cdot 5 \\mathrm { H } _ { 2 } \\mathrm { O }$ ,0.5g; $\\mathrm { N a _ { 2 } B _ { 4 } O _ { 7 } \\cdot 1 0 H _ { 2 } O }$ $\\mathbf { 0 . 2 3 } \\ \\mathrm { \\bf \\ g } ;$ $\\mathrm { C a C l } _ { 2 } \\cdot 2 \\mathrm { H } _ { 2 } \\mathrm { O }$ $2 \\ { \\mathrm { ~ g } } ;$ and $( \\mathrm { N H _ { 4 } } ) _ { 6 } \\mathrm { M O _ { 7 } O _ { 2 4 } }$ , 0.1 g], $5 \\mathrm { m l }$ . The seed culture $( 2 0 0 \\mathrm { m l } )$ was prepared in the same medium. The culture $\\mathrm { p H }$ was controlled at 6.8 by the addition of $14 \\%$ $\\mathrm { ( v o l / v o l ) }$ ammonia water. The dissolved oxygen (DO) concentration was controlled at $40 \\%$ air saturation by automatically increasing the agitation speed up to 1,000 rpm and by changing the pure oxygen percentage. The nutrient feeding solution used for the batch-fed culture contained $\\textup { 6 0 0 ~ g }$ of glucose and $_ { \\mathrm { ~ 1 5 ~ g ~ } }$ of $\\mathrm { M g S O } _ { 4 } \\cdot 7 \\mathrm { H } _ { 2 } \\mathrm { O }$ per liter. The feeding solution was added by the DO-stat feeding strategy (18). ",
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "Quantification of lycopene. The lycopene concentration was determined by the cold acetone extraction method (23) using high-performance liquid chromatography (1100 series; Agilent Technology) equipped with a Spherisorb S5 ODS2 $\\mathrm { C _ { 1 8 } }$ column (4.6 by $2 5 0 \\ \\mathrm { m m }$ , $5 \\mathrm { - } \\mu \\mathrm { m }$ particle size; Waters) and a diode array $4 7 4 ~ \\mathrm { n m }$ ; Agilent Technology). Lycopene purchased from SigmaAldrich was used to generate a standard curve. The mobile phase consisted of $3 0 \\%$ $( \\mathrm { v o l } / \\mathrm { v o l } )$ acetonitrile and $70 \\%$ (vol/vol) methanol and was flown at $1 . 5 \\mathrm { ~ m l ~ m i n ^ { - 1 } }$ . ",
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "FSEOF. An algorithm called flux scanning based on enforced objective flux (FSEOF) was developed for the selection of gene targets to be amplified (Fig. 1). The intracellular f ux distributions were calculated by constraint-based fl ux analysis using MetaFluxNet (15) (http://mbel.kaist.ac.kr/lab/mfn) installed on a personal computer $( 2 . 4 0 ~ \\mathrm { G H z }$ Pentium 4 CPU and Windows XP platform). The genome-scale metabolic network of $E$ . coli EcoMBEL979 (see Table S3 in the supplemental material), which was constructed based on two excellent models reported by Reed et al. (28) and Ma and Zeng. (20), was used. For the simulation of recombinant $E$ . coli producing lycopene, the EcoMBEL979 model was expanded with the heterologous lycopene biosynthetic pathways. The FSEOF procedure applied to lycopene production is described below. ",
+        "page_idx": 1
+    },
+    {
+        "type": "table",
+        "img_path": "images/36662752df64ab250bb0c6427921bb1686ed331beb3c8ddc421bf8dddfb0225c.jpg",
+        "table_caption": [
+            "TABLE 2. Plasmids used in this study "
+        ],
+        "table_footnote": [
+            "a RBS, ribosome binding site. "
+        ],
+        "table_body": "<html><body><table><tr><td>Plasmid</td><td>Relevant propertiesa</td><td>Source</td></tr><tr><td>pACYC184</td><td>Tc Cm′, p15A ori, 4.2 kb</td><td>New England Biolabs</td></tr><tr><td>pCar184</td><td>Tc, Erwinia uredovora crt operon (crtEXYIB) under gntT104 promoter cloned between EcoRI of site of pACYC184, 11.1 kb</td><td>This study</td></tr><tr><td>pLyc184</td><td>Tc, deletion of crtXY genes from pCar184, 8.7 kb</td><td>This study</td></tr><tr><td>pTrc99A</td><td>Ap&#x27;, trc promoter, ColE1 ori, 4.1 kb</td><td>Amersham Pharmacia</td></tr><tr><td>pTrcDx</td><td>Ap&#x27;, trc promoter, dxs gene cloned at KpnI and EcoRI sites of pTrc99A, 4.7 kb</td><td>This study</td></tr><tr><td>pTrcDx-idi</td><td>Ap&#x27;, trc promoter, idi gene cloned at KpnI and XbaI sites of pTrcDx under its own RBS, 6.6 kb</td><td>This study</td></tr><tr><td>pTrcDx-fbaA</td><td>Ap&#x27;, trc promoter, fbaA gene cloned at KpnI and XbaI sites of pTrcDx under its own RBS, 7.1 kb</td><td>This study</td></tr><tr><td>pTrcDx-tpiA</td><td>Ap&#x27;, trc promoter, tpiA gene cloned at KpnI and XbaI sites of pTrcDx under its own RBS, 6.8 kb</td><td>This study</td></tr><tr><td>pTrcDx-pfkA</td><td>Ap&#x27;, trc promoter, pfkA gene cloned at XbaI and PstI sites of pTrcDx under its own RBS, 7.1 kb</td><td>This study</td></tr><tr><td>pTrcDx-pgi</td><td>Ap, trc promoter, pgi gene cloned at XbaI and PstI sites of pTrcDx under its own RBS, 7.7 kb</td><td>This study</td></tr><tr><td>pTrcDx-icdA</td><td>Ap&#x27;, trc promoter, icdA gene cloned at XbaI site of pTrcDx under its own RBS, 7.3 kb</td><td>This study</td></tr><tr><td>pTrcDx-mdh pTrcDx-idi-fbaA</td><td>Ap&#x27;, trc promoter, mdh gene cloned at XbaI site of pTrcDx under its own RBS, 7.0 kb</td><td>This study</td></tr><tr><td>pTrcDx-idi-tpiA</td><td>Ap, trc promoter, fbaA gene cloned at XbaI site of pTrcDx-idi under its own RBS, 7.7 kb</td><td>This study This study</td></tr><tr><td>pTrcDx-idi-mdh</td><td>Ap, trc promoter, tpiA gene cloned at XbaI site of pTrcDx-idi under its own RBS, 7.4 kb</td><td>This study</td></tr><tr><td></td><td>Ap&#x27;, trc promoter, mdh gene cloned at XbaI site of pTrcDx-idi under its own RBS, 7.9 kb</td><td></td></tr></table></body></html>",
+        "page_idx": 1
+    },
+    {
+        "type": "image",
+        "img_path": "images/de147bafd7ac68bbf6018b683a1a65596e52701ece84c12581b0da4c55895798.jpg",
+        "img_caption": [
+            "FIG.1. Concept of FSEOFframework to select the gene amplifcation targets for enhanced product oration.FSEOF searches for the increased profile as the primary amplifi cation targets. "
+        ],
+        "img_footnote": [],
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "",
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "First, the initial fuxes $( \\nu _ { j } ^ { \\mathrm { i n i t i a l } } )$ were calculated by constraint-based flux analysis using the objective function of maximizing biomass formation, as follows. ",
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "Maximize $\\nu _ { \\mathrm { b i o m a s s } }$ subject to $\\sum _ { j = 1 } ^ { N } S _ { i j } \\nu _ { j } ^ { \\mathrm { i n i t i a l } } ~ = ~ 0$ (where $\\forall i \\in M$ and $\\forall j \\in N$ ) $\\nu _ { \\mathrm { A T P M } } \\geq \\nu _ { \\mathrm { a t p \\_ m a i n t } } , \\nu _ { \\mathrm { Z L Y C } } = \\nu _ { \\mathrm { l y c o p e n e } } ,$ and $\\nu _ { j } ^ { \\alpha } \\leq \\nu _ { j } \\leq \\nu _ { j } ^ { \\beta }$ (where $\\nu _ { j } \\in R$ $S _ { i j }$ is the stoichiometric coefficient of metabolite $i$ (belonging to a set of whole metabolites, $M$ ) in the jth reaction (belonging to a set of whole reactions, $N$ and $\\nu _ { j } ^ { \\mathrm { i n i t i a l } }$ $\\nu _ { \\mathrm { b i o m a s s } } , \\nu _ { \\mathrm { A T P M } }$ $\\nu _ { Z \\mathbf { L Y C } }$ represent the biomass formation rate, the ATP consumption rate for maintenance, and the lycopene production rate, respectively. $\\nu _ { \\mathrm { a t p \\_ m a i n t } }$ is the ATP flux tion rate measured from the initial experiment, which was 0.0002 mmol g $\\mathrm { D C W ^ { - 1 } \\thinspace h ^ { - 1 } }$ ; it was measured by cultivating recombinant $E$ . coli $\\mathrm { D H } 5 \\alpha$ harboring pLyc184 and pTrcDx in $2 \\times \\mathrm { Y T }$ medium at $3 0 ^ { \\circ } \\mathrm { C }$ . It should be noted that, in general, this can be provided as a measured constraint or calculated constraint if no experimental result is available. $\\nu _ { j } ^ { \\alpha }$ and $\\nu _ { j } ^ { \\mathsf { \\{ B } } $ are the lower and upper bounds of the flux of the jth reaction, respectively: for reversible reactions, $- \\infty \\le \\nu _ { j } \\le \\infty$ , and for irreversible reactions, $0 \\leq \\nu _ { j } \\leq \\infty$ . ",
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "Then, the theoretical maximum product (lycopene) formation rate was calculated; this was done by setting the objective function as maximizing the product formation flux during the constraint-based flux analysis, which can be formulated as follows. ",
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "Maximize $\\nu _ { \\mathrm { p r o d u c t } }$ subject too $\\sum _ { j = 1 } ^ { N } S _ { i j } \\nu _ { j } = 0$ (where $\\forall i \\in M$ and $\\forall j \\in N$ ) $\\nu _ { \\mathrm { A T P M } } \\geq$ $\\nu _ { \\mathrm { a t p \\_ m a i n t } }$ $\\nu _ { j } ^ { \\alpha } \\leq \\nu _ { j } \\leq \\nu _ { j } ^ { \\beta }$ $\\nu _ { j } \\in R$ $\\nu _ { j }$ is the flux of the jth reaction. Finally, FSEOF was performed during the constraint-based flux analysis under the objective function of maximizing cell growth while the lycopene production rate (our actual objective) is gradually increased (enforced) from the initial fl ux value to a value adjacent to the theoretical maximum value for product formation (typically $90 \\%$ of the maximum theoretical or higher value). This is because the flux distributions obtained by constraint-based fl ux analysis with the theoretical maximum production rate as an additional constraint are usually unrealistic; the biomass formation rate often becomes zero when the product formation objective function is set to its maximization during the simulation. Subsequently, the calculated intracellular fluxes under enforced product formation constraints were scanned for the selection of targets meeting the preset criteria for primary gene amplification. The targets were selected by identifying fluxes that increased upon the application of the enforced objective flux without changing the reaction's direction. This is mathematically formulated as follows. ",
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "",
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "Select $\\nu _ { j }$ that satisfiess $| \\nu _ { j } | ^ { \\mathrm { m a x } } > | \\nu _ { j } ^ { \\mathrm { i n i t i a l } } |$ and $\\nu _ { j } ^ { \\mathrm { m a x } } ~ \\times ~ \\nu _ { j } ^ { \\mathrm { m i n } } ~ \\geq ~ 0$ after the following calculations. ",
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "Maximize $\\nu _ { \\mathrm { b i o m a s s } }$ subject to $\\nu _ { \\mathrm { p r o d u c t } } ^ { \\mathrm { e n f o r c e d } } \\quad = \\quad \\nu _ { \\mathrm { p r o d u c t } } ^ { \\mathrm { i n i t i a l } } \\quad + \\quad \\frac { k } { n } ( \\mathrm { v } _ { \\mathrm { p r o d u c t } } ^ { \\mathrm { m a x } } \\quad -$ $\\nu _ { \\mathrm { p r o d u c t } } ^ { \\mathrm { i n i t i a l } } )$ $K \\ = \\ \\{ k \\ | \\ k \\ = \\ 1 , \\ 2 , . . . , \\ n \\ - \\ 1 \\}$ (wheree $n ~ \\geq ~ 1 0 .$ ubect to $\\sum _ { j = 1 } ^ { N } S _ { i j } \\nu _ { j } = 0$ (where $\\forall i \\in M$ and $\\forall j \\in N )$ $\\nu _ { \\mathrm { A T P M } } \\geq \\nu _ { \\mathrm { a t p \\_ m a i n t } } ,$ and $\\nu _ { j } ^ { \\alpha } \\leq \\nu _ { j } \\leq \\nu _ { j } ^ { \\beta }$ (where $\\nu _ { j } \\in R$ $\\nu _ { j } ^ { \\operatorname* { m a x } }$ and $\\nu _ { j } ^ { \\mathrm { m i n } }$ are the maximum and minimum $\\nu _ { \\mathrm { p r o d u c t } } ^ { \\mathrm { e n f o r c e d } }$ is the additional constraint provided during the constraint-based flux analysis; it starts with the initial vale $\\nu _ { \\mathrm { p r o d u c t } } ^ { \\mathrm { i n i t i a l } }$ $\\nu _ { \\mathrm { p r o d u c t } } ^ { \\mathrm { m a x } }$ and $\\nu _ { \\mathrm { p r o d u c t } } ^ { \\mathrm { i n i t i a l } }$ $\\nu _ { \\mathrm { p r o d u c t } } ^ { \\mathrm { m a x } }$ $k$ steps. ",
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "RESULTS AND DISCUSSION ",
+        "text_level": 1,
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "Flux scanning based on enforced objective fux. FSEOF starts with the constraint-based flux analysis of a genome-scale metabolic model, which calculates the internal metabolic fluxes by linear optimization of an objective function (7). A set of mass balances around metabolites yields the stoichiometric model $S _ { i j } \\cdot \\nu _ { j } = 0$ with an assumption of pseudo steady state, in which $S _ { i j }$ is a stoichiometric coeficient of a metabolite $i$ in the $j$ th reaction and $\\nu _ { j }$ is the flux of the jth reaction given in mmol $\\mathrm { \\ g \\ D C W ^ { - 1 } h ^ { - 1 } }$ . The metabolic model constructed in this study is an underdetermined system, having infinite sets of solutions. Thus, linear programming (LP) was performed, with maximizing the biomass formation rate, represented by the overall macromolecule composition of the cell, as the objective function, with constraints of mass conservation, reaction thermodynamics, and metabolic capacity in order to calculate intracellular fluxes. We introduced the enforced flux toward product formation as an additional constraint during the linear optimization of the objective function given as the maximum biomass formation. ",
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "",
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "In general, the yield of metabolite production is lower than the theoretical yield. This is because the objective of microbial metabolism is different from our desired objective. Thus, the magnitude of the enforced objective constraint employed during FSEOF simulation can be a key point in that the objective function is intentionally pushed in the direction of our objective. In this study, the enforced objective constraint was formulated by setting the product formation rate at the value currently attained by the strains and increasing it to $9 0 \\%$ of the theoretical maximum. Usually, there is a direct inverse relationship between the biomass formation and product formation rates. This is why the biomass formation rate often becomes zero when the product formation rate achieves the theoretical maximum value; in practice, genome-scale simulations can provide unrealistic flux values to achieve the theoretical maximum due to the limitation of cell growth. Since the gene amplifi cation targets are identified by observing the tendencies of the flux changes, we designed the FSEOF algorithm in such a way that it scans for the flux changes when the enforced objective flux is applied. ",
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "During this process, the internal metabolic fluxes that increase with increasing flux toward product formation were scanned for; these fluxes are potential targets to be amplif ed for increased yield of the desired product (Fig. 1). Although the flux patterns rather than the actual fl ux values were utilized for selecting the amplification targets by FSEOF simulation, the problem of multiple optima in linear programming calculation still exists. Thus, flux variability analysis was also carried out (21) for the selected targets, as well as for some nonselected targets, to evaluate the performance of FSEOF simulation (Fig. 2B to E; also see below). ",
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "Implementation of FSEOF on lycopene-producing $E$ . coli. FSEOF was employed to identify the amplification target genes for enhanced lycopene production in $E$ . coli. Based on previous reports (6, 13, 17, 22, 23), a recombinant $E$ coli $\\mathrm { D H } 5 \\alpha$ strain harboring the two plasmids pLyc184 and pTrcDx, which contain the Erwinia uredovora crtEIB genes and the $E$ . coli dxs gene (23), respectively, was constructed as a parental strain for the production of lycopene and implementation of FSEOF. The genome-scale metabolic network of $E$ coli EcoMBEL979 was expanded with the heterologous lycopene biosynthetic pathways (see Tables S3A and B in the supplemental material) and was simulated using MetaFluxNet (15). The experimentally measured lycopene flux value in a parental recombinant strain was 0.0002 mmol $\\mathrm { \\ g \\ D C W ^ { - 1 } \\ h ^ { - 1 } }$ . The maximum theoretical lycopene production flux value calculated using the objective function of its maximized formation was $0 . 5 6 5 8 \\mathrm { m m o l } \\mathrm { g }$ $\\mathrm { \\bar { D } C W ^ { - 1 } \\ h ^ { - 1 } }$ . Thus, FSEOF was carried out with the enforced objective constraints of varying the lycopene production flux value at 9 steps from 0.0002 to 0.5092 mmol $\\mathrm { \\ g \\ D C W ^ { - 1 } \\ h ^ { - 1 } }$ - $9 0 \\%$ of 0.5658). Then, the selection criteria of $\\begin{array} { r c l } { | \\nu _ { j } | ^ { \\mathrm { m a x } } } & { > } & { | \\nu _ { j } ^ { \\mathrm { i n i t i a l } } | } \\end{array}$ and $\\nu _ { j } ^ { \\mathrm { m a x } } ~ \\times ~ \\nu _ { j } ^ { \\mathrm { m i n } } ~ \\geq ~ 0$ were implemented during FSEOF to select fluxes showing at least one period of the increasing pattern without changing the reaction's direction. The newly predicted flux values using FSEOF should be higher than the initial flux values, $\\nu _ { j } .$ For predicted gene targets where the flux direction changed, they were not considered overexpression targets. This resulted in 35 out of 983 reactions being identified as initial gene amplification targets for increasing lycopene production (Fig. 2A and Table 3; also see Table S4A in the supplemental material). It is also important to set up the range of the enforced objective flux within a realistic range that can be achieved by the strain. In fact, the best strain developed in this study possessed a lycopene production rate that was much lower than the upper limit of the enforced objective flux. Obviously, there are many reasons for this, one being that lycopene is a product that becomes membrane associated. Thus, its production is limited by the capacity of the membrane and is also affected by its consequent alteration of the functions of proteins on the membrane. Therefore, we tested whether varying the enforced objective function within a more realistic range affected the FSEOF prediction results; the FSEOF results obtained within the enforced objective function in a smaller range (from $0 . 0 0 0 2 \\mathrm { m m o l g D C W ^ { - 1 } h ^ { - 1 } }$ to $0 . 0 1 1 3 1 \\mathrm { m m o l }$ $\\mathrm { g \\ D C W ^ { - 1 } \\ h ^ { - 1 } }$ were compared with those of the original simulation. As shown in Table S4B in the supplemental material, the new simulation with the smaller objective range suggested the same 35 candidates as gene amplification targets. Thus, varying the range of the enforced objective function from the initial value to $9 0 \\%$ of the theoretical maximum value was found to be valid. ",
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "",
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "The results of FSEOF suggest that the upper glycolytic fluxes to glyceraldehyde-3-phosphate (G3P) and the fluxes of methylerythritol phosphate (MEP) and the lycopene biosynthetic pathway should be increased to enhanced lycopene production. Also, it was found that the fluxes downstream of G3P should be decreased. It is interesting to note from a previous report (1) that lycopene production could be enhanced by employing the gpmAB and talB mutants, resulting in a decrease in pentose phosphate pathway fluxes, which is in agreement with the FSEOF prediction. These results suggest that the availability of a G3P pool is important for the synthesis of lycopene. ",
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "Another important pattern observed from FSEOF simulation involves the fluxes through the metabolite acetyl-coenzyme A (CoA). At the acetyl-CoA node, the incoming flux from pyruvate decreased and was found to be redirected toward 1-deoxy-D-xylulose-5-phosphate (DXYL5P), as seen in the increase in fux from pyruvate to DXYL5P. This would naturally result in the decrease which was observed in the outgoing fluxes from the acetyl-CoA node, with the exception of the flux through citrate synthase (TCA cycle). The reason for the increased flux into the TCA cycle seems to be for the generation of NADH, NADPH, and ATP, which are required for the synthesis of isopentenyl diphosphate (IPP) or dimethylallyl diphosphate (DMPP) via the MEP pathway (Fig. 2A). As $6 \\mathrm { m o l }$ IPP and 2 mol DMPP are required for the synthesis of ",
+        "page_idx": 3
+    },
+    {
+        "type": "image",
+        "img_path": "images/9fca2336b9185b8a8f781418ec02487b7d5f16552c577da8af4222d744362a40.jpg",
+        "img_caption": [
+            "follows: C4MOP, 3-carboxy-4-methyl-2-oxopentanoate; AC _ex, acetate (extracellular); ACA, acetyl-CoA; ACGAM1P, $N$ -acetyl-D-glucosamine 1-phosphate; ACGLU, $N$ -acetyl-L-glutamate; ACGSSA, $N$ -acetyl-L-glutamate-5-semialdehyde;ACSER, $o$ -acetyl-L-serine; ACTP, acetyl phos$E$ coi wil-pe strain. Red iamonds represent the results for igle gen deletins. Green rectangls represent the results for the deletion of two genes. "
+        ],
+        "img_footnote": [],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "1 mol lycopene, eight moles each of these cofactors are needed. ",
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "Flux variability analysis for the selected target. Constraintbased fl ux analysis does not give a unique fl ux distribution, and thus, there exists a rather large degree of freedom within the network to reach the optimal flux value for the objective function (e.g., growth rate). Therefore, the flux values obtained in FSEOF might not be the optimal value and can result in a false-positive prediction. To confi rm that the fluxes obtained from FSEOF are meaningful, the flux variability analysis was performed. ",
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "",
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "The flux variability analysis in response to the enforced product formation flux was performed for the 35 fl uxes identified by FSEOF and 5 additional fluxes that were not gene amplification targets (as negative controls). As shown in Fig. 2B to E, there were 4 meaningful flux variability patterns (see ",
+        "page_idx": 4
+    },
+    {
+        "type": "table",
+        "img_path": "images/d2251aa1d26959bd8c8a8b853a4d6d1329715ab96c03cc6e1e19c7d787e8bd3f.jpg",
+        "table_caption": [
+            "TABLE 3. List of key genes and enzymes investigated based on the FSEOF simulation "
+        ],
+        "table_footnote": [
+            "A gene that was overepressed n this stuy previously shown to enhance lycopene production. Akey gene that was newly identifed as an amplifcation taret by using FSE. "
+        ],
+        "table_body": "<html><body><table><tr><td>Gene</td><td>Enzyme</td><td>Functional category</td></tr><tr><td>acnAB</td><td>Aconitase</td><td>TCA cycle</td></tr><tr><td>gltA</td><td>Citrate (CIT) synthase</td><td></td></tr><tr><td>fumAB</td><td>Fumarase</td><td></td></tr><tr><td>icdAa</td><td>Isocitrate (ICIT) dehydrogenase (NADP)</td><td></td></tr><tr><td>mdha,c</td><td>Malate (MAL) dehydrogenase</td><td></td></tr><tr><td>sdhABCD</td><td>Succinate (SUC) dehydrogenase</td><td></td></tr><tr><td>sucCD</td><td>Succinyl-CoA (SUCOAS) synthetase (ADP-forming)</td><td></td></tr><tr><td>sucAB</td><td>2-Oxoglutarate (AKG) dehydrogenase</td><td></td></tr><tr><td>sdhABCD</td><td>Succinate dehydrogenase</td><td></td></tr><tr><td>dxr</td><td>1-Deoxy-D-xylulose 5-phosphate reductoisomerase</td><td>Methylerythritol phosphate pathwayb</td></tr><tr><td>dxc</td><td>1-Deoxyxylulose-5-phosphate synthase</td><td></td></tr><tr><td>idia</td><td>Isopentenyl diphosphate (IPDP) isomerase</td><td></td></tr><tr><td>ispAa</td><td>Geranyltranstransferase/dimethylallyltranstransferase</td><td></td></tr><tr><td>ispD</td><td>4-Diphosphocytidy1-2C-methyl-D-erythritol synthase</td><td></td></tr><tr><td>ispE</td><td>4-Diphosphocytidy1-2-C-methylerythritol kinase</td><td></td></tr><tr><td>ispF</td><td>2C-Methy-D-erythritol 2,4-cyclodiphosphate synthase</td><td></td></tr><tr><td>ispG</td><td>1-Hydroxy-2-methy1-2-(E)-butenyl 4-diphosphate synthase</td><td></td></tr><tr><td>ispH</td><td>1-Hydroxy-2-methy1-2-(E)-buteny1 4-diphosphate reductase</td><td></td></tr><tr><td>crtE</td><td>Geranylgeranyl pyrophosphate (GGPP) synthase</td><td>Heterogeneous genes for lycopene synthesis</td></tr><tr><td>crtB</td><td>Phytoene (PHYTO) synthetase</td><td></td></tr><tr><td>crtI</td><td>Phytoene dehydrogenase</td><td></td></tr><tr><td>fbaAa</td><td>Fructose-bisphosphate (FBP) aldolase</td><td>Glycolysis</td></tr><tr><td>pfkABa</td><td>Phosphofructokinase</td><td></td></tr><tr><td>pgia</td><td>Glucose-6-phosphate (G6P) isomerase</td><td></td></tr><tr><td>tpiAq,c</td><td>Triose-phosphate isomerase</td><td></td></tr></table></body></html>",
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "Fig. S1 in the supplemental material for more information on the flux variability analysis). Eleven fluxes were found to have an increasing pattern without variability (Fig. 2B), the same as FSEOF predicted. Ten fluxes were also found to have an increasing pattern but within a narrow increasing range in which the minimum of the upper line was lower than the maximum of the bottom line (Fig. 2C). This suggests that these 10 fluxes should increase with the enforced objective flux, which is consistent with the results of FSEOF. Thus, these 21 fluxes (Fig. 2B and C) showing increasing trends are consistent with the results from FSEOF simulation. Of the remaining 14 fluxes, 5 showed an increasing pattern within a broad increasing range (Fig. 2D), 4 showed almost no change and/or a decreasing-increasing pattern (Fig. 2E), and the remaining 5 reactions were unbound (not shown). These results suggest that 26 out of 35 fluxes identified as amplification targets are consistent with the results of flux variability analysis. Among the other 9 fluxes, 5 were unbound when flux variability analysis was performed, providing no further information. The remaining 4 fl uxes were the only ones which differed from the results from FSEOF by showing no increasing pattern (Fig. 2E). It should be stated that the 9 fluxes found to be either unbound or not changing were also experimentally verified in this study and were found to be good targets, with the exception of the Pfk amplification (Pgi and IcdA also resulted in marginal changes), contrary to the results of flux variability analysis. Thus, FSEOF provides a simple and powerful way of identifying the gene amplifi cation targets. ",
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "To further examine whether flux variability analysis can suggest results different from those of FSEOF, five central metabolic fluxes that were not suggested as targets using FSEOF were tested (as negative controls). The variable ranges of the fluxes for the Eno, GapA, Pgl, Ppc, and Pyk reactions showed a decreasing pattern with increasing lycopene production, as expected for the negative controls (see Fig. S1E in the supplemental material). Thus, FSEOF simulation allows the prediction of gene amplification targets that are mostly consistent with (and even better than) the results from flux variability analysis. ",
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "",
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "Experimental validation of the targets identified by FSEOF simulation. In order to validate the amplification target genes selected by FSEOF, the target genes were cloned into pTrcDx carrying the dxs gene and subsequently introduced into the recombinant $E$ . coli $\\mathrm { D H } 5 \\alpha$ harboring pLyc184 carrying the crtEIB genes (see Materials and Methods and Tables 1 to 3). First, all the target genes whose products are involved in glycolysis were amplified because it was expected that the reinforcement of these fluxes would increase G3P, an important precursor of lycopene. Among the TCA cycle genes, only the icdA and mdh genes were considered for actual experiments as a proof of concept; this was because other reactions in the TCA cycle are catalyzed by relatively large enzyme complexes which are rather dificult to properly amplify in the cell. ",
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "The lycopene concentration obtained with the control strain was $2 . 5 2 \\mathrm { m g } \\mathrm { l i t e r } ^ { - 1 }$ , with a content of $1 . 4 8 \\mathrm { m g } \\mathrm { g } \\mathrm { D C W } ^ { - 1 }$ . When the dxs gene was overexpressed, the lycopene concentration increased to $4 . 9 5 \\mathrm { ~ m g ~ l i t e r } ^ { - 1 }$ with a content of $3 . 0 9 \\mathrm { ~ m g ~ g ~ }$ $\\mathrm { D C W } ^ { - 1 }$ . When the pfkA, pgi, fbaA, tpiA, icdA, and mdh genes were amplified together with the dxs gene, the lycopene concentrations obtained were 3.25, 5.32, 6.94, 6.84, 4.94, and 9.06 mg liter-1 and the lycopene contents were 1.63, 2.73, 4.62, 4.89, 2.98, and $4 . 8 3 ~ \\mathrm { m g ~ g ~ D C W ^ { - 1 } }$ , respectively (Fig. 3A; see ",
+        "page_idx": 5
+    },
+    {
+        "type": "image",
+        "img_path": "images/d0a87795ac6385a6429df2cb3848f26716ee25b008370dce5794f4992e6bb8dd.jpg",
+        "img_caption": [
+            "FIG.3. Ientifcation of gene targets for enhanced lycopene production by FSEOF,MOMA, and their combination.(A) Production of lycopene by recombinant $E$ coli strains engineered based on the results of FSEOF, MOMA, and their combination. Al strains harbor the plasmid pLyc184 in addition to the plasmid shown. The lycopene concentrations (mg lite1 $\\cdot ^ { - 1 }$ $( \\operatorname* { m g } { \\mathrm { ~ g ~ D C W } ^ { - 1 } } )$ are shown by black and white $( p g i )$ , fructosebisphosphate aldolase $( f b a A )$ density at $6 0 0 \\ \\mathrm { n m }$ $\\mathrm { ( O D _ { 6 0 0 } ) }$ ); open circles, glucose concentration(conc.);open triangles,aceticacid concentration; closed squares, lycopene concentration. Error bars represent standard deviations. "
+        ],
+        "img_footnote": [],
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "Table S2 in the supplemental material). Amplification of the fbaA, tpiA, and mdh genes resulted in the highest enhancement of lycopene production. One of the in silico-predicted targets, $p f k A$ , showed a negative eff ect on lycopene production upon its amplification. This is due to the imperfect nature of the in silico genome-scale metabolic model that cannot account for complex regulatory mechanisms. Nonetheless, the identifi cation of at least three nonintuitive gene amplification targets (in particular, the mdh gene) proves the usefulness of FSEOF. ",
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "Among the targets in the MEP and lycopene pathways selected by FSEOF, the idi gene was chosen for amplification because it is a key enzyme that has been shown to exert a positive effect on lycopene production (17); when it was amplified together with the dxs gene, a lycopene concentration and content of $1 2 . 8 5 \\ \\mathrm { m g \\ l i t e r ^ { - 1 } }$ and $\\bar { 8 . 5 7 \\mathrm { ~ m g ~ g ~ D C W } ^ { - 1 } }$ , respectively, could be achieved. The effects on lycopene production of coamplifying the idi gene with one of the central metabolic genes fbaA, tpiA, or mdh were also examined. Among these, the overexpression of the idi and mdh genes with the dxs gene resulted in the production of lycopene to a concentration of $1 3 . 2 0 ~ \\mathrm { m g ~ l i t e r } ^ { - 1 }$ and a content of $9 . 9 8 ~ \\mathrm { m g ~ g ~ D C W ^ { - 1 } }$ , 2.7- and 3.2-fold higher, respectively, than obtained with the control strain $\\mathrm { D H } 5 \\alpha$ harboring pLyc184 and pTrcDx (see Table S2 in the supplemental material). In addition to these amplification targets, the fluxes that showed a decreasing pattern in FSEOF simulation can be considered as targets for gene knockdown. This can be achieved by amplification of the reverse reaction. One of the knockdown targets identified by FSEOF was the reaction converting phosphoenolpyruvate (PEP) to pyruvate. Thus, the gene pps (encoding PEP synthase) was considered for overexpression (see below and reference 6). ",
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "Gene knockout simulation and validation. The genomescale MOMA simulation (31) was performed to identify the knockout target genes for further improvement of lycopene production; the knockout of gdhA, cyoA, gpmA, gpmB, icdA, or eno was predicted to enhance lycopene production. This result is slightly different from that previous reported (1), which predicted the gdhA, cyoA, ppc, gpmA, gpmB, eno, $g l y A$ , and aceE genes as knockout targets. This might be due to the different genome-scale metabolic network models used in the two studies. In addition, the cofactor required for sequential reactions catalyzed by the Erwinia crtI gene product was set to be flavin adenine dinucleotide (FAD) in this study, rather than NADP as employed in the previous report (1); it was confirmed that the Erwinia crtI gene product uses FAD as a cofactor (Gerhard Sandmann, Goethe Universitat, Frankfurt, Germany, personal communication). Among these targets, knocking out the eno gene or gpmAB genes resulted in the highest increases of fl ux toward lycopene production. Dual-gene knockout simulation suggested that the most signifi cant enhancement of fl ux toward lycopene production can be achieved by knocking out the enogdhA or gpmAB-gdhA genes (Fig. 2F). However, the eno gene is an essential gene in E. coli (11) and so was removed from the candidate list. The gpmAB and gdhA genes were combinatorially knocked out by using the RED system (5). The gdhA and gpmB knockout strain (WLGB) showed the highest content of lycopene, while the gdhA and gpmAB knockout strains (WLG and wLAB, respectively) produced less lycopene (Fig. 3A). GpmA and GpmB are the isozymes of phosphoglycerate mutase, which have not yet been fully characterized. Simulation of the knockout of gpmAB showed that most of the flux from glucose went through the Entner-Doudoroff (ED) pathway. However, knocking out both genes is not realistic for $E$ . coli as doing so causes no growth under aerobic conditions on glucose (8). Thus, partial deletion of phosphoglycerate mutase is ideal for the increased production of lycopene. The extent of the enhancement of lycopene content and concentration by gene knockout was generally lower than that achieved with gene amplification (Fig. 3A), which suggests that the amplification of genes identifi ed by FSEOF exerted more signifi cant effects on the enhancement of lycopene production than gene knockouts did. ",
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "",
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "Metabolic engineering based on combined gene amplification and knockout simulations. In order to construct the final production strain by combining the beneficial effects of gene amplification and knockout, strain WLGB(pTrcDx-idi-mdh, pLyc184) was developed. Flask culture of WLGB (pTrcDx-idi-mdh, pLyc184) resulted in a lycopene concentration and content of $2 6 . 7 7 ~ \\mathrm { m g }$ liter−1 and $\\mathrm { \\dot { 8 } . 5 \\dot { 0 } \\ m g \\ g \\ D C W ^ { - 1 } }$ , respectively (Fig. 3A), showing a significant increase in the concentration but not in the content. To further increase the lycopene content, the ispA gene, which is an amplification target in the lycopene biosynthetic pathway, was chosen for overexpression. Due to the already large size of the plasmid, however, the ispA gene was overexpressed from the chromosome by promoter replacement. Since the dxs and ispA genes form a single operon, replacing its promoter with the strong trc promoter results in constitutive overexpression of both the dxs and the ispA gene in the lacI mutant strain. To balance the flux to lycopene (Fig. 2A), the promoter of the idi gene was also replaced with the trc promoter to construct strain WLGB-RP. ",
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "As described earlier, FSEOF also identified the PEP-topyruvate conversion step as a knockdown target, which can be achieved by overexpressing the pps gene which encodes the enzyme responsible for the reverse reaction. This was achieved by replacing the promoter of the pps gene with the trc promoter to construct strain WLGB-RPP. The lycopene contents obtained by flask cultivation of WLGB-RP and WLGB-RPP were 8.80and $9 . 5 1 \\mathrm { ~ m g ~ g ~ D C W ^ { - 1 } }$ , respectively, higher than those of WLGB $( 3 . 6 5 \\mathrm { ~ \\small ~ \\mathscr ~ { ~ m ~ g ~ } ~ } \\mathrm { ~ g ~ } \\mathrm { ~ D C W ^ { - 1 } ) ~ }$ and WLGB (pTrcDx-idi-mdh) $( 8 . 5 0 \\mathrm { \\ m g \\ g \\ D C W ^ { - 1 } } ,$ ) (Fig. 3A). Flask cultures of strains WLGB-RP(pTrcDx-idi-mdh, pLyc184) and WLGB-RPP(pTrcDx-idi-mdh, pLyc184) resulted in lycopene concentrations of 23.97 and $1 9 . 3 5 ~ \\mathrm { m g }$ liter−1 and contents of 12.32 and $1 0 . 6 3 ~ \\mathrm { m g ~ g ~ D C W ^ { - 1 } }$ , respectively. These results are slightly lower than that previously obtained with a strain that was developed by combined rational metabolic engineering and genomic library screening in flask cultures (12). However, batch-fed fermentation of WLGB-RP(pTrcDx-idi-mdh, pLyc184) and WLGB-RPP(pTrcDx-idi-mdh, pLyc184) resulted in the production of 206.7 and $2 8 3 . 0 \\mathrm { \\ m g }$ liter−1 of lycopene, respectively (Fig. 3B; also see Fig. S2 in the supplemental material). The latter titer achieved with this $100 \\%$ rationally designed strain is slightly higher than that obtained by batch-fed culture of an engineered $E$ . coli strain which was optimized by combined rational metabolic engineering and random mutagenesis (2). While the previous report showed a similar performance using different methods, such as random mutagenesis, the method presented here allows us to rationally find nonintuitive targets, such as mdh, instead of having to screen thousands of mutant strains. ",
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "In conclusion, FSEOF allows the in silico identification of fluxes (gene amplification targets) to be amplified for the enhanced production of desired bioproducts through the analysis of fl ux trends in response to varying product formation fluxes. Also, metabolic performance could be further enhanced by combination with gene knockouts. It is true that not all the targets predicted by FSEOF resulted in enhanced product formation upon their amplification, due to the limitations in our ability to predict real flux values using the current genomescale metabolic models. However, it is important to note that gene amplifi cation targets that are difficult if not impossible to predict could be identified by FSEOF, and most of them were indeed successfully used to develop improved strains for the production of lycopene. Thus, the strategy reported here should be useful in developing industrial strains capable of enhanced production of desired bioproducts, and in combination with other methods, further improvement will be possible. ",
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "",
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "ACKNOWLEDGMENTS ",
+        "text_level": 1,
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "We thank H. O. Bang for the construction of pLyc184 ",
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "This work was supported by the Korean Systems Biology Research Project (grant no. 20090065571) of the Ministry of Education, Science, and Technology (MEST) through the National Research Foundation of Korea (NRF). Further support, from the World Class University Program (grant no. R32-2008-000-10142-0) of the MEST through the NRF and by the LG Chem Chair Professorship, the IBM SUR program, and Microsoft, is appreciated. ",
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "REFERENCES ",
+        "text_level": 1,
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "1. Alper, H., Y. S. Jin, J. F. Moxley, and G. Stephanopoulos. 2005. Identifying gene targets for the metabolic engineering of lycopene biosynthesis in Escherichia coli. Metab. Eng. 7:155–164.   \n2. Alper, H., K. Miyaoku, and G. Stephanopoulos. 2006. Characterization of lycopene-overproducing E-coli strains in high cell density fermentations. Appl. Microbiol. Biotechnol. 72:968–974.   \n3. Becker, J, C. Klopprogge, O. Zelder, E. Heinzle, and C. Wittmann. 2005. Amplified expression of fructose 1,6-bisphosphatase in Corynebacterium glutamicum increases in vivo flux through the pentose phosphate pathway and lysine production on different carbon sources. Appl. Environ. Microbiol. 71:8587–8596.   \n4. Burgard, A. P., P. Pharkya, and C. D. Maranas. 2003. OptKnock: a bilevel programming framework for identifying gene knockout strategies for microbial strain optimization. Biotechnol. Bioeng. 84:647–657.   \n5. Datsenko, K. A., and B. L. Wanner. 2000. One-step inactivation of chromosomal genes in Escherichia coli K-12 using PCR products. Proc. Natl. Acad. Sci. U. S. A. 97:6640–6645.   \n6. Farmer, W. R., and J. C. Liao. 2000. Improving lycopene production in Escherichia coli by engineering metabolic control. Nat. Biotechnol. 18:533– 537.   \n7. Feist, A. M., C. S. Henry, J. L. Reed, M. Krummenacker, A. R. Joyce, P. D. Karp, L. J. Broadbelt, V. Hatzimanikatis, and B. O. Palsson. 2007. A genome-scale metabolic reconstruction for Escherichia coli K-12 MG1655 that accounts for 1260 ORFs and thermodynamic information. Mol. Syst. Biol. 3:121.   \n8. Fischer, E., and U. Sauer. 2003. Metabolic fux profling of Escherichia coli mutants in central carbon metabolism using GC-MS. Eur. J. Biochem. 270: 880–891.   \n9. Fowler, Z. L., W. W. Gikandi, and M. A. Koffas. 2009. Increased malonyl coenzyme A biosynthesis by tuning the Escherichia coli metabolic network and its application to flavanone production. Appl. Environ. Microbiol. 75: 5831–5839.   \n0. Herrgard, M. J., B. S. Lee, V. Portnoy, and B. O. Palsson, 2006. Integrated analysis of regulatory and metabolic networks reveals novel regulatory mechanisms in Saccharomyces cerevisiae. Genome Res. 16:627–635.   \n1. Hilman, J. D., and D. G. Fraenkel. 1975. Glyceraldehyde 3-phosphate dehydrogenase mutants of Escherichia coli. J. Bacteriol. 122:1175–1179.   \n|2. Jin, Y. S., and G. Stephanopoulos. 2007. Multi-dimensional gene target search for improving lycopene biosynthesis in Escherichia coli. Metab. Eng. 9:337–347.   \n|3. Kim, S. W., and J. D. Keasling. 2001. Metabolic engineering of the nonmevalonate isopentenyl diphosphate synthesis pathway in Escherichia coli enhances lycopene production. Biotechnol. Bioeng. 72:408–415.   \n|4. Kirschner, M. w. 2005. The meaning of systems biology. Cell 121:503–504.   \n5. Lee, D. Y., H. Yun, S. Park, and S. Y. Lee. 2003. MetaFluxNet: the management of metabolic reaction information and quantitative metabolic fl ux analysis. Bioinformatics 19:2144–2146.   \n16. Lee, K. H., J. H. Park, T. Y. Kim, H. U. Kim, and S. Y. Lee. 2007. Systems metabolic engineering of Escherichia coli for L-threonine production. Mol. Syst. Biol. 3:149.   \n17. Lee, P. C., and C. Schmidt-Dannert. 2002. Metabolic engineering towards biotechnological production of carotenoids in microorganisms. Appl. Microbiol. Biotechnol. 60:1–11.   \n18. Lee, S. Y. 1996. High cell-density culture of Escherichia coli. Trends Biotechnol. 14:98–105.   \n19. Lee, S. Y., D. Y. Lee, and T. Y. Kim. 2005. Systems biotechnology for strain improvement. Trends Biotechnol. 23:349–358.   \n20. Ma, H., and A. P. Zeng. 2003. Reconstruction of metabolic networks from genome data and analysis of their global structure for various organisms. Bioinformatics 19:270–277.   \n21. Mahadevan, R., and C. H. Schilling. 2003. The effects of alternate optimal solutions in constraint-based genome-scale metabolic models. Metab. Eng. 5:264–276.   \n22. Matthews, P. D., and E. T. Wurtzel. 2000. Metabolic engineering of carotenoid accumulation in Escherichia coli by modulation of the isoprenoid precursor pool with expression of deoxyxylulose phosphate synthase. Appl. Microbiol. Biotechnol. 53:396–400.   \n23. Misawa, N., M. Nakagawa, K. Kobayashi, S. Yamano, Y. Izawa, K. Nakamura, and K. Harashima. 1990. Elucidation of the Erwinia uredovora carotenoid biosynthetic pathway by functional analysis of gene products expressed in Escherichia coli. J. Bacteriol. 172:6704–6712.   \n24. Park, J. H., K. H. Lee, T. Y. Kim, and S. Y. Lee. 2007. Metabolic engineering of Escherichia coli for the production of L-valine based on transcriptome analysis and in silico gene knockout simulation. Proc. Natl. Acad. Sci. U. S. A. 104:7797–7802.   \n25. Pharkya, P., A. P. Burgard, and C. D. Maranas. 2003. Exploring the overproduction of amino acids using the bilevel optimization framework OptKnock. Biotechnol. Bioeng. 84:887–899.   \n26. Pharkya, P., and C. D. Maranas. 2006. An optimization framework for identifying reaction activation/inhibition or elimination candidates for overproduction in microbial systems. Metab. Eng. 8:1–13.   \n27. Price, N. D., J. L. Reed, and B. O. Palsson. 2004. Genome-scale models of microbial cells: evaluating the consequences of constraints. Nat. Rev. Microbiol. 2:886–897.   \n28. Reed, J. L., T. D. Vo, C. H. Schilling, and B. O. Palsson. 2003. An expanded genome-scale model of Escherichia coli K-12 (iJR904 GSM/GPR). Genome Biol. 4:R54.   \n29. Sambrook, J., and D. W. Russell. 2001. Molecular cloning: a laboratory manual. Cold Spring Harbor Laboratory Press, Cold Spring Harbor, NY.   \n30. Sanchez, A. M., G. N. Bennett, and K. Y. San. 2006. Batch culture characterization and metabolic flux analysis of succinate-producing Escherichia coli strains. Metab. Eng. 8:209–226.   \n31. Segre, D., D. Vitkup, and G. M. Church. 2002. Analysis of optimality in natural and perturbed metabolic networks. Proc. Natl. Acad. Sci. U. S. A. 99:15112–15117. ",
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "",
+        "page_idx": 8
+    },
+    {
+        "type": "text",
+        "text": "",
+        "page_idx": 8
+    }
+]

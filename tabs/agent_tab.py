@@ -270,7 +270,7 @@ def agent_tab():
     )
     
     # Send message
-    send_event = send_btn.click(
+    send_btn.click(
         fn=chat_with_agent,
         inputs=[msg_input, chatbot, uploaded_file_path, session_state],
         outputs=[chatbot, tool_display, session_state],
@@ -278,7 +278,7 @@ def agent_tab():
         fn=lambda: "",
         outputs=[msg_input],
     )
-    
+
     # Enter to send
     msg_input.submit(
         fn=chat_with_agent,
@@ -288,6 +288,7 @@ def agent_tab():
         fn=lambda: "",
         outputs=[msg_input],
     )
+
     
     # Clear chat
     clear_btn.click(

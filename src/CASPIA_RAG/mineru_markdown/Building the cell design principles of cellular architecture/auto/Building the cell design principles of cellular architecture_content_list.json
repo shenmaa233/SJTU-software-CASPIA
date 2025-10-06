@@ -1,0 +1,547 @@
+[
+    {
+        "type": "text",
+        "text": "Building the cell: design principles of cellular architecture ",
+        "text_level": 1,
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "Susanne M. Rafelski and Wallace F. Marshall ",
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "Abstract | The astounding structural complexity of a cell arises from the action of a relatively small number of genes, raising the question of how this complexity is achieved. Self-organizing processes combined with simple physical constraints seem to have key roles in controlling organelle size, number, shape and position, and these factors then combine to produce the overall cellarchitecture. By examining how these parameters are controlled in specific cell biological examples we can identify a handful of simple design principles that seem to underlie cellular architecture and assembly. ",
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "Self-organizing process ",
+        "text_level": 1,
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "A process by which a set of components that can, in principle, be connected in various possible patterns will spontaneously associate into a limited subset of patterns, without any external input of information. 'Selforganization' is to be contrasted with 'self-assembly'\" in which components can only fit together such that only one pattern is possible. ",
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "Cillium ",
+        "text_level": 1,
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "A microtubule-based motile and sensory organelle that projects from the surface of many eukaryotic cells. ",
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "Flagellum ",
+        "text_level": 1,
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "An alternative term for cilia when applied to eukaryotic cells. ",
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "Department of Biochemistry and Biophysics,   \nUniversity of California,   \nSan Francisco,   \n600 16th Street,   \nSan Francisco,   \nCalifornia 94158, USA.   \ne-mails:   \nsusanne.rafelski@ucsf.edu: wmarshall@biochem.ucsf.edu doi:10.1038/nrm2460 ",
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "Cells are highly complex structures'. This complexity affects biological functions at many size scales2. But how does this complexity arise? What mechanisms pattern the architecture of the cell and where does the information to specify a distinct architecture for different cell types come from? ",
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "The amount of information that is needed to direct the action of the cellular assembly pathways could be minimal because cellular morphogenesis is a self-organizing process3. Subject to simple inputs that can bias how the system develops, self-organizing processes can generate complex, patterned responses. In principle, therefore, the cell architecture could be specified by a small number of distinct genes, which would serve to modulate the inherent self-organizing processes that lead to the physical shape of cells and organelles. Understanding the origins of cell organization thus requires us to answer the question of how the self-organizing physical and biochemical properties of cellular constituents can convert simple temporal changes in gene-expression levels into complex changes in physical, three-dimensional structures. This review addresses this question at the structural level of the organelle by asking how the geometry (the size, number, position and morphology) of organelles is specified and regulated. ",
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "In all cases, we will ttempt to identify design principles by which a simple input containing minimal information can produce a complex output in terms of morphological changes. In engineering terminology a design principle is a simple rule that, when followed in the design of a machine, ensures or at least increases the likelihood of proper assembly and function. We note that our use of the term does not imply the existence of a 'designer, but given the current interest in synthetic biology we suggest that the design principles used in evolution could now be used to reprogramme cell in a rational way. For example, we argue that a common strategy used by cell to regulate organelle size is to limit either the assembly or disassembly rate of an organelle by a process that is inherently dependent on organelle size. Other specific principles that we discuss are the control of organelle number by the balance of organelle formation and partitioning; the establishment of cellular polarity by self-organization that is biased by external inputs; the control of organelle position by direct motion on polarized cytoskeletal arrays; and the control of organelle shape by membrane-binding proteins that drive local curvature changes. ",
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "",
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "How cells measure size and length ",
+        "text_level": 1,
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "Length and size are fundamental parameters for specifying geometry. Organelle size must be appropriately scaled as a function of cell size4 and physiological demands. Mitochondrion size in yeast, for example, is proportional to cell volume (G. Pesce, The Molecular Sciences Institute, Berkeley, personal communication). Organelle size is tightly controlled: for example, the coefficient of variation in the lengths of eukaryotic cilia and flagella (the two terms will be used interchangeably in this review) is less than $1 0 \\%$ (REF. 5). But how are the sizes of subcellular structures determined? Genetic screens have identified genes that are involved in size control for various organelles, including cilia and fl agella6, peroxisomes and lipid dropletss. However, in most cases the mechanistic basis for size alterations in these mutants remains unknown. ",
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "Measuring length using molecular rulers. One way to control the size of linear structures is for the cell to measure the length of the structure with a molecular ruler protein (FIG. 1a) which has a physical length that equals the desired length of the overall structure. For example, the length of the $\\lambda$ -phage tail is dictated by the size of the gene $H$ product'. Deletions in gene $H$ produce shorter tails and insertions produce longer tails. One end of the gene $H$ product is attached to the capsid and the other tracks the growing tail, protecting it from a growth-terminating factor until the tail finally exceeds the length of the gene $H$ product and growth terminates. Rulers have been proposed for length control of bacterial flagellar hooks1°, bacterial type II secretion needles' and sarcomere actin filaments in muscle12. ",
+        "page_idx": 0
+    },
+    {
+        "type": "image",
+        "img_path": "images/b986a7043a06878e3f433566b811e85efb4aa5e84a9679de04430324f53f34b8.jpg",
+        "img_caption": [
+            "Figure 1 | Design principles of organelle size control. a | Organelle size can be controlled by molecular rulers. The physical length of a molecular ruler protein determines the size of a cellular organelle. b | Organelle size can be controlled by quantal synthesis whereby the precise amount of precursor material is synthesized by the cellin order to build the correct number of organelles of the correct size. "
+        ],
+        "img_footnote": [],
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "",
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "Size control by quantal synthesis. Size could be determined by synthesizing precisely enough material to build a structure of the correct size (FIC. 1 b), a model that has been termed quantal synthesis13. Precursor protein levels affect the length of cilia/fl agella in the unicellular green alga Chlamydomonas reinhardti14 and are under tight regulation during flagellum regeneration 15. In sea urchin cells, the lengths of cilia correlate with the concentration of the protein tektin, which is produced by the cells13. However, new flagella can grow to roughly half of their normal length when protein synthesis is inhibited in C. reinhardtiil4, which shows that cells retain a pool of unused precursor protein. Moreover, a simple model in which the amount of precursor directly determines fl agellum length would predict a geometric dependence of fl agellum length on number. For example, if fl agella double in number, then the average length of each flagellum should halve. However, mutants with varying numbers of fl agella show a signifi cantly weaker dependence of flagellar length on numberl6. Therefore, it seems that the levels of precursor protein might not be the only length-controlling mechanism at work in fl agella. ",
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "",
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "Another example of an organelle whose size is apparently regulated by the synthesis of components is the endoplasmic reticulum (ER). Forced upregulation of lipid-biosynthesis enzymes leads to an increase in the size of the ER17. In this case there seems to be a feedback pathway that controls lipid synthesis as a function of ER size: the unfolded protein response (UPR), a signalling pathway that monitors proper ER function, and controls the transcription of many genes, including those that encode lipid-biosynthesis enzymes1⁸. If the amount of lipid controls the size of the ER, and the UPR activates lipid synthesis, then it is predicted that constitutive activation of the UPR pathway should cause an increase in the size of the ER membrane. This prediction has been experimentally verified19. ",
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "One prediction of the quantal synthesis model is that multiple organelles with common limiting components will compete with each other, such that one organelle can only grow if the others shrink. This has been demonstrated experimentally for flagella in C. reinhardtii, in which the severing and regeneration of one flagellum in a biflagellate cell induces the other intact flagellum to shorten20. ",
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "Dynamic balance mechanisms. Most cellular structures undergo continuous turnover, and hence size maintenance requires the rates of assembly and disassembly to precisely equal each other only when the correct structure size has been reached. If assembly or disassembly rates are inherently size-dependent then there will only be a limited number of sizes at which the two rates become equal. If there is only one size at which the assembly rate equals the disassembly rate then this will be the steady-state organelle size (FIC. 2a). For example, eukaryotic flagellar microtubules undergo continuous assembly and disassembly at their tips. Of these, the disassembly rate is length-independent and the assembly rate is a decreasing function of length16,21. Longer flagella assemble slower than shorter fl agella because transport within the flagellum, which is mediated by a kinesin-based system called intraflagellar transport22, becomes less efficient16,21. This limits the availability of precursor protein to support tip assembly, thus reducing the assembly rate with increasing length. As the rate of assembly is a continuously decreasing function of length (whereas the rate of disassembly is length-independent), there is only one length at which the two rates balance, and this sets the steady-state flagellar length. ",
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "A similar dynamic balance mechanism might control the length of actin-based structures, such as microvilli or the stereocilia of the mouse inner ear. Actin filaments in these structures constantly treadmill back towards the cell body, with disassembly at the base balanced by continuous assembly at the tip. In turn, this depends on the diff usion of free actin to the $\\mathrm { t i p } ^ { 2 3 , 2 4 }$ . The requirement for actin to diffuse to the tip provides an inherent dependence of the assembly rate on the length of the filament. Diffusion-induced length dependence of the assembly rate has also been suggested for the control of bacterial flagella length25. ",
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "",
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "Yeast kinesin-8 binds along the length of microtubules, moves processively to their tips and then catalyses disassembly. Longer microtubules recruit more kinesin-8, which results in a length-dependent disassembly process that, when combined with a constant rate of assembly, yields a unique steady-state microtubule length²6. Unlike flagella and microvilli, it seems to be the disassembly of the microtubules, rather than the assembly, that is regulated as a function of length. In complex cytoskeletal assemblies, such as the mitotic spindle, length control might involve multiple opposing length-dependent processes in a more complicated dynamic balance27. ",
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "The same types of dynamic balance mechanisms that are used to control length could also be used to control the volume or surface area of the organelle. If an organelle such as the Golgi apparatus exchanges vesicles with the ER, vesicle fusion on the organelle occurs at a rate that is dictated by the rate of vesicle budding from the ER, rather than by the organelle size. By contrast, vesicle budding from the organelle could occur at a rate that is proportional to the surface area of the organelle (assuming a constant density of budding sites). The rates of membrane addition and membrane removal would only balance each other for a single surface area value, thereby dictating the surface area of the organelle. If the organelle became larger than this the budding rate would increase, leading to a reduction in surface area: if the organelle became too small the budding rate would decrease relative to the fusion rate and hence it would enlarge to its steady-state surface area. ",
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "How cells control organelle number ",
+        "text_level": 1,
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "A typical eukaryotic cell has one nucleus, two centrioles, one ER, multiple mitochondria, scores of endosomes and many ribosomes. How is the number of organelles controlled? ",
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "Mitotic spindle ",
+        "text_level": 1,
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "A highly dynamic array of microtubules that forms during mitosis and serves to move the duplicated chromosomes apart. ",
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "Centriole ",
+        "text_level": 1,
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "A short, barrel-like array of microtubules that organizes the centrosome and contributes to cytokinesis and cell-cycle progression. ",
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "Autophagy ",
+        "text_level": 1,
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "A pathway for the recycling of cellular contents, in which materials inside the cell are packaged into vesicles and are then targeted to the vacuole or lysosome for bulk turnover. ",
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "Number control as a dynamic balance. The number of organelles reflects the balance between two competing processes: the increase in number due to de novo synthesis or fission of pre-existing organelles; and the decrease in number due to fusion with other organelles, degradation processes such as autophagy, or the partitioning of organelles into daughter cells during cell division. To control the number of organelles, one or more of these processes must be regulated. It has been proposed, for example, that the synthesis of chloroplasts is regulated as a function of the number of chloroplasts in algal cells28. Cells that inherit too few chloroplasts will make more, whereas cells that inherit too many will stop chloroplast synthesis. A similar scheme has been experimentally demonstrated for centrioles29. Therefore, the control of organell number shares a conceptually similar strategy to the dynamic balance mechanisms of organelle size control (FIC. 2). ",
+        "page_idx": 2
+    },
+    {
+        "type": "image",
+        "img_path": "images/e6e426ae5a28e45c1c48de26522781d09d3055d82818c5d6ae42ac7c3fe36921.jpg",
+        "img_caption": [
+            "Figure 2 | The dynamic balance mechanism to control size and number. a|Dynamic balance to control organelle size. The size of the organelle feeds back onto either the assembly or disassembly rate such that one of these is inherently size-dependent. Thus, the assembly rate and disassembly rate are equal to each other only at the correct size of the organelle. The organelle size changes if the regulation of either the assembly or the disassembly is altered. b | Dynamic balance to control organelle number. The mechanisms that regulate either the increase or decrease of organelle number are themselves a function of the organelle such that the correct number of organelles is maintained. The number of organelles changes if the underlying regulation of either the increase (thick arrow) or the decrease (thin arrow) in organelle number is altered. "
+        ],
+        "img_footnote": [],
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "Controlling the increase in organelle number. The fact that organelle production can be regulated by the existing number of organelles suggests that cells can count. For example, an absence of centrioles activates a de novo assembly pathway30,31, whereas an excess of centrioles $( > 2 )$ inactivates further centriole assembly29. Peroxisomes undergo highly regulated proliferation, the rate of which is adjusted in response to unknown intracellular cues that control steady-state peroxisome number'. Apparently, cells can detect whether the organelle number has drifted outside of a preset range. One possible mechanism by which cells count organelle number would be for the organelles to generate a diffusible molecular signal at a constant rate per organelle. This signalling molecule would degrade with a constant half-life. As a result, the steady-state concentration of the signal would be proportional to the number of organelles. The concentration could then be used to regulate the assembly of new organelles. One such mechanism seems to function in the control of plasmid replication, in which plasmids encode diffusible trans-acting autoinhibitors of plasmid replication at a constant rate per plasmid³2. This type of mechanism relies on measuring the ratio of organelle number to cell volume and could thus be tested by manipulating cell size33. ",
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "",
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "Reducing organelle number. The number $( N )$ of organelles can be reduced by their partitioning between daughter cells. If $N$ organelles distribute randomly between two daughter cells, the number of copies that a given daughter receives will vary randomly according to binomial statistics. For each organelle that segregates at random, it is as though one flips a coin to determine which daughter cell receives that organelle.If one flips a coin a few times, the number of flips that come up heads can vary substantially. Similarly, if organelles partition at random the actual number that a given daughter inherits can fluctuate substantially One way to dampen such fl uctuations is to fragment the organelle into a large number of small pieces so that the effective value of $N$ becomes very large. In this case most daughter cells will inherit a number that is close to $_ { \\mathrm { N } / 2 }$ . Alternatively, the mitotic spindle can be used to segregate organelles nonrandomly between the two daughters, as with centrioles. For many organelles, it is still not entirely clear how they are partitioned and whether this partitioning is truly a random process or not. For example, endosomes and lysosomes associate with spindle poles but still distribute according to binomial statistics34. Golgi segregate using the mitotic spindle poles in some organisms35, whereas in others they fragment and scatter randomly between the daughters36. It should be noted that partitioning by the spindle will not necessarily reduce fluctuations in organelle numbers if individual organelles associate with the spindle poles at random³7. Regardless, partitioning is certain to reduce organelle number because the initial number, $N _ { : }$ must somehow be divided among the two daughter cells. ",
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "Binomial statistics ",
+        "text_level": 1,
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "A statistical distribution that describes the probability distribution that is obtained by several successive decisions, each of which has two possible outcomes with constant probabilities. For example, the distribution of the numbers of heads or tails after a particular number of coin flips. ",
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "Fluctuating asymmetry ",
+        "text_level": 1,
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "Asymmetry resulting from slight stochastic differences in the molecular concentration in two different regions of a cell. ",
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "Organelle number might also be reduced by the active destruction of existing organelles when the number exceeds a threshold. Such a process has been documented for peroxisomes and involves an autophagy-like mechanism38. In ciliates, the number of cilia in various cortical structures is proportional to the cell size. When the cell volume is experimentally reduced in the absence of cell division, the number of cilia is reduced so as to maintain a cilia number that is in constant proportion to cell volume39,40. These experiments suggest that active degradation pathways, such as autophagy, can sense the relative concentration of organelles per unit volume, rather than a strict absolute number. We speculate that active organelle degradation might be triggered by the accumulation of diffusible factors produced by individual organelles, a model that is formally equivalent to the inhibitor-dilution model for control of organelle production that is discussed above32. However, the diffusible molecule would trigger degradation rather than inhibit biosynthesis. ",
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "",
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "Spatial organization and polarity ",
+        "text_level": 1,
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "A key aspect of cell geometry is the fact that both cell shape and intracellular organization are polarized. Cell polarity is an asymmetry of shape or of protein distribution, for example, between the front and the back in motile cells or between the top and the bottom in epithelial cells. A non-polarized cell becomes polarized through the loss of symmetry, occurring as a result of an extrinsic or intrinsic localized cue or occurring spontaneously as a result of underlying self-organizational mechanisms that are inherent in the cell or system. Polarization and directed motility do not require gene transcription or even the nucleus (as demonstrated by experiments using anucleate cytoplasts)41,42. ",
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "Spontaneous polarization has been observed within cells, including the formation of a polarized distribution of the signalling protein Cdc42 at the plasma membrane in Saccharomyces cerevisiae43, the polarization of neutrophils in a uniform bath of chemoattractant4, and the initiation of motility in stationary keratocytes45. In the case of keratocytes, spontaneous myosin-dependent actin contractility at the presumptive rear of the cell leads to the increased inward flow of fi lamentous (F)-actin and the retraction of the rear. These changes in F-actin organization and dynamics propagate globally and result in the decrease of F-actin flow at the cell rear and the induction of actin-polymerization-based protrusion at the front of the cell, thus leading to persistent keratocyte motility5. The common design principle in establishing cell polarity seems to be the existence of intrinsic selforganizing polarity systems, in which the cell exhibits fluctuating asymmetry in the localization of signalling proteins or cytoskeletal dynamics. The cell then responds to a stochastic amplification in these fluctuations by initiating a positive-feedback loop, which involves both signalling networks and cytoskeletal structures that locally amplify the initial symmetry-breaking event and further regulate other mechanochemical polarizing processes throughout the cell(FIC. 3a,b). Positive feedback alone would lead to constant uniform activation of polarizing processes. Therefore, polarization to a discrete site also requires long-range negative interactions to suppress the spread of polarization43,46. The combination of both local positive feedback and the long-range inhibition of polarizing processes allows spontaneous symmetry breaking and self-organization. Such systems are then biased by upstream spatial inputs in order to drive polarization in a desired direction. ",
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "Organelle positioning in response to polarity. Cell polarity directs the positioning of intracellular organelles. This positioning is often crucial for their function, for example, in determining the orientation of stereocilia bundles in response to planar cell polarity cues in the cochlea47,48 or the orientation of the secretory apparatus towards the targets of natural killer immune cells49. In migrating cells, many organelles, including mitochondria and the Golgi apparatus, are positioned relative to the axis of polarization50,51. A particularly dramatic example of polarized organelle positioning occurs during the development of neurons, in which the positions of the Golgi apparatus and the centrosomes strongly correlate with sites of neurite outgrowth52. ",
+        "page_idx": 3
+    },
+    {
+        "type": "image",
+        "img_path": "images/107e0324bbc44dd980df3832d9b303fe47043871f90267cccfaae7c5251cc0e4.jpg",
+        "img_caption": [
+            "Figure 3 | Design principles of polarity and organelle positioning. a | Local polarity processes (including cytoskeletal dynamics and protein localization) undergo stochastic fluctuating asymmetry. The cell responds to either a stochastic or cued amplification in these fluctuations by locally amplifying this symmetry-breaking event. Meanwhile, organelles are randomly positioned within the cell. b | Local polarity processes induce global cytoskeletal or structural polarity (shown by the gradient). Long-range suppression of these polarity processes prevents them from being activated uniformly throughout the cell. Together, the local amplification and long-range suppression of polarity processes amplify the overall polarity of the cell. Some organelles (yellow) are positioned by this global cell polarity. c | The positioning of some organelles (yellow) further amplifies the global cytoskeletal or structural polarity (the gradient steepens) and controls the positioning of other organelles (green and grey) in the cell. "
+        ],
+        "img_footnote": [],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "",
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "Mechanistically, it is not clear how organelles become repositioned in response to polarity cues. Organelles might move by random diffusion until they collide with a target docking site, although it is unclear whether the diffusion of organelles in the crowded cytoplasm is fast enough to allow such a diffuse-to-capture mechanism to operate53-56 Perhaps for this reason, organelle positioning often involves the cytoskeleton, which can allow for more rapid, directed transport of organelles by motor proteins or specific subcellular localization through the regulation of cytoskeletal distribution and dynamics. For example, cortical actin flow drives the polarized redistribution of the cortical ER and myoplasm (mitochondrially enriched cytoplasm) in Ascidian oocytes57 and establishes the nucleus-centrosome axis in migrating cells during wound healing58. ",
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "Feedback from organelle positioning. One common theme in polarized cells is the non-random distribution and dynamics of the microtubule array. Work has recently focused on the plus-end microtubule-tip-binding proteins and motors that track with microtubule plus ends and interact with other signalling or motor proteins that are localized to the cell cortex59–61. These proteins allow the selective stabilization of microtubule dynamics and the proper localization of the microtubule cytoskeleton within the cell62,63. For example, the microtubule array is polarized and microtubules are selectively stabilized towards the leading edge in motile cells64. ",
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "",
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "The position of the microtubule array can in turn affect the position of organelles, such as the Golgi apparatus in mammalian cells. The Golgi is located adjacent to the centrosome and its position is dependent on both the microtubules and the motor protein dynein65–67. The cisternal compartments of the Golgi have a polarized organization, and their orientation depends on the cell type and on both dynein and kinesin molecular motors moving on polarized microtubules65. For example, in motile cells the trans-Golgi network (TGN), from which vesicles that are destined for the plasma membrane bud, is orientated towards the outside of the cell, whereas the cis-Golgi is orientated inward. The TGN has been shown to harbour microtubule-nucleation ability and Golgi-attached microtubules exhibit increased stability68. It was recently further shown that the TGN protein GCC185 recruits CLASPs (CLIP-associated proteins), which stabilize small microtubule seeds that are nucleated at the TGN6%. This leads to a population of stabilized microtubules emanating from the TGN, preferentially towards the leading edge69, which might be required for cell motility70. Thus, the positioning of the Golgi in response to cell polarity might itself contribute further to processes that promote cell polarity. This sort of organelle position-dependent positive-feedback loop could potentially lead to the spontaneous formation of a polarized intracellular axis, although to our knowledge this has not been tested. ",
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "Organelles can also feedback on the positioning of other organelles. In C. reinhardti, which exhibits stereotyped positioning of its intracellular organelles, the mother centriole directs the positioning of the daughter centriole, the nucleus and possibly the contractile vacuole71. This suggests that perhaps the mother centriole acts more generally to coordinate the overall geometry of the many subcellular structures in this organism. ",
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "After the initial polarization, some organelles are repositioned in the cell in response to the now orientated cytoskeleton (FIG. 3b). These organelles can in turn redirect the position of the cytoskeleton and further enhance the global cell polarity, and can cause the reposition of other organelles through an organelle position-dependent feedback loop (FIC. 3c). Because the underlying polarity system is self-organizing, it does not require high information content in its inputs, but because it is coupled to the cytoskeleton and ultimately to organelle positioning, the polarity system can lead to complicated responses to simple inputs. ",
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "Dynamic shape specification ",
+        "text_level": 1,
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "Organelles take on a striking variety of shapes that range from interconnected tubular networks of the mitochondria and peripheral ER to carefully localized stacks of membranes in the Golgi cisterna, and to the large continuous membrane sheets in the nuclear envelope and regions of the ER. How are these distinct shapes achieved? ",
+        "page_idx": 4
+    },
+    {
+        "type": "image",
+        "img_path": "images/d62611312b17ec5744e075f9e187027d6d9fe0ffb385458de144c8da482ed92b.jpg",
+        "img_caption": [
+            "Figure 4 | The regulation of organelle shape by changing the vesicle size. Depending on the number and size of the vesicles that fuse with a membrane-bound compartment, the resultant compartment can display significant shape differences. Small vesicles would increase the surface area of the compartment more than the volume, whereas large vesicles would increase the volume over the surface area. While the possible resulting shapes of the compartment are extreme, this sort of control mechanism could also create many more subtle variations in compartment shape and function. "
+        ],
+        "img_footnote": [],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "pull the lipid membrane into tubes as they move along microtubules8-90 (FIC. 5c). These membrane tubes resemble tubular ER networks. However, membrane tubes can also be formed from purified ER-membrane fractions and cytosol, in the absence of microtubules, in a process that is dependent on cytosol-regulated vesicle-membrane fusion91. This suggests that a microtubule-independent regulation of ER networks exists. The movement of the ER along and the direct attachment of the ER to microtubules, however, is required for its peripheral localization in mammalian cells92-93. ",
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "Insights into how the tubular morphology compared with the sheet-like morphology of the ER is regulated has come from the identification of the reticulon proteins in yeast and mammalian cells, which localize to the tubular ER and are excluded from the sheets94,95. Altering the amounts of these proteins in cells induces transitions between a more tubular ER and a more sheet-like $\\mathrm { E R ^ { 9 4 } }$ . Reticulons contain two long hydrophobic domains that are thought to induce membrane tubulation by constraining local membrane curvature94,96. ",
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "Shaping membrane curvature. The shape of an organelle can be completely defined by specifying the local curvature of the surrounding membrane at each point. The membrane curvature depends on the surface-area-tovolume ratio (FIC. 4) and the preferred intrinsic curvature of the membrane. Indeed, changes in the surface-area-tovolume ratio and the difference in area between the two lipid monolayers can lead to a wide range of dramatic transitions in shape, such as to spheres, flattened discs, cup-shapes and even complex star-like shapes72 (FIC. 5a). These shapes can be explained by theoretical models that minimize the energetics of membrane deformation73–75. Different lipids preferentially stabilize different degrees of membrane curvature and can profoundly affect the organelle shape7%. Local membrane curvature can drive the segregation of lipids, which can then influence further curvature changes, suggesting a potential for complicated feedback loops between local curvature and lipid composition77,78 (FIC. 5a). Phase-separated vesicles and tubules can even spontaneously bud owing to the induced local membrane curvature of segregated domains79–81. ",
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "Membrane-associated proteins can also affect membrane curvature82-84 (FIG. 5b), as is believed to be the case for the BAR-domain-containing proteins85. An extreme example is that when purified matrix protein of Newcastle disease virus is added to membranes, they deform and bud off vesicles of similar sizes to virus particles in infected cells86. ",
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "Determining the tubular morphology of ER. The ER consists of a membrane-bound compartment that is continuous with the nuclear envelope. There are two types of ER: the rough ER, which is usually composed of membrane sheets, and the smooth ER, which is usually composed of a tubular network that extends to the cell periphery in mammalian cells or is attached to the periphery in yeast87. Membrane tubes can be formed in vitro by the activity of motor proteins, which ",
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "Dynamic morphology of mitochondria. Depending on the cell type, mitochondrial shapes range widely from small individual organelles, as commonly described in textbooks, to large interconnected networks97. Mitochondrial morphology involves a combination of the underlying tubular structure, the constant tubule fusion and fission dynamics which regulate the degree of mitochondrial fragmentation, and the tubule movement along or the attachment to the cytoskeleton and cell periphery98-101. In mammalian cells mitochondria form tubular networks that spread throughout the cell along the microtubule cytoskeleton9, whereas in budding yeast they form an interconnected tubular network that is localized to the inner cell surface which forms a cage-like structure around the cell102. The cell regulates the overall degree of mitochondrial fragmentation in response to the cell cycle103,104 or apoptotic signals105. The mitochondrial tubule fusion and fission dynamics constantly remodel the connections within the mitochondrial network, and therefore perhaps provide a mechanism for the cell to remodel the mitochondrial network, for example, from a more simplified to a more complex and ramified network, as observed in yeast cells in response to changes in growth condition106. ",
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "The wealth of imaging and genetic tools available to study mitochondrial morphology makes this organelle an ideal model for determining the minimum requirements that are needed to establish a complex organelle morphology from simple algorithmic rules. It is also an ideal model for understanding the basic design principles that underlie the precise regulation of mitochondrial morphology in response to the functional needs of a cell. These sorts of studies, however, require rigorous methods to quantify the dynamic morphology of mitochondria to compare them with modelled structures. ",
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "Membrane-bound organelle morphology results from basic physical effects (including surface-to-volume-driven curvature distributions and curvature-induced lipid partitioning; FIC. 5a) combined with protein-induced curvature changes (FIC. 5b) and the attachment to and motor-driven movement along cellular structures (FIC. 5c). Thermodynamically, energy input into the system by the cytoskeleton, by the production and turnover of membrane-associated proteins and by the generation of specific lipid composition changes allows the membranous systems to attain more complicated structures than a simple lipid-bound vesicle could attain at thermodynamic equilibrium. Further precise control of the shape-altering dynamics of these structures imparts a flexibility to their morphologies that allows them, in a controlled manner, to regulate the cellular functions accomplished by these complex structures. ",
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "",
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "Propagation of structure ",
+        "text_level": 1,
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "Because cells are dynamic systems, their organization must be continuously regulated. It seems most likely that the genome exerts its control over cellular structure not by explicitly dictating where each part of the cell has to go and how it is to be shaped, but rather by providing small course corrections that steer the evolving organization of the cell in particular directions. The steering of dynamic systems by small perturbations is an important principle of control-system theory and has been applied to control biological systems, such as heart rhythms. ",
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "The dynamic nature of the cell structure also means that the influence of a given pattern of gene expression on the cell organization will be a strong function of the current state of the cell — the history of a structure of a cell directly affects its future dynamic organization. It has been observed that cells can re-form their original shape after the removal of chemical inhibitors that disrupt cell shape107–-109. Cells thus have a persistent state which is gradually modified by dynamic processes. ",
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "",
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "If cells can restore their geometric state following transient perturbations, one might wonder how much of cellular structure persists following a round of division: cell division is, in essence, a geometrical perturbation. This question can be potentially addressed by comparing the structural similarity between sister cells. In fact, several studies have suggested that sister cells are similar and might even be mirror images of each otherl10-113. However, these studies have been based on visual observation and the statistical strength of the similarity between sisters is yet to be rigorously demonstrated. The degree to which sister cells are mirror images of each other is therefore an open question, whose answer will have strong implications for the importance of pre-existing structure in the dynamic organization of the cell. ",
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "In cells with sufficiently complex structures, it has been possible to test for the inheritance of spatial organization by experimentally rearranging cellular components and testing whether the rearranged geometry persists. The famous experiments of Beisson and Sonneborn on inverted ciliary rows in Paramecium aurelia clearly show that artificially rearranged structures can be propagated through division114. This phenomenon has been extensively investigated with a series of elegant experiments in various types of ciliates, which have shown that certain aspects of a rearranged organization can be inherited and other rearrangements can selfcorrect. An example is provided by the oral apparatus, a spiral-shaped array of cilia. The oral apparatus is a polarized structure with a distinct anterior and posterior end, and is also chiral, showing a pronounced left–right asymmetry. When the oral apparatus is repositioned to different places in the cell, it retains its normal left–right asymmetry but switches its anterior-posterior asymmetry in response to the new cellular context. This suggests that the structure relies strictly on local self-propagating cues for left–right position but responds to global cellular cues for anterior-posterior positioning15. This has been interpreted as reflecting a varying level of input of local information (which can be rearranged and thus propagated) for some aspects of structure compared with global cellular polarity information (which cannot be rearranged by local manipulations and therefore cannot be propagated). If genomic tools could be used to probe the underlying events of these rearrangements, they might aid the understanding of the origins of cellular geometry and its propagation. ",
+        "page_idx": 6
+    },
+    {
+        "type": "image",
+        "img_path": "images/5d79bb7f9699b6f3b133596807e6b7aa46ce9f4ab8fa1accab74f248d13fa55f.jpg",
+        "img_caption": [
+            "Figure 5| Design principles of dynamic shape specification. a| Possible changes in membrane curvature and vesicle shape based on lipid size and composition. The segregation oflipid domains occurs spontaneously within alipid bilayer and can afect localized curvature (top). Changing the surface-area-to-volume ratio and the relative surface areas of each monolayer within the bilayer can induce a wide range ofvesicle shapes simply by minimizing the energetics of membrane curvature (bottom).b|The addition of membrane-binding proteins orintegral membrane proteins can induce or stabilize localized membrane curvature,including the extreme curvatures that are seen during the budding of smallervesicles from the membrane (top) and during the formation of membrane tubes bottom).c|The cytoskeleton provides aframework along which membrane-protein structures can be moved and attached. Regulated fusion and fission dynamics can constanty remodel the resultant complex membrane networks. The overallnetwork morphology depends on the localization of the cytoskeletal attachment sites and the localization of the fusion and fission proteins within the network. "
+        ],
+        "img_footnote": [],
+        "page_idx": 6
+    },
+    {
+        "type": "table",
+        "img_path": "images/7345e2978bfacdc12931758b66b1f3ef4d7adf5e446a7eaa2529a23b01409799.jpg",
+        "table_caption": [
+            "Table 1 | Design principles for cellular architecture "
+        ],
+        "table_footnote": [
+            "\\* We have provided a single reference here as an example, although there are numerous others. "
+        ],
+        "table_body": "<html><body><table><tr><td>Parameter</td><td>Design principle References*</td></tr><tr><td>Size</td><td>Dynamic balance of assembly and disassembly</td></tr><tr><td>Number</td><td>21 Balance of organelle formation and partitioning 28</td></tr><tr><td>Polarity</td><td>Self-organization biased by externalinputs</td></tr><tr><td>Position</td><td>Directed motion on polarized cytoskeletal arrays</td></tr><tr><td>Shape</td><td>Energetics of protein binding drive 94 curvature change</td></tr></table></body></html>",
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "",
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "Perspective ",
+        "text_level": 1,
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "As cell biologists accumulate details concerning cellular composition and geometry, new approaches that combine physics, engineering and biology will be needed to understand the systems that build a cell. TABLE 1 outlines some of the general design principles that seem to apply to cellular geometry, based on examples discussed above. One important current goal is to determine whether these simple mechanisms, such as local membrane curvature changes driven by protein binding, are sufficient to explain the full complexity of cellular structures. To achieve this goal, computational modelling combined with quantitative measurements will be needed to ask whether some proposed set of potential mechanisms could be sufficient to generate a particular structure that is observed in vivo. For instance, one could simulate the combined effects of membrane-binding proteins by using a mechanical model for the equilibrium of membrane curvature and ask whether this yields the structure of a Golgi stack. Ultimately, such approaches should yield a designlevel understanding of cell architecture, allowing us to programme cell organization by the modification of strategically chosen gene-expression levels. ",
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "",
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "Within the realm of regenerative medicine, the differentiation of stem cells into a desired cell type is just the first step. In order for cells to perform their correct physiological function, they must not only express the correct genes but also attain the correct morphology. The ability to reprogramme and design cell organization might thus have a crucial role by allowing cells to be driven towards the functionally required architecture. ",
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "There is currently great interest in 'synthetic biology, whereby circuits and systems can be engineered using biomolecular building blocks such as promoters and DNA-binding proteins. However, the synthetic systems built to date are trivial compared with real physical machines built out of metal or silicon. One reason for this is that current synthetic biology relies on solutionphase reactions with diffusible molecules. Because the molecules that carry information, such as the value of digital bits, are diffusible, it is impossible to use spatial patterning such as that used in integrated circuits to build up complexity. Hence, a synthetic biological logic circuit can only have as many logic gates as there are diffusible signalling molecules. If molecular assemblies with defined three-dimensional structures can be engineered within cells, it might be possible to take synthetic biology into a realm of vastly increased complexity. Understanding how cells assemble and control complex structures might thus provide the basis for a whole new type of engineering. ",
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "1. Marsh, B. J., Mastronarde, D. N., Buttle, K. F., Howell, K. E. & Mclntosh, J. R. Organellar relationships in the Golgi region of the pancreatic β cell line, HiT-T15, visualized by high resolution electron tomography. Proc. Natl Acad. Sci. USA 98, 2399–2406 (2001).   \n2. Minton, A. P. How can biochemical reactions within cells differ from those in test tubes? J. Cell Sci. 119, 2863–2869 (2006).   \n3. Karsenti, E. Selforganization in cell biology: a brief history. Nature Rev. Mol. Cell Biol. 9,255–262 (2008).   \n4. West, G. B., Brown, J. H. ∂ Enquist, B. J. in Scaling in Biology (eds J. H. Brown ∂ G. B. West) (Oxford University Press, New York, 2000).   \n5. Wheatley, D. N. & Bowser, S. S. Length control of primary cilia: analysis of monociliate and multiciliate PtK1 cells. Biol. Cel1 92, 573–582 (2000).   \n6. Tam, L. W., Wilson, N. F. δ Lefebvre, P. A. A CDK-relatec kinase regulates the length and assembly of fl agella in Chlamydomonas. J. Cell Biol. 176, 819–829 (2007).   \n7. Yan, M., Rayapuram, N. & Subramani, S. The control of peroxisome number and size during division and proliferation. Curr. Opin. Cell Biol. 17,376–383 (2005).   \n8. Guo, Y. et al. Functional genomic screen reveals genes involved in lipid-droplet formation and utilization. Nature 453, 657–661 (2008).   \n9. Katsura, I. Determination of bacteriophage λ tail length by a protein ruler. Nature 327, 73–75 (1987). Demonstrates that the length of a biological structure can be determined by the length of a single protein, which apparently acts as a ruler during assembly.   \n10. Shibata, S. et al. FliK regulates flagellar hook length as an internal ruler. Mol. Microbio/. 64, 1404–1415 (2007).   \n11. Journet, L., Agrain, C., Broz, P. & Cornelis, G. R. The needle length of bacterial injectisomes is determined by a molecular ruler. Science 302, 1757–1760 (2003).   \n12. Fowler, V. M., McKeown, C. R. & Fischer, R. S. Nebulin: does it measure up as a ruler? Curr. Biol. 16, R18–R20 (2006).   \n13. Stephens, R. E. Quantal tektin synthesis and ciliary length in sea-urchin embryos. J. Cell Sci. 92, 403–413 (1989).   \n14. Rosenbaum, J. L., Moulder, J. E. ∂ Ringo, D. L. Flagellar elongation and shortening in Chlamydomonas. The use of cycloheximide and colchicine to study the synthesis and assembly of flagellar proteins. J. Cell Biol. 41, 600–619 (1969).   \n15. Lefebvre, P. A. ∂ Rosenbaum, J. L. Regulation of the synthesis and assembly of ciliary and flagellar proteins during regeneration. Ann. Rev. Cell Biol. 2, 517–546 (1986).   \n16. Marshall, W. F., Qin, H., Rodrigo Brenni, M. δ Rosenbaum, J. L. Flagellar length control system: testing a simple model based on intraflagellar transport and turnover. Mol. Biol. Cell 16, 270–278 (2005).   \n17. Sriburi, R., Jackowski, S., Mori, K. ∂ Brewer, J. W. XBP1: a link between the unfolded protein response, lipid biosynthesis, and biogenesis of the endoplasmic reticulum. J. Cell Biol. 167, 35–41 (2004).   \n18. Cox, J. S., Chapman, R. E. ∂ Walter, P. The unfolded protein response coordinates the production of endoplasmic reticulum protein and endoplasmic reticulum membrane. Mol. Biol. Cel/ 8, 1805–1814 (1997).   \n19. Bernales, S., McDonald, K. L. & Walter, P. Autophagy counterbalances endoplasmic reticulum expansion during the unfolded protein response. PLoS Biol. 4, e413 (2006).   \n20. Coyne, B. & Rosenbaum, J. L. Flagellar elongation and shortening in Chlamydomonas. II. Re-utilization of flagellar proteins. J. Cell Biol. 47, 777–781 (1970).   \n21. Marshall, W. F. δ Rosenbaum, J. L. Intraflagellar transport balances continuous turnover of outer doublet microtubules: implications for flagellar length control. J. Cell Biol. 155, 405–414 (2001). Presents a simple size-control mechanism in which size-dependent assembly counteracts size-independent disassembly, with the two processes balancing only at a unique value for size.   \n22. Rosenbaum, J. L. δ Witman, G. B. Intraflagellar transport. Nature Rev. Mol. Cell Biol. 3, 813–825 (2002).   \n23. Tyska, M. J. & Mooseker, M. S. MYO1A (brush border myosin I) dynamics in the brush border of LLC-PK 1-CL4 cells. Biophys. J. 82, 1869–1883 (2002).   \n24. Rzadzinska, A. K., Schneider, M. E., Davies, C., Riordan, G. P. δ Kachar, B. An actin molecular treadmill and myosins maintain stereocilia functional architecture and self-renewal. J. Cell Biol. 164, 887–897 (2004).   \n25. Keener, J. How Salmonella typhimurium measures the length of fl agellar filaments. Bull. Math. Biol. 68,1761–1778 (2006).   \n26. Varga, V. et al. Yeast kinesin-8 depolymerizes microtubules in a length-dependent manner. Nature Cell Biol. 8, 957–962 (2006).   \n27. Burbank, K. S., Mitchison, T. J. δ Fisher, D. S. Slide-and-cluster models for spindle assembly. Curr Biol. 17, 1373–1383 (2007).   \n28. Hennis, A. S. δ Birky, C. W. Stochastic partitioning of chloroplasts at cell division in thealgaOlisthodiscus, and compensating control of chloroplast replication. J. Cell Sci. 70, 1–15 (1984).   \n29. Marshall, W. F. Stability and robustness of an organelle number control system: modeling and measuring homeostatic regulation of centriole abundance. Biophys. J. 93, 1818–1833 (2007).   \n30. Marshall, W. F, Vucica, Y. δ Rosenbaum, J. L. Kinetics and regulation of de novo centriole assembly. Implications for the mechanism of centriole duplication. Curr. Biol. 11, 308–317 (2001).   \n31 La Terra, S. et al. The de novo centriole assembly pathway in HeLa cells: cell cycle progression and centriole assembly/maturation. J. Cell Biol. 168, 713–722 (2005).   \n32. Paulsson, J. δ Ehrenberg, M. Noise in a minimal regulatory network: plasmid copy number control. Quart. Rev. Biophys. 34, 1–59 (2001).   \n33. Umen, J. G. The elusive sizer. Curr. Opin. Cell Biol. 17, 435–441 (2005).   \n34. Bergeland, T., Widerberg, J., Bakke, O. δ Nordeng, T. W. Mitotic partitioning of endosomes and lysosomes. Curr. Biol. 11, 644–651 (2001).   \n35. Ludford, R. J. δ Gatenby, J. B. Dictyokinesis in germ cells. Proc. R. Soc. Lond., B, Biol. Sci. 92, 235–244 (1921).   \n36. Lucocq, J. M. δ Warren, G. Fragmentation and partitioning of the Golgi apparatus during mitosis in HeLA cells. EMBO J. 6, 3239–3246 (1987).   \n37. Warren, G. Membrane partitioning during cell division. Annu. Rev. Biochem. 62, 323–348 (1993).   \n38. Farré, J. C. & Subramani, S. Peroxisome turnover by micropexophagy: an autophagy-related process. Trends Cell Biol. 14, 515–523 (2004).   \n39. Morgan, T. H. Regeneration of proportionate structures in Stentor. Biol. Bull. 2, 311–328 (1901).   \n40. Bakowska, J. δ Jerka-Dziadosz, M. Ultrastructural aspect of size dependent regulation of surface pattern of complex ciliary organelle in a protozoan ciliate. J. Embryol. Exp. Morph. 59, 355–375 (1980).   \n41. Malawista, S. E. δ Van Blaricom, G. Cytoplasts made from human blood polymorphonuclear leukocytes with or without heat: preservation of both motile function and respiratory burst oxidase activity. Proc. NatI Acad. Sci, USA 84, 454–458 (1987).   \n42. Verkhkovsky, A. B., Svitkina, T. M. δ Borisy, G. G. Self-polarization and directional motility of cytoplasm. Curr. Biol. 9, 11–20 (1999).   \n43. Wedlich-Soldner, R., Altschuler, S., Wu, L. ∂ Li, R. Spontaneous cell polarization through actomyosinbased delivery of the Cdc42 GTPase. Science 299,1231–1235 (2003). Demonstrates a simple self-organizing polarity system by combining modelling and experimental measurements.   \n44. Xu, J. et al. Divergent signals and cytoskeletal assemblies regulate self-organizing polarity in neutrophils. Cel114, 201–214 (2003).   \n45. Yam, P. T. et al. Actin-myosin network reorganization breaks symmetry at the cell rear to spontaneously initiate polarized cell motility. J. Cell Biol. 178, 1207–1221 (2007).   \n46. Ozbudak, E. M., Becskei, A. δ van Oudenaarden, A. A system of counteracting feedback loops regulates Cdc42p activity during spontaneous cell polarization. Dev. Cel1 9, 565–571 (2005).   \n47. Jones, C. et al. Ciliary proteins link basal body polarization to planar cell polarity regulation. Nature Genet. 40, 69–77 (2008).   \n48. Montcouquiol, M. et al. Identification of Vangl2 and Scrb 1 as planar polarity genes in mammals. Nature 423, 173–177 (2003).   \n49. Kupfer, A., Dennert, G. δ Singer, S. J. Polarization of center within cloned natural kiler cells bound to their targets. Proc. Natl Acad. Sci. USA 80, 7224–7228 (1983).   \n50. Sanchez-Madrid, F. & Serrador, J. M. Mitochondrial redistribution: adding new players to the chemotaxis game. Trends lmmunol. 38, 193–196 (2007).   \n51. Kupfer, A., Louvard, D. δ Singer, S. J. Polarization of center in cultured fibroblasts at the edge of an experimental wound. Proc. Natl Acad. Sci. USA 79, 2603–2607 (1982).   \n52. Zmuda, J. F. δ Rivas, R. J. The Golgi apparatus and the centrosome are localized to the sites of newly emerging axons in cerebellar granule neurons in vitro. Cell. Motil. Cytoskel. 41, 18–38 (1998).   \n53. Agutter, P. S. δ Wheatley, D. N. Random walks and cellsize. Bioessays 22, 1018–1023 (2000).   \n54. Verkman, A. S. Solute and macromolecule diffusion in cellular aqueous compartments. Trends Biochem. Sci. 27, 27–33 (2002).   \n55. Sun, J. δ Weinstein, H. Toward realistic modeling of dynamic processes in cell signaling: quantification of macromolecular crowding effects. J. Chem. Phys. 127,155105 (2007).   \n56. Ridgway, D. et al. Coarse-grained molecular simulation of diffusion and reaction kinetics in a crowded virtual cytoplasm. Biophys. J. 94, 3748–3759 (2008).   \n57. Prodon, F., Sardet, C. & Nishida, H. Cortical and cytoplasmic flows driven by actin microfilaments polarize the cortical ER-mRNA domain along the a-Vaxis in ascidian 0ocytes. Dev. Biol. 313, 682–699 (2008).   \n58. Gomes, E. R., Jani, S. δ Gundersen, G. G. Nuclear movement regulated by Cdc42, MRCK, myosin, and actin flow establishes MTOC polarization in migrating cell. Cel1 121, 451–463 (2005).   \n59. Carvalho, P., Tirnauer, J. S. δ Pellman, D. Surfing on microtubule ends. Trends Cell Biol. 13,229-237 (2003).   \n60. Gundersen, G. G., Gomes, E. R. δ Wen, Y. Cortical control of microtubule stability and polarization. Curr. Opin. Cell Biol. 16, 106–112 (2004).   \n61. Wu, X., Xiang, X. δ Hammer, J. A. Motor proteins at the microtubule plus-end. Trends Cell Biol. 16, 135–143 (2006).   \n62. Pearson, C. G. δ Bloom, K. Dynamic microtubules lead the way for spindle positioning. Nature Rev. Mol. Cell Biol. 5, 481–492 (2004).   \n63. Grill, S. W. δ Hyman, A. A. Spindle positioning by cortical pulling forces. Dev. Cell 8, 461–465 (2005).   \n64. Watanabe, T., Noritake, J. δ Kaibuchi, K. Regulation of microtubules in cell migration. Trends Cell Biol. 15,76-83 (2005).   \n65. Allan, V. J., Thompson, H. M. & McNiven, M. A. Motoring around the Golgi. Nature Cell Biol. 4, E236–E242 (2002).   \n66. Rios, R. M.δ Bornens, M. The Golgi apparatus at the cell centre. Curr. Opin. Cell Biol. i5, 60–66 (2003).   \n67. Barr, F. A. Egerer, J. Golgi positioning: are we looking at the right MAP? J. Cell Biol. 168, 993–998 (2005).   \n68. Chabin-Brion, K. et al. The Golgi complex is a microtubule-organizing organelle. Mol. Biol. Cell 12, 2047–2060 (2001).   \n69. Efimov, A. et al. Asymmetric CLASP-dependent nucleation of noncentrosomal microtubules at the trans-Golgi network. Dev. Cell 12, 917–930 (2007).   \n70. Drabek, K. et al. Role of CLASP2 in microtubule stabilization and the regulation of persistent motility. Curr Rinl 16 2359–2264 (2006)   \n71. Feldman, J. L., Geimer, S. δ Marshall, W. F. The mother centriole plays an instructive role in defining cell geometry. PLoS Biol. 5, e149 (2007).   \n72. Svetina, S. δ Zeks, B. Shape behavior of lipid vesicles as the basis of some cellular processes. Anat. Rec. 268, 215–225 (2002).   \n73. Deuling, H. J. δ Helfrich, W. Curvature elasticity of fluid membranes — catalog of vesicle shapes. Journal De Physique 37, 1335–1345 (1976).   \n74. Kas, J. & Sackmann, E. Shape transitions and shape stability of giant phospholipid vesicles in pure water induced by area-to-volume changes. Biophys. J. 60,825-844 (1991).   \n75. Seifert, U. Configurations of fluid membranes and vesicles. Advances in Physics 46, 13–137 (1997).   \n76. McMahon, H. T. & Gallop, J. L. Membrane curvature and mechanisms of dynamic cell membrane remodeling. Nature 438, 590–596 (2005).   \n77. Veatch, S. L. δ Keller, S. L. Organization in lipid membranes containing cholesterol. Phys. Rev. Lett. 89,268101 (2002).   \n78. Baumgart, T., Hess, S. T. δ Webb, W. W. Imaging coexisting fluid domains in biomembrane models coupling curvature and line tension. Nature 425, 821–824 (2003).   \n79. Dobereiner, H. G., Kas, J., Noppl, D., Sprenger, I. δ Sackmann, E. Budding and fission of vesicles. Biophys. J. 65, 1396–1403 (1993).   \n80. Julicher, F. ∂ Lipowsky, R. Domain-induced budding of vesicles. Phys. Rev. Lett. 70, 2964–2967 (1993).   \n81. Roux, A. et al. Role of curvature and phase transition in lipid sorting and fission of membrane tubules. EMBOJ. 24, 1537–1545 (2005).   \n82. Zimmerberg, J. δ Kozlov, M. M. How proteins produce cellular membrane curvature. Nature Rev. Mol. Cell Biol. 7, 9–19 (2006).   \n83. Farsad, K. δ De Camilli, P. Mechanisms of membrane deformation. Curr. Opin. Cell Biol. 15, 372–381 (2003].   \n84. Antonny, B. Membrane deformation by protein coats. Curr. Opin. Cell Biol. 18, 386–394 (2006).   \n85. Frost, A. et al. Structural basis of membrane invagination by F-BAR domains. Cel1 132, 807–817 (2008). Describes how a class of membrane curvatureinducing proteins operates at a structural level.   \n86. Shnyrova, A. V. et al. Vesicle formation by selfassembly of membrane-bound matrix proteins into a fluidlike budding domain. J. Cell Biol. 179, 627–633 (2007).   \n87. sheets and smooth tubules. Cel1 126, 435–439 (2006).   \n88. Dabora, S. L. & Sheetz, M. P. The microtubuledependent formation of a tubulovesicular network with characteristics of the ER from cultured cell extracts. Cel/ 54, 27–35 (1988).   \n89. Vale, R. D. ∂ Hotani, H. Formation of membrane networks in vitro by kinesin-driven microtubule movement. J. Cell Biol. 107, 2233–2241 (1988).   \n90. Leduc, C. et al. Cooperative extraction of membrane nanotubes by molecular motors. Proc. Natl Acad. Sci. USA 101, 17096–17101 (2004).   \n91. Dreier, L. δ Rapoport, T. A. In vitro formation of the endoplasmic reticulum occurs independently of microtubules by a controlled fusion reaction. J. Cell Biol. 148, 883–898 (2000).   \n92. Waterman-Storer, C. M. & Salmon, E. D. Endoplasmic reticulum membrane tubules are distributed by microtubules in living cells using three distinct mechanisms. Curr. Biol. 8, 798–806 (1998).   \n93. Vedrenne, C. & Hauri, H. P. Morphogenesis of the endoplasmic reticulum: beyond active membrane expansion. Traffic 7, 639–646 (2006).   \n94. Voeltz, G. K., Prinz, W. A., Shibata, Y., Rist, J. M. δ Rapoport, T. A. A class of membrane proteins shaping the tubular endoplasmic reticulum. Celi 124, 573–586 (2006). Shows how proteins can induce specific changes in membrane shape.   \n95. De Craene, J. O. et al. Rtn1p is involved in structuring the cortical endoplasmic reticulum. Mol. Biol. Cell 17,3009–3020 (2006).   \n96. Hu, J. et al. Membrane proteins of the endoplasmic reticulum induce high-curvature tubules. Science 319,1247–1250 (2008).   \n97. Bereiter-Hahn, J. Behavior of mitochondria in the living cell. Int. Rev. Cytol. 122, 1–63 (1990).   \n98. Okamoto, K. & Shaw, J. M. Mitochondrial morphology and dynamics in yeast and multicellular eukaryotes. Annu. Rev. Genet. 39, 503–536 (2005).   \n99. Boldogh, I. R. ∂ Pon, L. A. Mitochondria on the move. Trends Cell Biol. 17, 502–510 (2007).   \n100. Hoppins, S., Lackner, L. ∂ Nunnari, J. The machines that divide and fuse mitochondria. Annu. Rev. Biochem. 76, 751–780 (2007).   \n101. Merz, S., Hammermeister, M., Altmann, K., Durr, M. & Westermann, B. Molecular machinery of mitochondrial dynamics in yeast. Biol. Chem. 388, 917–926 (2007).   \n102. Nunnari, J. et al. Mitochondrial transmission during mating in Saccharomyces cerevisiae is determined by mitochondrial fusion and fission and the intramitochondrial segregation of mitochondrial DNA. Mol. Biol. Cel1 8, 1233–1242 (1997).   \n103. Arakaki, N. et al. Dynamics of mitochondria during the cell cycle. Biol. Pharm. Bull. 29, 1962–1965 (2006).   \n104. Taguchi, N., Ishihara, N., Jofuku, A., Oka, T. δ Mihara, K. Mitotic phosphorylation of dynaminrelated GTPase Drp 1 participates in mitochondrial fission. J. Biol. Chem. 282, 11521–11529 (2007).   \n105. Youle, R. J. & Karbowski, M. Mitochondrial fission in apoptosis. Nature Rev. Mol. Cell Biol. 6, 657–663 (2005).   \n106. Egner, A., Jakobs, S. δ Hell,S. W. Fast 100-nm resolution three-dimensional microscope reveals structural plasticity of mitochondria in live yeast. Proc. NatI Acad. Sci. USA 99, 3370–3375 (2002).   \n107. Keren, K. et al. Mechanism of shape determination in motile cells. Nature 453, 475–480 (2008).   \n108. Solomon, F. Specification of cell morphology by endogenous determinants. J. Cell Biol. 90, 547–553 (1981).   \n109. Bouck, G. B. & Brown, D. L. Microtubule biogenesis and cell shape in Ochromonas: Il. The role of nucleating sites in shape development. J. Cell Biol. 56, 360–378 (1987).   \n110. Albrecht-Buehler, G. Daughter 3T3 cells. Are they mirror images of each other? J. Cell Biol. 72, 595–603 (1977). Shows images of sister cells that seem to be mirror images of each other, suggesting the propagation of structural determinants to the two daughter cells in opposite directions by the mitotic spindle during division.   \n111. Solomon, F. Detailed neurite morphologies of sister neuroblastoma cells are related. Cel1 16, 165–169 (1979).   \n112. Locke, M. Is there somatic inheritance of intracellular patterns? J. Cell Biol. 96, 563–567 (1990).   \n113. Tawk, M. et al. A mirror-symmetric cell division that orchestrates neuroepithelial morphogenesis. Nature 446, 797–800 (2007).   \n114. Beisson, J. & Sonneborn, T. M. Cytoplasmic inheritance of the organization of the cell cortex ",
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "",
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "",
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "",
+        "page_idx": 8
+    },
+    {
+        "type": "text",
+        "text": "",
+        "page_idx": 8
+    },
+    {
+        "type": "text",
+        "text": "",
+        "page_idx": 8
+    },
+    {
+        "type": "text",
+        "text": "",
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "",
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "in Paramecium aurelia. Proc. Nat Acad. Sci. USA 53, 275–282 (1965). A classic study showing that when part of the cortex of a ciliate is rearranged, the rearrangement can propagate for multiple cell divisions without any accompanying genetic change. 115. Shi, X. B. δ Frankel, J. Morphology and development of mirror-image doublets of Stylonychia mytilus. J. Protozool. 37, 1–13 (1990). ",
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "Acknowledgements ",
+        "text_level": 1,
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "W.F.M. acknowledges the support of the WM Keck Foundation, the Searle Scholars Program and NIH grant R01 GM077004. S.M.R. acknowledges the support of the Sandler Postdoctoral Research Fellowship. ",
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "DATABASES ",
+        "text_level": 1,
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "Entrez Gene:   \nhttp://www.ncbi.nlm.nih.gov/entrez/query.fcqi?db=gene   \ngeneH   \nUniProtKB:http://ca.expasy.org/sprot   \nCdc42|dynein |tektin ",
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "FURTHER INFORMATION ",
+        "text_level": 1,
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "Wallace F Marshal's homepage: http:/biochemistry.ucsf.edu/labs/marshall ALL LINKS ARE ACTIVE IN THE ONLINE PDF ",
+        "page_idx": 9
+    }
+]

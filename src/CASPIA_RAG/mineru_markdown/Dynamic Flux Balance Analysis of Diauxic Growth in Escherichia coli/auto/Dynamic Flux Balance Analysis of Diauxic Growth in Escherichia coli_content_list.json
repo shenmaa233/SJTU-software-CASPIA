@@ -1,0 +1,588 @@
+[
+    {
+        "type": "text",
+        "text": "Dynamic Flux Balance Analysis of Diauxic Growth in Escherichia coli ",
+        "text_level": 1,
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "Radhakrishnan Mahadevan, Jeremy S. Edwards, and Francis J. Doyle, III Department of Chemical Engineering, University of Delaware, Newark, Delaware 19716 USA ",
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "ABSTRACT Flux Balance Analysis (FBA) has been used in the past to analyze microbial metabolic networks. Typically, FBA is used to study the metabolic flux at a particular steady state of the system. However, there are many situations where the reprogramming of the metabolic network is important. Therefore, the dynamics of these metabolic networks have to be studied. In this paper, we have extended FBA to account for dynamics and present two different formulations for dynamic FBA. These two approaches were used in the analysis of diauxic growth in Escherichia coli. Dynamic FBA was used to simulate the batch growth of E. coli on glucose, and the predictions were found to qualitatively match experimental data. The dynamic FBA formalism was also used to study the sensitivity to the objective function. It was found that an instantaneous objective function resulted in better predictions than a terminal-type objective function. The constraints that govern the growth at different phases in the batch culture were also identified. Therefore, dynamic FBA provides a framework for analyzing the transience of metabolism due to metabolic reprogramming and for obtaining insights for the design of metabolic networks. ",
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "INTRODUCTION ",
+        "text_level": 1,
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "Recent developments in genomics, such as genome sequencing, microarrays, and GeneChips have provided detailed information into the genetic networks of several microorganisms (De Saizieu et al., 1998; Tao et al., 1999; Selinger et al., 2000; Oh and Liao, 2000; Wei et al., 2001). The next logical step is to use this information to study the integrated behavior of the cellular networks. One of the areas of research has been the study of metabolic networks (Oh and Liao, 2000; Tao et al., 2001; Ideker et al., 2001). The analytical and experimental methods for understanding the nature of flux distribution in a metabolic network, along with molecular biology techniques for genetic engineering, assist in the design of the metabolic reaction networks (Stephanpoulos, 1999). Mathematical analysis of metabolism can guide the metabolic engineering process; for example, Hatzimanikatis et al. (1998) have addressed the problem of determining the optimal regulatory structure in terms of gene overexpression or deletion. In that study, the regulatory structure was represented by binary variables, and the objective was to maximize a desired steady-state objective through the solution of a mixed integer linear programming formulation. Several other quantitative approaches have been proposed to study metabolic networks. These approaches include metabolic control analysis (Fell, 1996), biochemical systems theory (Savageau et al., 1987a,b), cybernetic modeling (Kompala, 1984; Dhurjati et al., 1985; Varner and Ramkrishna, 1999), and flux balance analysis (FBA) (Varma and Palsson, 1994b). With the exception of FBA, these approaches require a functional form for the kinetics of the cellular reactions. ",
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "FBA is an approach to constrain the metabolic network based on the stoichiometry of the metabolic reactions and does not require kinetic information (Varma and Palsson, 1994a). Optimization of an objective function, such as growth rate, is used to obtain a metabolic flux distribution that satisfies the constraints, and FBA has been shown to provide meaningful predictions in Escherichia coli (Varma and Palsson, 1994b; Edwards et al., 2001). van Riel and coworkers have proposed a modified FBA approach, where the flux balance analysis problem was solved along with constraints on the rate of change of metabolite levels at specific time instants (van Riel et al., 2000; Giuseppin and van Riel, 2000). ",
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "",
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "Diauxic growth represents the classical reprogramming of a metabolic network and has been extensively studied with mathematical modeling (Varma and Palsson, 1994b; Wong et al., 1997; Lendenmann and Egli, 1998; Guardia and Calvo, 2001). Ramkrishna and coworkers have also used the cybernetic modeling approach to model the diauxic growth of $E$ . coli on mixtures of glucose and organic acids such as pyruvate, succinate, and fumarate (Ramakrishna et al., 1996; Narang et al., 1997). In cybernetic modeling, the bacterial cell is viewed as an optimal strategist that maximizes the utility of the resources provided to it. The regulation of the genes and the activity of the enzymes are obtained as a solution to an optimal resource allocation problem. Because these variables are obtained as a function of the kinetic rate equations, the result is a closed-form dynamic model of the network. ",
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "Herein, we describe dynamic flux balance analysis (DFBA), which incorporates rate of change of flux constraints. We show that DFBA can predict the dynamics of diauxic growth. Classical FBA has also been used to study diauxic growth on glucose and acetate (Varma and Palsson, 1994b). However, classical FBA incorrectly predicted the reutilization of acetate. Furthermore, classical FBA cannot predict the metabolite concentrations, which is possible with DFBA. DFBA also allows the incorporation of kinetic expression when the kinetics are well characterized. In this paper, two different formulations for DFBA are presented. ",
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "These two approaches are used to analyze the diauxic growth of $E$ . coli on glucose and acetate. The sensitivity of the approaches to the rate of change of flux constraints, the functional form of the objective function, and the parameters in the model are examined. Using this formalism, we have characterized the different phases of batch growth in terms of the active constraints during each phase. Thus, DFBA provides a significant improvement over the classical FBA and will find utility as a quantitative analysis tool in the basic sciences and biotechnology. ",
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "DYNAMIC FLUX BALANCE ANALYSIS ",
+        "text_level": 1,
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "FBA is a modeling approach that constrains the metabolic network by the balance of the metabolic fluxes (reactions) around each node (metabolite). When the metabolic network is operating in a steady state, the mass balances are described by a set of linear equations, ",
+        "page_idx": 1
+    },
+    {
+        "type": "equation",
+        "img_path": "images/8c5ae22ed81a56e734513d5abafb31fad3de938dd4671f800d0371343f89e668.jpg",
+        "text": "$$\nA \\cdot \\nu = 0 ,\n$$",
+        "text_format": "latex",
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "where $A$ is the $m \\times n$ stoichiometric matrix of the reactions, $m$ is the number of the metabolites, $n$ is the number of fluxes, and $\\nu$ is the flux vector of the network. Because the system of linear equations is underdetermined (more unknown fluxes than equations), an objective function is used to obtain a solution using linear programming (LP). Typically, the maximization of the growth flux is used as the objective function (Varma and Palsson, 1994a; Bonarius et al., 1997; Pramanik and Keasling, 1997; Edwards et al., 2001), where the growth flux is defined in terms of the biosynthetic requirements. For details on the LP formulation, see Varma and Palsson (1994a), and Edwards et al. (1999). FBA only identifies the metabolic flux distribution, and there is no information on the metabolite concentrations or on the dynamic characteristics of the metabolic fluxes. In simulations where there is a transition between two steady states, the FBA solution will indicate an instantaneous change of the metabolic fluxes (Varma and Palsson, 1994b). Therefore, constraints on the rate of change of the fluxes must be explicitly incorporated in the problem. The dynamic extension to FBA can be formulated in the following two ways. The two formulations are discussed in detail in the following sections. ",
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "Dynamic Optimization Approach (DOA): This involves optimization over the entire time period of interest to obtain time profiles of fluxes and metabolite levels. The dynamic optimization problem was transformed to a nonlinear programming (NLP) problem and the NLP problem was solved once. The details of the objective function and the constraints in the formulation are presented in Eq. 3. ",
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "Static Optimization Approach (SOA): This approach involves dividing the batch time into several time intervals and solving the instantaneous optimization problem at the beginning of each time interval, followed by integration over the interval. The optimization problem was solved using LP repeatedly during the course of the batch to obtain the flux distribution at a particular time instant. The SOA formulation is presented in detail in Eq. 4. The objective used in the optimization problem can be similar to the objective in FBA. Varma et al. (1994b) have used FBA to obtain dynamic prediction for diauxic growth in a manner similar to this approach. However, they did not incorporate rate-of-change constraints on the metabolic fluxes. ",
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "",
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "Dynamic optimization-based DFBA approach ",
+        "text_level": 1,
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "Consider a metabolic network with $m$ metabolites and $n$ fluxes. The set of conservation of mass equations, for each metabolite, results in a set of ordinary differential equations, ",
+        "page_idx": 1
+    },
+    {
+        "type": "equation",
+        "img_path": "images/1913a561065b85798456d4f8eafe7d73c8bf248e567f052496dc7ae729362f47.jpg",
+        "text": "$$\n{ \\frac { \\mathrm { d } z } { \\mathrm { d } t } } = A \\mathbf { v } X , \\quad { \\frac { \\mathrm { d } X } { \\mathrm { d } t } } = \\mu X , \\quad \\mu = \\Sigma w _ { \\mathrm { i } } \\nu _ { \\mathrm { i } } ,\n$$",
+        "text_format": "latex",
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "where $\\mathbf { z }$ is the vector of metabolite concentrations, $X$ is the biomass concentration, $\\mathbf { V }$ is the vector of metabolic fluxes per gram (DW) of the biomass, $A$ is the stoichiometric matrix of the metabolic network, $\\mu$ is the growth rate obtained as a weighted sum of the reactions that synthesize the growth precursors, and $w _ { \\mathrm { i } }$ are the amounts of the growth precursors required per gram (DW) of biomass. ",
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "Along with the system of dynamic equations, several additional constraints must be imposed for a realistic prediction of the metabolite concentrations and the metabolic fluxes. These include non-negative metabolite and flux levels, limits on the rate of change of fluxes, and any additional nonlinear constraints on the transport fluxes. A general dynamic optimization problem can be formulated as ",
+        "page_idx": 1
+    },
+    {
+        "type": "equation",
+        "img_path": "images/94ab311d9d9b84de7a93b8da291b650eca9df585bd8036dd0363c99ced1c7e61.jpg",
+        "text": "$$\n\\begin{array} { r l r } {  { \\mathbf { M a x } } } & { \\hat { w } _ { \\mathrm { e n d } } \\Phi ( \\mathbf { z } , \\mathbf { v } , X ) | _ { \\mathrm { t = t } } }  \\\\ & { } & \\\\ & { } & { \\qquad + \\hat { w } _ { \\mathrm { i n s } } \\sum _ { \\mathrm { j = 0 } } ^ { \\mathrm { M } } \\int _ { \\mathrm { t } } ^ { t _ { \\mathrm { f } } } L ( \\mathbf { z } , \\mathbf { v } , X ( t ) ) \\delta ( t - t _ { \\mathrm { j } } ) \\mathrm { d } t } \\end{array}\n$$",
+        "text_format": "latex",
+        "page_idx": 1
+    },
+    {
+        "type": "equation",
+        "img_path": "images/e24cb9653b29a4ede3286d475b6345b2095090de4adffa6be40421274045a1cc.jpg",
+        "text": "$$\n{ \\frac { \\mathrm { d } \\mathbf { z } } { \\mathrm { d } t } } = A \\mathbf { v } X\n$$",
+        "text_format": "latex",
+        "page_idx": 1
+    },
+    {
+        "type": "equation",
+        "img_path": "images/c31d1780573a6c6c048ce2a4d2fec8e687bd92dc080ba0065d9feb9474f46040.jpg",
+        "text": "$$\n\\begin{array} { l } { \\displaystyle \\frac { \\mathrm { d } X } { \\mathrm { d } t } = \\mu X } \\\\ { \\displaystyle \\mu = \\Sigma w _ { 1 } \\nu _ { i } } \\\\ { \\displaystyle t _ { j } = t _ { 0 } + j \\frac { t _ { j } - t _ { 0 } } { M } j = 0 \\cdots M } \\\\ { \\displaystyle c ( \\mathbf { v } , \\mathbf { z } ) \\leq 0 \\quad \\lvert \\dot { \\mathbf { v } } \\rvert \\leq \\dot { \\mathbf { v } } _ { \\mathrm { a n ~ } } \\quad \\forall t \\in [ t _ { 0 } , t _ { \\mathrm { d } } ] } \\\\ { \\displaystyle z \\geq 0 \\quad X \\geq 0 \\quad \\forall t \\in [ t _ { 0 } , t _ { \\mathrm { d } } ] } \\\\ { \\displaystyle z ( t _ { 0 } ) = z _ { 0 } \\quad X ( t _ { 0 } ) = X _ { 0 } , } \\end{array}\n$$",
+        "text_format": "latex",
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "where $\\mathbf { z } _ { 0 }$ and $X _ { 0 }$ are the initial conditions for the metabolite concentration and the biomass concentration, respectively, $c ( \\mathbf { v } ,$ z) is a vector function representing nonlinear constraints that could arise due to consideration of kinetic expressions for fluxes, $t _ { 0 }$ and $t _ { \\mathrm { f } }$ are the initial and the final times, $\\Phi$ is the terminal objective function that depends on the end-point concentration, $L$ is the instantaneous objective function, \u0005 is the Dirac-delta function, $t _ { \\mathrm { j } }$ is the time instant at which $L$ is considered, $\\hat { w } _ { \\mathrm { i n s } }$ and $\\hat { w } _ { \\mathrm { e n d } }$ are the weights associated with the instantaneous and the terminal objective function, respectively, and $\\mathbf { v } ( t )$ is the time profile of the metabolic fluxes. If the nonlinear constraint is absent, the problem reduces to an optimization involving a bilinear system. ",
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "The dynamic optimization problem was solved by parameterizing the dynamic equations through the use of orthogonal collocation on finite elements (Cuthrell and Biegler, 1987). The time period $( t _ { 0 } { - } t _ { \\mathrm { f } } )$ was divided into a finite number of intervals (finite elements). The fluxes, the metabolite levels, and the biomass concentration were parameterized at the roots of an orthogonal polynomial within each finite element. The details of the parameterization for a specific example are presented in the next section. Continuity of the metabolite and the biomass concentrations was imposed at the beginning of each of the finite elements. The time derivative of the variables was approximated as a linear combination of the value of the fluxes at each point, and the dynamic equations were transformed to algebraic equations. The nonlinear constraints were imposed at discrete points in the time interval considered. Thus the dynamic optimization was converted to an NLP problem. The resulting NLP was solved using the fmincon function in MATLAB (The MathWorks Inc., Natwick, MA). ",
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "were constant over the interval. The optimization problem was then formulated at the next time instant and solved. This procedure was repeated from $t _ { 0 }$ to $t _ { \\mathrm { f } } .$ For the class of systems involving only bilinear terms with fluxes and the biomass concentration, it is possible to directly solve the dynamic equations and thereby eliminate the numerical integration. ",
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "DIAUXIC GROWTH OF E. COLI ON GLUCOSE AND ACETATE ",
+        "text_level": 1,
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "The metabolic network considered for modeling the diauxic growth of E. coli is shown in Fig. 1. From a metabolic pathway analysis with glucose, acetate, and oxygen as the input and biomass and acetate as the output, a set of $\\sim 3 0 0$ extreme pathways were identified (Schilling et al., 2000a). The biomass composition and the ratio of precursors required were obtained from the literature (Schilling et al., 2000b). From this set, four pathways were chosen based on the biomass yield and the known physiology of $E .$ coli (Cronan and Laporte, 1996; Oh and Liao, 2000) to define a simplified metabolic network (see Figs. 2 and 3). The extreme pathways chosen represented both aerobic and anaerobic utilization of glucose and had the highest biomass yield from among the 300 pathways. The acetate utilization pathway was chosen to be consistent with experimental observations that the pckA gene coding for the PEP carboxykinase is expressed during growth on acetate (Oh and Liao, 2000). The simplified network was then used in all further studies presented in the paper. ",
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "A dynamic model for the prediction of the time profiles for a batch bioreactor with glucose as the carbon source is presented in the equations, ",
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "Static optimization-based DFBA approach ",
+        "text_level": 1,
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "In SOA, the time period was divided into $N$ intervals. In the absence of the nonlinear constraints involving the fluxes, the optimization problem is reduced to an LP problem. The LP was solved at the beginning of each interval to obtain the fluxes at that time instant: ",
+        "page_idx": 2
+    },
+    {
+        "type": "equation",
+        "img_path": "images/93a846786a933e99232afc62ad760de987ece0ea874d102eb61dbca8ad96ecb2.jpg",
+        "text": "$$\n\\begin{array} { c c } { \\mathrm { M a x ~ } \\sum w _ { \\mathrm { i } } \\nu _ { \\mathrm { i } } ( t ) } & \\\\ { \\mathrm { v ( t ) } } & { } \\\\ { \\mathbf { z } ( t + \\Delta T ) \\geq 0 } & { \\mathbf { v } ( t ) \\geq 0 } \\\\ { \\bar { c } ( \\mathbf { z } ( t ) ) \\mathbf { v } ( t ) \\leq 0 } & { \\forall t \\in [ t _ { 0 } , t _ { \\mathrm { f } } ] } \\\\ { | \\mathbf { v } ( t ) - \\nu ( t - \\Delta T ) | \\leq \\dot { \\mathbf { v } } _ { \\mathrm { m a x } } \\Delta T } & { \\forall t \\in [ t _ { 0 } , t _ { \\mathrm { f } } ] } \\\\ { \\mathbf { z } ( t + \\Delta T ) = \\mathbf { z } ( t ) + A \\mathbf { v } \\Delta T } \\\\ { X ( t + \\Delta T ) = X ( t ) + \\mu X ( t ) \\Delta T , } \\end{array}\n$$",
+        "text_format": "latex",
+        "page_idx": 2
+    },
+    {
+        "type": "equation",
+        "img_path": "images/8c728a6b7f6214f7287736efe7552160c433b9075c5444abf1ac1c0c56d79b27.jpg",
+        "text": "$$\n\\begin{array} { l } { \\displaystyle \\frac { G l c x t } { \\mathrm { d } t } = { \\cal A } ^ { \\mathrm { G r x } } \\nu { \\cal X } , } \\\\ { \\displaystyle } \\\\ { \\displaystyle \\frac { \\mathrm { d } { \\cal A } c } { \\mathrm { d } t } = { \\cal A } ^ { \\mathrm { \\tiny ~ A } } \\nu { \\cal X } , } \\\\ { \\displaystyle \\frac { \\mathrm { d } { \\cal O } _ { 2 } } { \\mathrm { d } t } = { \\cal A } ^ { \\mathrm { \\tiny ~ O } _ { 2 } } \\nu { \\cal X } + k _ { \\mathrm { L } } a ( 0 . 2 1 - 0 _ { 2 } ) , } \\\\ { \\displaystyle } \\\\ { \\displaystyle \\frac { \\mathrm { d } { \\cal X } } { \\mathrm { d } t } = ( \\nu _ { 1 } + \\nu _ { 2 } + \\nu _ { 3 } + \\nu _ { 4 } ) { \\cal X } , } \\end{array}\n$$",
+        "text_format": "latex",
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "where $\\Delta T$ is the length of the time interval chosen. ",
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "The optimization problem was solved using CPLEX. The dynamic equations were integrated assuming that the fluxes where $\\boldsymbol { A } ^ { \\mathrm { G l c x t } } , \\boldsymbol { A } ^ { \\mathrm { A c } } , \\boldsymbol { A } ^ { \\mathrm { O _ { 2 } } }$ are the rows of the stoichiometric matrix associated with glucose, acetate, and oxygen, respectively, $k _ { \\mathrm { L } } a$ is the mass transfer coefficient for oxygen and is assumed to be $7 . 5 \\ \\mathrm { h r } ^ { - 1 }$ (Edwards et al., 2001). ",
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "",
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "The key variables in the mathematical model of the metabolic network are the glucose concentration, the acetate concentration, the biomass concentration, and the oxygen concentration in the gas phase. The oxygen concentration in the gas phase was assumed to be a constant $( 0 . 2 1 \\mathrm { m M }$ ). A term for the oxygen transport from the gas phase (air at ambient temperature) was included in the model. The oxygen transport rate was assumed to be directly proportional to the difference in concentration. The oxygen uptake rate was constrained to allow a maximum possible flux of 15 mmol/gdw hr (Varma and Palsson, 1994b). Transport of acetate across the cell was assumed to be rapid (with respect to the metabolic flux); therefore, the internal and the external concentrations were assumed to be the same. The glucose uptake rate was bounded by Michaelis– Menten kinetics involving the glucose concentration (Wong et al., 1997). The DFBA formulation for the analysis of diauxic growth in $E$ . coli is presented in the next subsection. ",
+        "page_idx": 2
+    },
+    {
+        "type": "image",
+        "img_path": "images/09dbbefe5322e4e9ab6ecfeb8c00fe7bc475686606fdc52938b45e704bdc0613.jpg",
+        "img_caption": [
+            "FIGURE 1 Metabolic network of $E$ . coli considered for the FBA. The network consisted of 54 metabolites and 85 reactions. Glycolysis, pentose phosphate pathway, TCA cycle with the glyoxylate bypass, anapleurotic reactions, and redox metabolism are included in the metabolic network. "
+        ],
+        "img_footnote": [],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "",
+        "page_idx": 3
+    },
+    {
+        "type": "image",
+        "img_path": "images/1e7ae10d0ef55ca297a5bef6d74944e39e642b22e2eae75a81d97bcf6398e109.jpg",
+        "img_caption": [
+            "FIGURE 2 Simplified metabolic network. The network identified after pathway analysis with glucose, acetate, and oxygen as the input and biomass as the output and selection based on biomass yield is presented above. "
+        ],
+        "img_footnote": [],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "",
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "DFBA: DOA formulation ",
+        "text_level": 1,
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "The DOA formalism of DFBA was used to analyze the diauxic growth of $E$ . coli. The objective function for the DOA formalism is detailed in the equations, ",
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "Case 1: Instantaneous objective ",
+        "page_idx": 3
+    },
+    {
+        "type": "equation",
+        "img_path": "images/504e9950ae53a0fc57368c4f46385db222bb65cdf95d9e5d614fcc2b9d3745df.jpg",
+        "text": "$$\nJ _ { 1 } ( \\mathbf { z } , \\mathbf { v } , X ) = \\sum _ { \\mathrm { i } = 1 } ^ { \\mathrm { N } _ { \\mathrm { s } } } \\frac { X ( i ) } { X _ { 0 } e ^ { \\mu ^ { \\mathrm { s c } } t _ { \\mathrm { i } } } }\n$$",
+        "text_format": "latex",
+        "page_idx": 3
+    },
+    {
+        "type": "image",
+        "img_path": "images/1893581e51c5f17d94808128eabdd70b8fb0b0ecbc229ba4991deb9dbcdd89ca.jpg",
+        "img_caption": [
+            "FIGURE 3 The metabolic pathways used to simplify the network $\\nu _ { 1 }$ (top left), $\\nu _ { 2 }$ (top right), $\\nu _ { 3 }$ (bottom left), and $\\nu _ { 4 }$ (bottom right). The details of the pathways in the simplified network are shown above. The active reactions are highlighted reactions in the pathways. "
+        ],
+        "img_footnote": [],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "Case 2: Terminal time objective ",
+        "page_idx": 4
+    },
+    {
+        "type": "equation",
+        "img_path": "images/806aa17fbfdc375f0085ba6777def4fac8747c47bb088f38fd11f51c2328cd19.jpg",
+        "text": "$$\nJ _ { 2 } ( \\mathbf { z } , \\mathbf { v } , X ) = X ( N _ { \\mathrm { s } } )\n$$",
+        "text_format": "latex",
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "$\\boldsymbol { Z } ^ { \\mathrm { s t } } \\in \\mathbf { R } ^ { 4 \\mathrm { N _ { s } } }$ is the stacked vector containing the metabolite and biomass concentrations in time; $K _ { \\mathrm { m } }$ is the saturation constant ( $\\mathrm { 0 . 0 1 5 ~ m M }$ , Wong et al., 1997); $\\mathbf { z } _ { 0 }$ is a vector consisting of the initial glucose, acetate, and oxygen concentrations; $N _ { \\mathrm { v } }$ is the number of collocation points of the fluxes; $V ^ { \\mathrm { s t } } \\in \\mathbb R ^ { 4 \\mathrm N _ { \\mathrm { v } } }$ is the stacked vector containing the fluxes in time; $\\dot { \\mathbf { v } } _ { \\mathrm { m a x } }$ is the rate of change of flux constraints imposed; $C ^ { 0 }$ is the matrix containing the derivative weights; $f ( Z ^ { \\mathrm { s t } } , \\ V ^ { \\mathrm { s t } } )$ is the function containing the derivative vector along with the continuity condition (determined from Eq. 5); and $\\mu ^ { \\mathrm { { s c } } }$ is the growth rate determined from the initial and final biomass concentration measurements used in scaling the objective function. ",
+        "page_idx": 4
+    },
+    {
+        "type": "equation",
+        "img_path": "images/d3628f4d6c7ad524a718b9682463419e659f7b5e4b839379778951d90edcfa78.jpg",
+        "text": "$$\n\\begin{array} { r l } & { \\mathbf { z } _ { 0 } = \\left[ 1 0 . 8 ~ 0 . 4 ~ 0 . 2 1 \\right] ^ { \\mathrm { T } } } \\\\ & { X _ { 0 } = 0 . 0 0 1 } \\\\ & { \\dot { \\mathbf { v } } _ { \\mathrm { m a x } } = \\left[ 0 . 1 ~ 0 . 3 ~ 0 . 3 ~ 0 . 1 \\right] ^ { \\mathrm { T } } } \\\\ & { d ^ { \\mathrm { G i c a t } } \\mathbf { v } \\leq \\frac { 1 0 G l x t } { K _ { \\mathrm { m } } + G l c x t } \\frac { \\mathrm { m m o l } } { { \\mathrm { g d w } } \\cdot \\mathrm { h r } } } \\\\ & { d ^ { 0 } \\mathbf { z } \\mathbf { v } \\leq 1 5 \\frac { \\mathrm { m m o l } } { { \\mathrm { g d w } } \\cdot \\mathrm { h r } } , } \\end{array}\n$$",
+        "text_format": "latex",
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "where $N _ { \\mathrm { s } }$ is the number of collocation points for the parameterization of the metabolite and biomass concentrations; ",
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "For the DOA formalism, each time interval was divided into five finite elements, and the variables were parameterized at the roots of the fifth-order Legendre polynomial, resulting in 204 variables. The flux rates-of-change constraints were included in the optimization problem as linear constraints. The NLP was solved for two different objective functions involving the biomass concentration, and the results are presented in the next section. The first objective function (instantaneous objective (Eq. 6a) involved maximizing the scaled sum of the biomass concentration at the collocation points. As the biomass concentration increases 1000-fold during the course of the batch, the concentrations at different time points were scaled, so that all the time points are equally weighted. The second objective function (terminal time objective (Eq. 6b) maximized the biomass concentration at the final time. ",
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "",
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "DFBA: SOA formulation ",
+        "text_level": 1,
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "For DFBA using SOA, the time of the batch $( 1 0 \\ \\mathrm { h r s } )$ was divided into 10,000 intervals, and the optimization was formulated as described in the Eq. 4 and was solved using CPLEX. The number of variables in the optimization problem was four (corresponding to the number of the fluxes). The optimization was solved at the beginning of each interval, and the metabolite concentrations at the beginning of the next interval were found by direct integration. ",
+        "page_idx": 5
+    },
+    {
+        "type": "image",
+        "img_path": "images/96cd25de77a87f32548c9a5609f26b9ef5d1fa5a06ae8c5cb90a2a66feceefa4.jpg",
+        "img_caption": [
+            "FIGURE 4 Model prediction using the SOA for DFBA in the absence of the rate of change of flux constraints. Interpretation of the constraints governing the growth of $E$ . coli in the three phases is shown above. In the first phase, the constraints are the oxygen and the glucose uptake rate. The transport of oxygen along with the glucose uptake constrained the growth in the middle phase. Growth on acetate in the final phase was again constrained by oxygen transport. Glucose, acetate, and biomass concentrations from experimental data are plotted along with the model predictions (Varma and Palsson, 1994b). "
+        ],
+        "img_footnote": [],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "The parameters used for the DFBA were the maximal oxygen and the glucose uptake rates (Varma and Palsson, 1994b), the mass transfer coefficient (Edwards et al., 2001), the substrate saturation constant (Wong et al., 1997), and the flux rate-of-change constraints. The only parameter that could not be identified based on the existing literature was the flux rate-of-change constraints. These parameters, however, can be estimated from biochemical parameters such as the transcription and translation rates and genomic information involving regulatory elements, microarray data, and proteomics (Tavazoie et al., 1999; Cohen et al., 2000; Kirkpatrick et al., 2001). Thus, in the case where the transcription and translation rates are known, the rate of change of flux constraints can be identified precisely. For the current study, a range of values for the rate of change of fluxes provided reasonable agreement between the model predictions and the experimentally observed time domain data. A single parameter set within the range was chosen for the present study. ",
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "RESULTS AND DISCUSSION ",
+        "text_level": 1,
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "The DFBA approaches were used to simulate batch growth of $E$ . coli on glucose, where acetate is initially secreted and subsequently utilized. The data from a batch fermentation (Varma and Palsson, 1994b) is also plotted in all the figures. ",
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "Static optimization-based approach: Results ",
+        "text_level": 1,
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "The results from the DFBA using the SOA are shown in Figs. 4 and 5. In Fig. 4, the flux rate-of-change constraints were relaxed for the purpose of comparison. The DFBA solution was used to identify the constraints governing cellular growth. It was determined that different constraints were active during different times in the batch culture. We defined distinct phases of the fermentation based on differences in the active constraint. It was observed that, up to 4.6 hr, the constraints on the oxygen and glucose uptake rates were limiting growth and were the active constraints. In the next phase of the fermentation (from 4.6 to $6 . 9 \\ \\mathrm { h r } $ ) the oxygen concentration in the fermentation environment approached zero, and the system was constrained by the transport of oxygen (governed by $k _ { \\mathrm { L } } a$ term). At $6 . 9 \\ \\mathrm { h r }$ , the glucose was nearly completely consumed, and, from this point until the glucose concentration reached zero, the system was limited by the glucose (Michaelis–Menten kinetics) and oxygen uptake rate constraints. When the glucose concentration was zero, the acetate utilization began, and the growth was characterized by the oxygen transport limitation, which was influenced by the $k _ { \\mathrm { L } } a$ term. The growth in the final phase (on acetate) was linear, and not exponential as in the previous phase, due to the $k _ { \\mathrm { L } } a$ constraint. ",
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "",
+        "page_idx": 5
+    },
+    {
+        "type": "image",
+        "img_path": "images/2bbc20cb893951aca6c1b28237d2458178f5ad70389f40d834f10273ced49e11.jpg",
+        "img_caption": [
+            "FIGURE 5 Model prediction using SOA for DFBA in the presence of the rate of change of flux constraints. The constraints governing the growth are similar to the previous figure except for the region where the growth is constrained by the rate of change of flux constraints, and pathway 3 is active. Glucose, acetate, and biomass concentrations from experimental data are plotted along with the model predictions (Varma and Palsson, 1994b). "
+        ],
+        "img_footnote": [],
+        "page_idx": 5
+    },
+    {
+        "type": "image",
+        "img_path": "images/45dcdd36e9fb5b81a2939afd8c38dc364e84a989a146e505905833543a8da4f1.jpg",
+        "img_caption": [
+            "FIGURE 6 Initial flux distribution as a function of the oxygen uptake rate for the SOA to DFBA. When the oxygen uptake rate is not sufficient to support aerobic growth (pathway 2), then the anaerobic pathway $( \\nu 4 )$ becomes active. "
+        ],
+        "img_footnote": [],
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "",
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "The flux rate-of-change constraints were also imposed on the metabolic network, and the simulations produced similar results (Fig. 5), with the exception of additional phases that were governed by the flux rate of change constraints. The flux rate-of-change constraints were active from 5.5 to $6 . 5 \\ \\mathrm { h r }$ , where the flux from pathway 3 that produced both biomass and acetate was nonzero. This was due to the constraint on the flux rate of change of the pathway that produced acetate in the absence of oxygen (pathway 4). ",
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "Sensitivity to the oxygen uptake rate ",
+        "text_level": 1,
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "The flux distribution during the early stages of the batch culture was qualitatively defined by the oxygen uptake rate. The by-product formation for the batch growth of $E$ . coli has previously been shown to depend on the oxygen uptake rate (Varma et al., 1993). Therefore, we investigated the optimal flux distribution during the initial growth phase as a function of the maximum oxygen uptake rate. Figure 6 shows that, as the maximum allowed oxygen uptake was decreased, the flux of pathway 4 that produced acetate increased, and, when the maximum allowed oxygen uptake rate was increased, the flux of pathway 4 decreased to zero, and pathways 1 and 2 were active. However, the flux through pathway 3 (produces both biomass and acetate) was found to be zero for all values of the oxygen uptake rate. ",
+        "page_idx": 6
+    },
+    {
+        "type": "image",
+        "img_path": "images/34af7cfed9f59910fdb78860dbeca118c3c0b52e12fc612f55563bd6e97915ab.jpg",
+        "img_caption": [
+            "FIGURE 7 Model prediction using SOA for DFBA in the presence of the rate of change of flux constraints for a glucose uptake rate of 11 mmol/gdwhr. Insufficient oxygen uptake rate due to the increased glucose uptake results in the shutting down of the acetate utilization pathway in the initial phase. Glucose, acetate, and biomass concentrations from experimental data are plotted along with the model predictions (Varma and Palsson, 1994b). "
+        ],
+        "img_footnote": [],
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "",
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "Sensitivity to the glucose uptake rate ",
+        "text_level": 1,
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "The DFBA solutions described above were generated with a maximum glucose uptake rate of 10 mmol/gdwhr. We used this value because it has been identified experimentally. The sensitivity of the solution to this flux constraint was examined using the SOA. When the maximum glucose uptake rate was increased to 11 mmol/gdwhr (Fig. 7), it was observed that the acetate utilization pathway was not active during the initial stages of the batch. In this case, the oxygen uptake rate was not sufficient to allow acetate utilization as seen earlier in Fig. 6. These results indicated that glucose and oxygen are not simultaneously consumed due to oxygen uptake constraints. However, if the glucose uptake rate is constraining bacterial growth, acetate and glucose are optimally co-metabolized during the initial phase of growth. However, they are not optimally cometabolized once the biomass reaches a higher level. ",
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "Sensitivity to the mass transfer coefficient $( { \\sf k } _ { L } \\sf a )$ ",
+        "text_level": 1,
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "DFBA was performed for a perturbation in the mass transfer coefficient $( k _ { \\mathrm { L } } a = 1 2 . 5 ~ \\mathrm { h r } ^ { - 1 } )$ ) (Fig. 8). This perturbation could be interpreted as increasing the agitation rate or increasing the surface area of the gas–liquid interphase. Additionally, a similar effect would be obtained by increasing the concentration of oxygen in the sparging gas. Due to the increased rate of oxygen transport, the time when the oxygen concentration reached zero increased, and the pathways that use oxygen increased in activity relative to the acetate-producing pathway (pathway 4). This resulted in decreased acetate production. Because, in the model, the use of acetate depends on the oxygen transport rate, as the $k _ { \\mathrm { L } } a$ increases, the acetate use rate increased and acetate concentration decreased to zero at $8 \\ \\mathrm { h r }$ compared to $9 . 5 \\ \\mathrm { h r }$ in Fig. 5 for a case where $k _ { \\mathrm { L } } a = 7 . 5 ~ \\mathrm { h r } ^ { - 1 }$ ",
+        "page_idx": 6
+    },
+    {
+        "type": "image",
+        "img_path": "images/33bb9ad11510da358a4510ca038d958a2ca5cc31667bf6975aba5ccca388d5c5.jpg",
+        "img_caption": [
+            "FIGURE 8 Model prediction using SOA for DFBA in the presence of the rate of change of flux constraints for the case where $k _ { \\mathrm { L } } a = 1 2 . 5 ~ \\mathrm { h r } ^ { - 1 }$ . Final phase involving acetate utilization is constrained by the transport of oxygen. Increased oxygen availability results in higher rate of acetate utilization. Glucose, acetate, and biomass concentrations from experimental data are plotted along with the model predictions (Varma and Palsson, 1994b). "
+        ],
+        "img_footnote": [],
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "",
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "Dynamic optimization based approach: Results ",
+        "text_level": 1,
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "The results from the DOA for DFBA are presented in Fig. 9. The rate of change of flux constraints were imposed at all time instants, unlike SOA (where the constraints were relaxed whenever the concentrations were close to zero). Therefore, for this case, the time evolution was marginally slower than the case of dynamic FBA using SOA for the same parameter set. However, when the flux rate of change constraints were relaxed, time evolution was rapid (Fig. 10). Sensitivity studies similar to the previous approach (SOA) were performed, and the results of the simulations for this approach (DOA) were similar. This is to be expected because these two approaches were formulated to produce the same results. The differences in the two approaches are related to the flexibility in problem formulation and the computational requirements (see Discussion). ",
+        "page_idx": 7
+    },
+    {
+        "type": "image",
+        "img_path": "images/253bcc2ec48ffe5b5d461dd8675687426f41d7b860be3d70db7523fcfe289dd6.jpg",
+        "img_caption": [
+            "FIGURE 9 Model prediction using DOA for DFBA in the presence of the rate of change of flux constraints. The results shown above are similar to the earlier results obtained using SOA. Glucose, acetate, and biomass concentrations from experimental data are plotted along with the model predictions (Varma and Palsson, 1994b). "
+        ],
+        "img_footnote": [],
+        "page_idx": 7
+    },
+    {
+        "type": "image",
+        "img_path": "images/ab0112b5237a1a53c3bab97ff944eef1a39b16c4fcea5b75998d8310d1ec624a.jpg",
+        "img_caption": [
+            "FIGURE 10 Model prediction using DOA for DFBA in the absence of the rate of change of flux constraints. Glucose, acetate, and biomass concentrations from experimental data are plotted along with the model predictions (Varma and Palsson, 1994b). "
+        ],
+        "img_footnote": [],
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "",
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "Sensitivity to the objective function ",
+        "text_level": 1,
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "The DOA formalism provides increased flexibility in the definition of the constraints and the objective function. Namely, because the DOA solves the entire solution (time course) in a single optimization problem, objectives that span multiple time steps can be incorporated. For example, with the DOA, the time-dependent flux distribution that maximizes the biomass at the end of the fermentation was solved. Furthermore, other interesting objective functions can be poised, such as maintaining homeostasis and robustness to perturbations in the environment. ",
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "We examined the sensitivity of the results to the objective function. We formulated the maximal growth objective in two distinct manners, maximal biomass at the end of the fermentation and maximal growth rate at each instant. Figure 11 depicts the results for the maximization of the endpoint biomass concentration objective. Here, the results obtained differ markedly from the previous case. The pathway that utilizes glucose was active until the end of the batch, and acetate production was slower, and the end-point biomass concentration achieved was greater than the previous cases. These results do not match the experimental data. The results obtained using the instantaneous objective function are more representative of the experimental data. This indicates that $E$ . coli may lack the predictive capability for redirecting the fluxes that could result in increased endpoint biomass concentration. ",
+        "page_idx": 7
+    },
+    {
+        "type": "image",
+        "img_path": "images/ee6eab465b24009a6913a8b98c57a18dedeb264b9246d23155f21a08a570bbcc.jpg",
+        "img_caption": [
+            "FIGURE 11 Model prediction using DOA for DFBA where the objective is maximizing the end-point biomass concentration. The results obtained for this objective function do not match the experimental data. The biomass concentration achieved is higher than the previous case, and pathway 2 is active until the end of the batch. Glucose, acetate, and biomass concentrations from experimental data are plotted along with the model predictions (Varma and Palsson, 1994b). "
+        ],
+        "img_footnote": [],
+        "page_idx": 8
+    },
+    {
+        "type": "text",
+        "text": "",
+        "page_idx": 8
+    },
+    {
+        "type": "text",
+        "text": "Discussion ",
+        "text_level": 1,
+        "page_idx": 8
+    },
+    {
+        "type": "text",
+        "text": "We have extended the classical FBA for analyzing the dynamic reprogramming of a metabolic network. In particular, we have examined the reprogramming of the metabolic network that occurs at different stages of diauxic growth of E. coli on glucose. Two approaches for DFBA were introduced, and the sensitivity to the different parameters was analyzed. The results were compared to the data presented in Varma and Palsson (1994b). ",
+        "page_idx": 8
+    },
+    {
+        "type": "text",
+        "text": "DFBA using SOA extended the FBA approach presented in Varma and Palsson (1994b) through the incorporation of the flux rate-of-change constraints. In this paper, the model for diauxic growth of $E$ . coli considered the effect of oxygen transport, and the metabolic network studied was simplified using pathway analysis to obtain a compact representation. The scope of the results obtained for modeling the metabolic reprogramming during diauxic growth presented here were similar to those based on FBA. Cybernetic models have also been proposed for the study of diauxic growth (Ramakrishna et al., 1996; Narang et al., 1997). The fluxes in the cybernetic approach are obtained as a solution to an optimal resource allocation problem with an instantaneous objective function. Typically, only a subset of the network is considered in the optimization problem (Varner, 2000). The solution obtained is analytic, and one can represent the system with a dynamic model. However, the cybernetic approach requires kinetic information for all the reactions in the network. DFBA does not require kinetic information and considers the entire network, although the solution for the fluxes is not analytic and is obtained by solving an optimization problem. ",
+        "page_idx": 8
+    },
+    {
+        "type": "text",
+        "text": "",
+        "page_idx": 8
+    },
+    {
+        "type": "text",
+        "text": "DFBA using DOA allows the formulation of a dynamic objective function describing characteristics, such as, reduction of transition time between metabolic states (Torres, 1994) or end-point biomass optimization, into a rigorous mathematical framework. A dynamic objective function based on the desired goal could provide information useful in the design of genetically modified metabolic networks for metabolic engineering by taking into account the dynamic responses to fluctuations in the system. The static optimization-based DFBA would not allow such a dynamic formulation, because the optimization performed is at a specific time instant. However, in SOA, the number of variables that have to be solved is far fewer (in each optimization) in comparison, and the optimization problem is an LP problem as opposed to the NLP for DOA. As the size of the network increases, the number of variables and the number of constraints would increase proportionally in the NLP. Thus, SOA is scalable to larger metabolic networks. ",
+        "page_idx": 8
+    },
+    {
+        "type": "text",
+        "text": "DFBA provides a framework for modeling the dynamic responses of a metabolic network to various perturbations. In this paper, we have examined the applicability of this framework for modeling the diauxic growth in $E$ . coli. The results from DFBA are qualitatively similar to the experimental observations. DFBA was able to predict the onset of acetate production and also the preference of $E$ . coli for sequential utilization of acetate and glucose over the simultaneous utilization. The constraints governing the behavior were identified at various phases in the batch culture. It was found that, in the initial phase, the glucose and oxygen uptake rates were the active constraints. In the middle phase, the oxygen concentration is close to zero, and the mass transfer coefficient $( k _ { \\mathrm { L } } a )$ and the maximum allowed rate of change of flux was found to constrain the system. Acetate utilization (last phase) was found to be constrained completely by the oxygen mass transfer coefficient. ",
+        "page_idx": 8
+    },
+    {
+        "type": "text",
+        "text": "The sensitivity to the various parameters was studied, and it was found that the dynamic model was most sensitive to $k _ { \\mathrm { L } } a$ whereas it was less sensitive to other parameters. The importance of the objective function was examined, and it was found that an instantaneous objective function was more representative of the experimental results than an end-point objective function. Another advantage of dFBA is that can incorporate kinetic expressions for reactions that are well-studied. This approach could also be used to identify regulatory phenomena and obtain insight into the functioning of the metabolic pathways. Changes in the regulatory structure that optimize the dynamics of a particular metabolic process could be obtained as a solution to a modified DFBA problem. ",
+        "page_idx": 8
+    },
+    {
+        "type": "text",
+        "text": "In conclusion, we have presented analysis tools for the quantitative study of the dynamic reprogramming of metabolic networks. These tools, along with experimental technologies such as microarrays, GeneChips, and proteomics, will help further understanding of the dynamic behavior of metabolic networks. Additionally, the DFBA approach can be used to provide strategies for the design of a network with a desired objective for metabolic engineering. Finally, the DFBA approach is an extension to classical FBA and has demonstrated great potential; however, further analysis is needed to improve the predictive capabilities in the biological sciences. ",
+        "page_idx": 8
+    },
+    {
+        "type": "text",
+        "text": "",
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "Financial support for this work was provided by the National Science Foundation (BES-9896061 and BES-0120241) and the US Department of Energy, Office of Biological and Environmental Research (Microbial Cell Project). ",
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "REFERENCES ",
+        "text_level": 1,
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "Bonarius, H. P. J., G. Schmid, and J. Tramper. 1997. Flux analysis of undetermined metabolic networks: the quest for the missing constraints. Trends Biochem. Sci. 15:308 –314.   \nCohen, B. A., R. D. Mitra, and J. D. Hughes. 2000. A computational analysis of whole-genome expression data reveals domains of gene expression. Nat. Genet. 26:183–186.   \nCronan, J. E., Jr., and D. Laporte. 1996. Tricarboxylic acid cycle and glyoxalate bypass. In Escherichia coli and Salmonella: Cellular and Molecular Biology. F. C. Neidhardt and H. E. Umbarger, Eds. Second ed. ASM Press, Washington, D. C. 189 –198.   \nCuthrell, J. E., and L. T. Biegler. 1987. On the optimization of differential algebraic process systems. AIChE J. 33:1257–1270.   \nDe Saizieu, A., U. Certa, J. Warrington, C. Gray, W. Keck, and J. Mous. 1998. Bacterial transcript imaging by hybridization of total RNA to oligonucleotide arrays. Nature Biotechnol. 16:45– 48.   \nDhurjati, P., D. Ramkrishna, M. C. Flickinger, and G. T. Tsao. 1985. A cybernetic view of microbial growth: modeling of cells as optimal strategists. Biotech. Bioeng. 27:1–9.   \nEdwards, J. S., R. Ramakrishna, C. H. Schilling, and B. O. Palsson. 1999. Metabolic flux balance analysis. In Metabolic Engineering. S. Y. Lee and E. T. Papoutsakis, Eds. Marcel Dekker, New York. 13–57.   \nEdwards, J. S., R. U. Ibarra, and B. O. Palsson. 2001. In silico predictions of Escherichia coli metabolic capabilities are consistent with experimental data. Nature Biotechnol. 19:125–130.   \nFell, D. 1996. Understanding the Control of Metabolism. Portland Press, London.   \nGiuseppin, M. L. F., and N. A. W. van Riel. 2000. Metabolic modeling of Saccharomyces cerevisiae using the optimal control of homeostasis: a cybernetic model definition. Metabolic Eng. 2:14 –33.   \nGuardia, M. J., and E. G. Calvo. 2001. Modeling of Escherichia coli growth and acetate formation under different operational conditions. Enzyme. Microb. Technol. 29:449 – 455.   \nIdeker, T., V. Thorsson, J. A. Ranish, R. Christmas, J. Buhler, J. K. Eng, R. Bumgarner, D. R. Goodlett, R. Aebersold, and L. Hood. 2001. Integrated genomic and proteomic analyses of a systematically perturbed network. Science. 292:929 –934.   \nKirkpatrick, C., L. M. Maurer, N. E. Oyelakin, Y. N. Yoncheva, R. Maurer, and J. L. Slonzewski. 2001. Acetate and formate stress: opposite responses in the proteome of Escherichia coli. J. Bacteriol. 183: 6466 – 6477.   \nKompala, D. S. 1984. Bacterial growth on multiple substrates. Experimental verification of cybernetic models. Ph.D. thesis. Purdue University, West Lafayette, IN.   \nLendenmann, U., and T. Egli. 1998. Kinetic models for the growth of Escherichia coli with mixtures of sugars under carbon-limited conditions. Biotech. Bioeng. 59:99 –107.   \nNarang, A., A. Konopka, and D. Ramkrishna. 1997. New patterns of mixed-substrate utilization during batch growth of Escherichia coli K12. Biotech. Bioeng. 55:747–757.   \nOh, M. K., and J. C. Liao. 2000. Gene expression profiling by DNA microarrays and metabolic fluxes in Escherichia coli. Biotechnol. Prog. 16:278 –286.   \nPramanik, J., and J. D. Keasling. 1997. Stoichiometric model of Escherichia coli metabolism: incorporation of growth-rate dependent biomass composition and mechanistic energy requirements. Biotech. Bioeng. 56:398 – 421.   \nRamakrishna, R., A. Konopka, and D. Ramkrishna. 1996. Cybernetic modeling of growth in mixed, substitutable substrate environments: preferential and simultaneous utlization. Biotech. Bioeng. 52:141–151.   \nSavageau, M. A., E. O. Voit, and D. H. Irvine. 1987a. Biochemical systems theory and metabolic control theory: 1. Fundamental similarities and differences. Math. Biosci. 86:127–145.   \nSavageau, M. A., E. O. Voit, and D. H. Irvine. 1987b. Biochemical systems theory and metabolic control theory: 2. The role of summation and connectivity relationships. Math. Biosci. 86:147–169.   \nSchilling, C. H., D. Letscher, and B. O. Palsson. 2000a. Theory for the systematic definition of metabolic pathways and their use in interpreting metabolic function from a pathway oriented perspective. J. Theor. Biol. 203:229 –248.   \nSchilling, C. H., J. S. Edwards, D. Letscher, and B. O. Palsson. 2000b. Combining pathway analysis with flux balance analysis for the comprehensive study of metabolic systems. Biotech. Bioeng. 71:286 –306.   \nSelinger, D. W., K. J. Cheung, R. Mei, E. M. Johansson, C. S. Richmod, F. R. Blattner, D. J. Lockhart, and G. M. Church. 2000. RNA expression analysis using a 30 base pair resolution Escherichia coli genome array. Nature Biotechnol. 18:1262–1268.   \nStephanpoulos, G. 1999. Metabolic fluxes and metabolic engineering. Metab. Eng. 1:1–11.   \nTao, H., C. Bausch, C. Richmond, F. R. Blattner, and T. Conway. 1999. Functional genomics: expression analysis of Escherichia coli growing on minimal and rich media. J. Bacteriol. 181:6425– 6440.   \nTao, H., R. Gonzalez, A. Martinez, M. Rodriguez, L. O. Ingram, J. F. Preston, and K. T. Shanmugam. 2001. Engineering a homo-ethanol pathway in Escherichia coli: increased glycolytic flux and levels of expression of glycolytic genes during xylose fermentation. J. Bacteriol. 183:2979 –2988.   \nTavazoie, S., J. D. Hughes, M. J. Campbell, R. J. Cho, and G. M. Church. 1999. Systematic determination of genetic network architecture. Nat. Genet. 22:281–285.   \nTorres, N. V. 1994. Application of the transition time of metabolic systems as a criterion for optimization of metabolic processes. Biotech. Bioeng. 44:291–296.   \nvan Riel, N. A. W., M. L. F. Giuseppin, and C. T. Verrips. 2000. Dynamic optimal control of homeostasis: an integrative system approach for modeling of the central nitrogen metabolism in Saccharomyces cerevisiae. Metabolic Eng. 2:14 –33.   \nVarma, A., and B. O. Palsson. 1994a. Metabolic flux balancing— basic concepts, scientific and practical use. Bio-Technol. 12:994 –998.   \nVarma, A., and B. O. Palsson. 1994b. Stoichiometric flux balance models quantitatively predict growth and metabolic by-product secretion in wild-type Escherichia coli W3110. Appl. Environ. Microbiol. 60: 3724 –3731.   \nVarma, A., B. W. Boesch, and B. O. Palsson. 1993. Stoichiometric interpretation of Escherichia coli glucose catabolism under various oxygenation rates. Appl. Environ. Microbiol. 59:2465–2473.   \nVarner, J. 2000. Large-scale prediction of phenotype: concept. Biotech. Bioeng. 69:664 – 678.   \nVarner, J., and D. Ramkrishna. 1999. Metabolic engineering from a cybernetic perspective I. Theoretical preliminaries. Biotechnol. Prog. 15: 407– 425.   \nWei, Y., J. M. Lee, C. Richmond, F. R. Blattner, J. A. Rafalski, and R. A. LaRossa. 2001. High-density microarray-mediated gene expression profiling of Escherichia coli. J. Bacteriol. 183:545–556.   \nWong, P., S. Gladney, and J. D. Keasling. 1997. Mathematical Model of the lac Operon: inducer exclusion, catabolite repression, and diauxic growth on glucose and lactose. Biotechnol. Prog. 13:132–143. ",
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "",
+        "page_idx": 9
+    }
+]

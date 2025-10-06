@@ -400,7 +400,7 @@ T_opt = MLP(Pool(HyenaDNA(Tokenize(G))))
 - **RAM**: Minimum 16 GB (32 GB recommended for large models)
 - **Storage**: 50 GB free space
 - **GPU**: NVIDIA GPU with 8+ GB VRAM (optional, recommended for faster predictions)
-- **Python**: Version 3.8 or higher
+- **Python**: Version 3.10 is tested
 
 ### Prerequisites
 
