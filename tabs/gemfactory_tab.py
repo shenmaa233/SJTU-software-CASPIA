@@ -15,6 +15,7 @@ Date: 2025-10
 
 import shutil
 import os
+import dotenv
 from pathlib import Path
 from datetime import datetime
 from typing import Optional
@@ -27,15 +28,36 @@ from src.GEMFactory.src.utils.GeneMarkS import GeneMarkSRunner
 from src.GEMFactory.src.ecGEM.ecgem_service import ECGEMService
 from src.utils import get_task_manager
 
+dotenv.load_dotenv()
+
 # ==================== Constants ====================
 GENOME_DIR = "src/GEMFactory/data/Genome"
-GMS_SCRIPT = "/home/shenmaa/gms2_linux_64/gms2.pl"
+GMS_SCRIPT = os.environ.get("GMS_SCRIPT_PATH")
 
 # ==================== Global Services ====================
 task_manager = get_task_manager()
 ecgem_service = ECGEMService()
 
+# Global mapping from display name to full path for draft models
+_model_path_mapping = {}
+
 # ==================== Utility Functions ====================
+
+def get_model_path_from_display(display_name: str) -> str:
+    """Extract actual file path from display name
+    
+    Display format: "filename.xml (1.2 MB, 2025-10-06 12:00)"
+    Returns the full path from the mapping.
+    """
+    if not display_name:
+        return ""
+    
+    # Extract filename from display string (everything before the first '(')
+    filename = display_name.split(' (')[0].strip()
+    
+    # Get full path from mapping
+    return _model_path_mapping.get(filename, display_name)
+
 
 def format_size(bytes_size):
     """Format file size in human-readable format"""
@@ -224,10 +246,13 @@ def draft_gem_tab():
 # ==================== Tab 2: ecGEM Builder ====================
 
 def refresh_draft_models():
-    """Refresh list of draft models"""
+    """Refresh list of draft models, show file name with metadata"""
     models = ecgem_service.list_draft_models()
-    choices = [m["path"] for m in models]
-    labels = [f"{m['name']} ({format_size(m['size'])}, {format_timestamp(m['modified'])})" for m in models]
+    # Create display labels with file name, size, and timestamp
+    choices = [f"{Path(m['path']).name} ({format_size(m['size'])}, {format_timestamp(m['modified'])})" for m in models]
+    # Store mapping from display name to full path
+    global _model_path_mapping
+    _model_path_mapping = {Path(m['path']).name: m['path'] for m in models}
     return gr.update(choices=choices, value=choices[0] if choices else None)
 
 
@@ -236,7 +261,9 @@ def check_model_suitability(model_file):
     if not model_file:
         return "⚠️ Please select a model"
     
-    is_suitable, messages = ecgem_service.check_model_suitability(model_file)
+    # Convert display name to actual path
+    model_path = get_model_path_from_display(model_file)
+    is_suitable, messages = ecgem_service.check_model_suitability(model_path)
     
     if is_suitable:
         result = "✅ Model is SUITABLE for ecGEM construction\n\n"
@@ -252,13 +279,16 @@ def start_ecgem_build(model_file, f, ptot, sigma, lowerbound, _sid):
     if not model_file:
         return "", "❌ Please select a model", ""
     
+    # Convert display name to actual path
+    model_path = get_model_path_from_display(model_file)
+    
     # Check suitability first
-    is_suitable, messages = ecgem_service.check_model_suitability(model_file)
+    is_suitable, messages = ecgem_service.check_model_suitability(model_path)
     if not is_suitable:
         return "", "❌ Model not suitable: " + "; ".join(messages), ""
     
     task_id = ecgem_service.build_ecgem(
-        model_file=model_file,
+        model_file=model_path,
         f=f,
         ptot=ptot,
         sigma=sigma,
@@ -384,13 +414,16 @@ def start_etcgem_build(model_file, temperature, f, ptot, sigma, lowerbound, _sid
     if temperature is None or temperature < 0 or temperature > 100:
         return "", "❌ Please specify a valid temperature (0-100°C)", ""
     
+    # Convert display name to actual path
+    model_path = get_model_path_from_display(model_file)
+    
     # Check suitability first
-    is_suitable, messages = ecgem_service.check_model_suitability(model_file)
+    is_suitable, messages = ecgem_service.check_model_suitability(model_path)
     if not is_suitable:
         return "", "❌ Model not suitable: " + "; ".join(messages), ""
     
     task_id = ecgem_service.build_etcgem(
-        model_file=model_file,
+        model_file=model_path,
         temperature=temperature,
         f=f,
         ptot=ptot,

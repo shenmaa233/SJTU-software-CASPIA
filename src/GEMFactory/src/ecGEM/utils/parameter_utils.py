@@ -32,8 +32,7 @@ def parameter_predict(
     T=37.0
 ):
     if is_etc and T is None:
-        print("❌ Optimal temperature is required when building enzyme-temperature-constrained GEM. Exiting.")
-        exit(1)
+        raise ValueError("Optimal temperature is required when building enzyme-temperature-constrained GEM")
 
     os.makedirs(result_folder, exist_ok=True)
 

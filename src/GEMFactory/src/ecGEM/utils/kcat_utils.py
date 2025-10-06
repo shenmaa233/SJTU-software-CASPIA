@@ -237,5 +237,5 @@ def get_kcat_mw(gprdf, result_folder):
     reaction_kcat_mw.reset_index(drop=True, inplace=True)
     reaction_kcat_mw_file=f'{result_folder}/reaction_kcat_mw.csv'
     reaction_kcat_mw.to_csv(reaction_kcat_mw_file, index=False)
-    print('reaction_kcat_mw generated')
+    # Removed print statement to avoid I/O errors in daemon threads
     return reaction_kcat_mw

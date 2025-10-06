@@ -225,33 +225,60 @@ class ECGEMService:
         if suitability == "No":
             raise ValueError("Model is not suitable for ecGEM construction")
         
-        # Step 2: Split and pair substrates
+        # Step 2: Split and pair substrates (with checkpoint recovery)
         logger.info("\n🔬 Step 2: Processing metabolite-reaction-protein pairs...")
-        from .build_ecGEM import split_and_pair_substrate_with_protein
-        gprdf = split_and_pair_substrate_with_protein(model_file, result_folder)
-        logger.info(f"  Generated {len(gprdf)} metabolite-reaction pairs")
+        metabolites_gpr_file = f"{result_folder}/metabolites_reactions_gpr.csv"
         
-        # Step 3: Predict kcat
+        if os.path.exists(metabolites_gpr_file):
+            logger.info("  ♻️  Found existing metabolites_reactions_gpr.csv, loading from checkpoint...")
+            gprdf = pd.read_csv(metabolites_gpr_file)
+            logger.info(f"  Loaded {len(gprdf)} metabolite-reaction pairs from checkpoint")
+        else:
+            from .build_ecGEM import split_and_pair_substrate_with_protein
+            gprdf = split_and_pair_substrate_with_protein(model_file, result_folder)
+            logger.info(f"  Generated {len(gprdf)} metabolite-reaction pairs")
+        
+        # Step 3: Predict kcat (parameter_predict has internal checkpoint recovery)
         logger.info("\n🧬 Step 3: Predicting kcat parameters...")
-        gprdf_with_kcat = parameter_predict(
-            gprdf, protein_file, model_file, result_folder,
-            is_etc=False, T=None
-        )
-        logger.info(f"  Predicted kcat for {len(gprdf_with_kcat)} entries")
+        full_metabolites_file = f"{result_folder}/full_metabolites_reactions.csv"
         
-        # Step 4: Get kcat/MW
+        if os.path.exists(full_metabolites_file):
+            logger.info("  ♻️  Found existing full_metabolites_reactions.csv, loading from checkpoint...")
+            gprdf_with_kcat = pd.read_csv(full_metabolites_file)
+            logger.info(f"  Loaded {len(gprdf_with_kcat)} entries from checkpoint")
+        else:
+            gprdf_with_kcat = parameter_predict(
+                gprdf, protein_file, model_file, result_folder,
+                is_etc=False, T=None
+            )
+            logger.info(f"  Predicted kcat for {len(gprdf_with_kcat)} entries")
+        
+        # Step 4: Get kcat/MW (with checkpoint recovery)
         logger.info("\n⚖️  Step 4: Computing kcat/MW ratios...")
-        reaction_kcat_mw = get_kcat_mw(gprdf_with_kcat, result_folder)
-        logger.info(f"  Computed {len(reaction_kcat_mw)} kcat/MW values")
+        reaction_kcat_mw_file = f"{result_folder}/reaction_kcat_mw.csv"
         
-        # Step 5: Build ecGEM
+        if os.path.exists(reaction_kcat_mw_file):
+            logger.info("  ♻️  Found existing reaction_kcat_mw.csv, loading from checkpoint...")
+            reaction_kcat_mw = pd.read_csv(reaction_kcat_mw_file)
+            logger.info(f"  Loaded {len(reaction_kcat_mw)} kcat/MW values from checkpoint")
+        else:
+            reaction_kcat_mw = get_kcat_mw(gprdf_with_kcat, result_folder)
+            logger.info(f"  Computed {len(reaction_kcat_mw)} kcat/MW values")
+        
+        # Step 5: Build ecGEM (with checkpoint recovery)
         logger.info("\n🏗️  Step 5: Building enzyme-constrained model...")
-        from .build_ecGEM import build_ecGEM
-        ecModel_file = build_ecGEM(
-            model_file, result_folder,
-            f=f, ptot=ptot, sigma=sigma, lowerbound=lowerbound
-        )
-        logger.info(f"  ✅ ecGEM saved: {ecModel_file}")
+        ecModel_file = f"{result_folder}/ecModel.json"
+        
+        if os.path.exists(ecModel_file):
+            logger.info("  ♻️  Found existing ecModel.json, skipping model construction...")
+            logger.info(f"  ✅ ecGEM already exists: {ecModel_file}")
+        else:
+            from .build_ecGEM import build_ecGEM
+            ecModel_file = build_ecGEM(
+                model_file, result_folder,
+                f=f, ptot=ptot, sigma=sigma, lowerbound=lowerbound
+            )
+            logger.info(f"  ✅ ecGEM saved: {ecModel_file}")
         
         logger.info("\n"+"="*60)
         logger.info("✅ ecGEM Construction Complete!")
@@ -291,33 +318,60 @@ class ECGEMService:
         if suitability == "No":
             raise ValueError("Model is not suitable for etcGEM construction")
         
-        # Step 2: Split and pair substrates
+        # Step 2: Split and pair substrates (with checkpoint recovery)
         logger.info("\n🔬 Step 2: Processing metabolite-reaction-protein pairs...")
-        from .build_ecGEM import split_and_pair_substrate_with_protein
-        gprdf = split_and_pair_substrate_with_protein(model_file, result_folder)
-        logger.info(f"  Generated {len(gprdf)} metabolite-reaction pairs")
+        metabolites_gpr_file = f"{result_folder}/metabolites_reactions_gpr.csv"
         
-        # Step 3: Predict kcat and Topt
+        if os.path.exists(metabolites_gpr_file):
+            logger.info("  ♻️  Found existing metabolites_reactions_gpr.csv, loading from checkpoint...")
+            gprdf = pd.read_csv(metabolites_gpr_file)
+            logger.info(f"  Loaded {len(gprdf)} metabolite-reaction pairs from checkpoint")
+        else:
+            from .build_ecGEM import split_and_pair_substrate_with_protein
+            gprdf = split_and_pair_substrate_with_protein(model_file, result_folder)
+            logger.info(f"  Generated {len(gprdf)} metabolite-reaction pairs")
+        
+        # Step 3: Predict kcat and Topt (parameter_predict has internal checkpoint recovery)
         logger.info(f"\n🧬 Step 3: Predicting kcat and Topt @ {temperature}°C...")
-        gprdf_with_kcat = parameter_predict(
-            gprdf, protein_file, model_file, result_folder,
-            is_etc=True, T=temperature
-        )
-        logger.info(f"  Predicted parameters for {len(gprdf_with_kcat)} entries")
+        full_metabolites_file = f"{result_folder}/full_metabolites_reactions.csv"
         
-        # Step 4: Get kcat/MW
+        if os.path.exists(full_metabolites_file):
+            logger.info("  ♻️  Found existing full_metabolites_reactions.csv, loading from checkpoint...")
+            gprdf_with_kcat = pd.read_csv(full_metabolites_file)
+            logger.info(f"  Loaded {len(gprdf_with_kcat)} entries from checkpoint")
+        else:
+            gprdf_with_kcat = parameter_predict(
+                gprdf, protein_file, model_file, result_folder,
+                is_etc=True, T=temperature
+            )
+            logger.info(f"  Predicted parameters for {len(gprdf_with_kcat)} entries")
+        
+        # Step 4: Get kcat/MW (with checkpoint recovery)
         logger.info("\n⚖️  Step 4: Computing kcat/MW ratios...")
-        reaction_kcat_mw = get_kcat_mw(gprdf_with_kcat, result_folder)
-        logger.info(f"  Computed {len(reaction_kcat_mw)} kcat/MW values")
+        reaction_kcat_mw_file = f"{result_folder}/reaction_kcat_mw.csv"
         
-        # Step 5: Build etcGEM
+        if os.path.exists(reaction_kcat_mw_file):
+            logger.info("  ♻️  Found existing reaction_kcat_mw.csv, loading from checkpoint...")
+            reaction_kcat_mw = pd.read_csv(reaction_kcat_mw_file)
+            logger.info(f"  Loaded {len(reaction_kcat_mw)} kcat/MW values from checkpoint")
+        else:
+            reaction_kcat_mw = get_kcat_mw(gprdf_with_kcat, result_folder)
+            logger.info(f"  Computed {len(reaction_kcat_mw)} kcat/MW values")
+        
+        # Step 5: Build etcGEM (with checkpoint recovery)
         logger.info("\n🏗️  Step 5: Building enzyme-temperature-constrained model...")
-        from .build_ecGEM import build_ecGEM
-        ecModel_file = build_ecGEM(
-            model_file, result_folder,
-            f=f, ptot=ptot, sigma=sigma, lowerbound=lowerbound
-        )
-        logger.info(f"  ✅ etcGEM saved: {ecModel_file}")
+        ecModel_file = f"{result_folder}/ecModel.json"
+        
+        if os.path.exists(ecModel_file):
+            logger.info("  ♻️  Found existing ecModel.json, skipping model construction...")
+            logger.info(f"  ✅ etcGEM already exists: {ecModel_file}")
+        else:
+            from .build_ecGEM import build_ecGEM
+            ecModel_file = build_ecGEM(
+                model_file, result_folder,
+                f=f, ptot=ptot, sigma=sigma, lowerbound=lowerbound
+            )
+            logger.info(f"  ✅ etcGEM saved: {ecModel_file}")
         
         logger.info("\n"+"="*60)
         logger.info(f"✅ etcGEM Construction Complete @ {temperature}°C!")

@@ -145,7 +145,7 @@ def build_gem(genome_fasta: str,
 if __name__ == "__main__":
     # CLI demo
     genome = "src/GEMFactory/data/Genome/GCF_000005845.2_ASM584v2_genomic.fna"
-    results = build_gem(genome, gms_script="/home/shenmaa/gms2_linux_64/gms2.pl", gapfill="M9")
+    results = build_gem(genome, gms_script=os.environ.get("GMS_SCRIPT_PATH"), gapfill="M9")
     print("\n=== Build GEM Pipeline Finished ===")
     for k, v in results.items():
         print(f"{k}: {v}")

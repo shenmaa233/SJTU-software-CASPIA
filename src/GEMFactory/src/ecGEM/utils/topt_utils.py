@@ -20,7 +20,8 @@ def load_topt_model(model_path, device=None):
     """
     if device is None:
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    print(f"Using device: {device}")
+    # Device info - removed print to avoid I/O errors in daemon threads
+    pass
     
     # List of standard amino acids
     amino_acids = ['A', 'R', 'N', 'D', 'C', 'E', 'Q', 'G', 'H', 'I', 'L', 'K', 'M', 'F', 'P', 'S', 'T', 'W', 'Y', 'V']
@@ -50,7 +51,8 @@ def load_topt_model(model_path, device=None):
     model.load_state_dict(checkpoint['model_state_dict'])
     model.eval()
     
-    print(f"Loaded Topt model from {model_path}")
+    # Model loaded - removed print to avoid I/O errors in daemon threads
+    pass
     return model, tokenizer, device
 
 # === 单条预测函数 ===
@@ -84,7 +86,8 @@ def predict_single_topt(protein_sequence, model, tokenizer, device, max_length=1
             prediction = model(input_tensor)
             return prediction.item()
     except Exception as e:
-        print(f"Error predicting Topt for sequence: {e}")
+        # Error occurred - silently handle to avoid I/O errors in daemon threads
+        pass
         return None
 
 # === Batch prediction function ===
@@ -112,7 +115,8 @@ def topt_predict_batch(protein_sequences, model_path, max_length=1000):
                 if pred is None:
                     pred = 37.0
             except Exception as e:
-                print(f"⚠️ Failed at index {idx}: {e}")
+                # Failed at index - silently handle to avoid I/O errors in daemon threads
+                pass
                 pred = 37.0
         results.append(pred)
 

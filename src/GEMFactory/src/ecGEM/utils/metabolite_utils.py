@@ -31,7 +31,7 @@ def get_metabolite_smiles_from_pubchem(metabolite_name):
                 return None
         
     except Exception as e:
-        print(f"尝试获取 {metabolite_name} 的SMILES时出错: {e}")
+        # Error getting SMILES - silently handle to avoid I/O errors in daemon threads
         return None
 
 def get_smiles_for_gprdf(gprdf, model, cache_file = 'src/GEMFactory/src/ecGEM/utils/smiles_cache.json'):
@@ -51,9 +51,9 @@ def get_smiles_for_gprdf(gprdf, model, cache_file = 'src/GEMFactory/src/ecGEM/ut
         try:
             with open(cache_file, 'r', encoding='utf-8') as f:
                 processed_metabolites = json.load(f)
-            print(f"从缓存文件加载了 {len(processed_metabolites)} 个代谢物的SMILES数据")
+            # Loaded cache - removed print to avoid I/O errors in daemon threads
         except Exception as e:
-            print(f"加载缓存文件失败: {e}，将创建新的缓存")
+            # Failed to load cache - removed print to avoid I/O errors in daemon threads
             processed_metabolites = {}
     else:
         processed_metabolites = {}
@@ -61,7 +61,7 @@ def get_smiles_for_gprdf(gprdf, model, cache_file = 'src/GEMFactory/src/ecGEM/ut
     smiles_list = []
     new_entries = 0  # 记录新查询的条目数
 
-    print("开始获取代谢物的SMILES...")
+    # Getting SMILES - removed print to avoid I/O errors in daemon threads
 
     for idx, row in tqdm(gprdf.iterrows(), total=len(gprdf), desc="获取SMILES"):
         metabolite_id = row['metabolites']  # 第二列是metabolites
@@ -93,17 +93,18 @@ def get_smiles_for_gprdf(gprdf, model, cache_file = 'src/GEMFactory/src/ecGEM/ut
                     os.makedirs(os.path.dirname(cache_file), exist_ok=True)
                     with open(cache_file, 'w', encoding='utf-8') as f:
                         json.dump(processed_metabolites, f, ensure_ascii=False, indent=2)
-                    print(f"已保存 {new_entries} 个新条目到缓存")
+                    # Saved cache - removed print to avoid I/O errors in daemon threads
                 except Exception as e:
-                    print(f"保存缓存失败: {e}")
+                    # Failed to save cache - removed print to avoid I/O errors in daemon threads
+                    pass
 
         except Exception as e:
-            print(f"处理代谢物 {metabolite_name} 时出错: {e}")
+            # Error processing metabolite - removed print to avoid I/O errors in daemon threads
             # 对于出错的情况，也要记录到缓存中避免重复查询
             if metabolite_name not in processed_metabolites:
                 processed_metabolites[metabolite_name] = None
                 new_entries += 1
             smiles_list.append(None)
 
-    print(f"SMILES获取完成。成功获取: {sum(1 for s in smiles_list if s is not None)}/{len(smiles_list)}")
+    # SMILES retrieval complete - removed print to avoid I/O errors in daemon threads
     return smiles_list

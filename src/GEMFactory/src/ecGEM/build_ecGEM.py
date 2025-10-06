@@ -97,7 +97,8 @@ def main():
     args = parser.parse_args()
 
     if args.is_etc and args.T is None:
-        print("Optimal temperature is required when building enzyme-temperature-constrained GEM. Exiting.")
+        import sys
+        print("❌ Optimal temperature is required when building enzyme-temperature-constrained GEM.", file=sys.stderr)
         exit(1)
 
     if args.result_folder is None:
@@ -114,13 +115,14 @@ def main():
     os.makedirs(args.result_folder, exist_ok=True)
 
     # Step 1: 检查模型是否适合构建ecGEM
+    import sys
     suitability, messages = Determine_suitable_ecGEM(args.model_file, args.bigg_met_file)
-    print(f"Model suitability for EC construction: {suitability}")
+    print(f"Model suitability for EC construction: {suitability}", file=sys.stderr)
     for message in messages:
-        print(f"- {message}")
+        print(f"- {message}", file=sys.stderr)
     
     if suitability == 'No':
-        print("The model is not suitable for enzyme-constrained model construction. Exiting.")
+        print("❌ The model is not suitable for enzyme-constrained model construction.", file=sys.stderr)
         exit(1)
 
     # Step 2: 拆分并匹配底物与蛋白
@@ -137,11 +139,12 @@ def main():
     reaction_kcat_mw = get_kcat_mw(gprdf_with_kcat, args.result_folder)
 
     # Step 5: 构建 ecGEM
+    import sys
     ecModel_output_file = build_ecGEM(
         args.model_file, args.result_folder,
         f=args.f, ptot=args.ptot, sigma=args.sigma, lowerbound=args.lowerbound
     )
-    print(f"ecGEM built and saved at {ecModel_output_file}")
+    print(f"✅ ecGEM built and saved at {ecModel_output_file}", file=sys.stderr)
 
 
 if __name__ == "__main__":
