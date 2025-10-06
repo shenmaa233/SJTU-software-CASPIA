@@ -6,6 +6,7 @@ os.environ["NO_PROXY"] = "localhost,127.0.0.1,::1"
 os.environ["no_proxy"] = "localhost,127.0.0.1,::1"
 
 # 从 tabs 目录导入各个 Tab 的创建函数
+from tabs.index_tab import index_tab  # 首页/索引界面
 from tabs.agent_tab import agent_tab  # 简洁版 - 原生 Gradio ⭐
 from tabs.gemfactory_tab import gemfactory_tab
 from tabs.tasks_monitor_tab import tasks_monitor_tab
@@ -56,6 +57,8 @@ with gr.Blocks(theme=gr.themes.Monochrome(), fill_height=True, css=CSS) as demo:
 
     # 标签页
     with gr.Tabs():
+        with gr.TabItem("🏠 Home"):
+            index_tab()
         with gr.TabItem("🤖 CASPIAgent"):
             agent_tab()
         with gr.TabItem("🧬 GEMFactory"):

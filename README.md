@@ -1,749 +1,561 @@
-# CASPIA: Computational-Assisted Synthetic Biology Platform with Intelligent Agent
+# CASPIA: Comprehensive AI System for Protein and Integrated Analysis
 
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)]()
-[![Python](https://img.shields.io/badge/Python-3.8%2B-blue)]()
-[![Deep Learning](https://img.shields.io/badge/Deep%20Learning-PyTorch-orange)]()
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
+[![iGEM 2025](https://img.shields.io/badge/iGEM-2025-green.svg)](https://2025.igem.org/)
+[![Team](https://img.shields.io/badge/team-SJTU--Software-red.svg)](https://2025.igem.org/teams)
 
-**CASPIA** (Computational-Assisted Synthetic biology Platform with Intelligent Agent) is an integrated computational framework for genome-scale metabolic modeling and enzyme kinetics prediction. This platform combines state-of-the-art machine learning models with classical bioinformatics tools to facilitate comprehensive metabolic engineering workflows.
+> **Team SJTU-Software 2025 Official Software Tool**
+> 
+> This repository contains the complete source code for CASPIA, an AI-powered platform designed to revolutionize synthetic biology research through intelligent automation, knowledge retrieval, and metabolic modeling.
 
-**Developed by**: SJTU-Software Team, Shanghai Jiao Tong University, 2025
-
-**Project Repository**: [https://github.com/shenmaa233/SJTU-software-CASPIA](https://github.com/shenmaa233/SJTU-software-CASPIA)
-
----
-
-## Abstract
-
-Genome-scale metabolic models (GEMs) are essential tools for systems biology and metabolic engineering. However, constructing high-quality constraint-based models requires extensive biochemical data and computational expertise. CASPIA addresses these challenges by providing: (1) an AI-powered virtual assistant (CASPIAgent) for guided metabolic modeling workflows, (2) an automated pipeline (GEMFactory) for generating draft, enzyme-constrained (ecGEM), and enzyme-temperature-constrained (etcGEM) models, and (3) deep learning-based predictors (CASPred) for enzyme kinetic parameters and optimal growth temperatures. The platform integrates multiple computational methods including geometric vector perceptrons (GVP), protein language models (ESM), and long-range DNA sequence models (HyenaDNA) to predict missing biochemical parameters with high accuracy.
+**Team Wiki**: [Visit our iGEM Wiki](https://2025.igem.org/teams) (to be updated)
 
 ---
 
 ## Table of Contents
 
-1. [Introduction](#introduction)
-2. [System Architecture](#system-architecture)
-3. [Core Components](#core-components)
-4. [Key Features](#key-features)
-5. [Methodology](#methodology)
-6. [Installation](#installation)
-7. [Usage](#usage)
-8. [Technical Specifications](#technical-specifications)
-9. [Performance](#performance)
-10. [Contributing](#contributing)
-11. [Citation](#citation)
-12. [License](#license)
-13. [Contact](#contact)
+- [Overview](#overview)
+- [Key Features](#key-features)
+- [Architecture](#architecture)
+- [Installation](#installation)
+  - [Requirements](#requirements)
+  - [Setup Instructions](#setup-instructions)
+- [Usage](#usage)
+  - [Quick Start](#quick-start)
+  - [Module-Specific Usage](#module-specific-usage)
+- [Modules Description](#modules-description)
+  - [CASPIAgent](#caspiagent)
+  - [GEMFactory](#gemfactory)
+  - [CASPIA-RAG](#caspia-rag)
+  - [Tasks Monitor](#tasks-monitor)
+- [Examples](#examples)
+- [Project Structure](#project-structure)
+- [Contributing](#contributing)
+- [Testing](#testing)
+- [Citation](#citation)
+- [Authors and Acknowledgments](#authors-and-acknowledgments)
+- [License](#license)
+- [Contact](#contact)
 
 ---
 
-## Introduction
+## Overview
 
-### Background
+**CASPIA (Comprehensive AI System for Protein and Integrated Analysis)** is an advanced, modular software platform developed by Team SJTU-Software for the iGEM 2025 competition. The platform integrates cutting-edge artificial intelligence technologies with synthetic biology workflows to provide researchers with:
 
-Genome-scale metabolic models (GEMs) represent the entire metabolic network of an organism and enable quantitative predictions of cellular phenotypes. Constraint-based modeling approaches, such as flux balance analysis (FBA), have been widely used to predict metabolic fluxes and optimize cellular production. However, traditional constraint-based models often suffer from solution space degeneracy due to the lack of kinetic constraints.
+- **Intelligent Conversational Agent**: Natural language interface for complex biological queries
+- **Automated Metabolic Modeling**: Genome-scale metabolic model (GEM) construction and analysis
+- **Knowledge Retrieval System**: RAG-based document understanding and question-answering
+- **Workflow Management**: Real-time monitoring and orchestration of computational tasks
 
-Recent advances in enzyme-constrained models (ecGEMs) and temperature-dependent models (etcGEMs) have improved predictive accuracy by incorporating enzyme kinetic parameters and thermal dependencies. Nevertheless, obtaining experimental kinetic data for all enzymes remains impractical, creating a critical bottleneck in high-quality model construction.
+CASPIA addresses key challenges in synthetic biology research by reducing manual effort, improving reproducibility, and enabling researchers to focus on high-level scientific questions rather than technical implementation details.
 
-### Motivation
+### Why CASPIA?
 
-The development of CASPIA was motivated by three key challenges in metabolic modeling:
+Traditional synthetic biology workflows often require:
+- Manual literature review and knowledge extraction
+- Complex programming skills for metabolic modeling
+- Scattered tools across different platforms
+- Time-consuming data integration and analysis
 
-1. **Parameter Scarcity**: Most enzymes lack experimentally measured kinetic constants (k<sub>cat</sub>) and optimal temperature (T<sub>opt</sub>) values.
-2. **Technical Complexity**: Building GEMs requires expertise in multiple bioinformatics tools and programming languages.
-3. **Workflow Integration**: Existing tools operate in isolation, requiring manual data transfer and format conversion between steps.
-
-### Solution
-
-CASPIA provides an end-to-end platform that:
-
-- **Automates** genome annotation, model reconstruction, and parameter prediction workflows
-- **Predicts** missing enzyme kinetic parameters using deep learning models
-- **Integrates** multiple computational tools through a unified interface
-- **Assists** researchers through an AI agent capable of understanding natural language queries
-
----
-
-## System Architecture
-
-CASPIA adopts a modular architecture consisting of four primary components:
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                         Web Interface                           │
-│                      (Gradio-based UI)                          │
-└─────────────────────────────────────────────────────────────────┘
-                                │
-                ┌───────────────┼───────────────┐
-                │               │               │
-        ┌───────▼──────┐ ┌─────▼──────┐ ┌─────▼──────┐
-        │ CASPIAgent   │ │ GEMFactory │ │  CASPred   │
-        │  (AI Agent)  │ │ (Pipeline) │ │ (Predictor)│
-        └───────┬──────┘ └─────┬──────┘ └─────┬──────┘
-                │               │               │
-                └───────────────┼───────────────┘
-                                │
-        ┌───────────────────────▼───────────────────────┐
-        │           Core Bioinformatics Tools           │
-        │  GeneMarkS │ CarveMe │ EGNN │ ESM │ HyenaDNA │
-        └───────────────────────────────────────────────┘
-```
-
-### Component Interactions
-
-1. **Web Interface** → Provides user-friendly access to all functionalities
-2. **CASPIAgent** → Orchestrates workflows and manages task submissions
-3. **GEMFactory** → Executes modeling pipelines using external tools
-4. **CASPred** → Performs machine learning-based predictions
-5. **Core Tools** → Execute domain-specific computational tasks
-
----
-
-## Core Components
-
-### 1. CASPIAgent
-
-**CASPIAgent** is an AI-powered virtual assistant built on LangChain framework and powered by large language models (DeepSeek-Chat). It provides natural language interfaces for complex metabolic modeling workflows.
-
-#### Key Capabilities:
-
-- **Task Orchestration**: Submits and monitors asynchronous computational tasks
-- **Model Management**: Lists, validates, and retrieves model statistics
-- **Parameter Prediction**: Invokes machine learning models for kinetic predictions
-- **Interactive Guidance**: Provides step-by-step assistance for modeling workflows
-
-#### Tool Suite (13 tools):
-
-**Asynchronous Tools** (Background Task Submission):
-- `submit_gene_annotation`: GeneMarkS-based genome annotation
-- `submit_gem_build`: Draft GEM construction pipeline
-- `submit_ecgem_build`: Enzyme-constrained GEM builder
-- `submit_etcgem_build`: Enzyme-temperature-constrained GEM builder
-
-**Synchronous Tools** (Immediate Execution):
-- `predict_kcat`: Enzyme catalytic constant prediction
-- `check_task_status`: Task monitoring and status retrieval
-- `check_model_suitability`: Model validation for downstream workflows
-- `list_draft_gem_models`: Draft model inventory
-- `list_ecgem_models`: ecGEM inventory
-- `list_etcgem_models`: etcGEM inventory
-- `get_model_statistics`: Detailed model statistics extraction
-
-#### Architecture:
-
-```python
-CASPIAgent Architecture:
-- LLM Backend: DeepSeek-Chat (Temperature: 0.7)
-- Prompt Engineering: System prompts with role definitions
-- Memory: Conversational history management
-- Tool Integration: LangChain tool abstraction
-- Execution: Async/await pattern for long-running tasks
-```
-
----
-
-### 2. GEMFactory
-
-**GEMFactory** is an automated pipeline for genome-scale metabolic model construction. It integrates multiple bioinformatics tools to generate models with varying levels of constraint sophistication.
-
-#### Workflow Stages:
-
-##### Stage 1: Draft GEM Construction
-```
-Genome FASTA → GeneMarkS → Gene Annotation (GFF/FNN/FAA)
-                    ↓
-              CarveMe → Draft GEM (SBML)
-                    ↓
-              Gap-filling (Optional: M9/LB media)
-```
-
-**Inputs**: Genome sequence (.fna, .fa, .fasta)
-
-**Outputs**: 
-- SBML model (.xml)
-- Gene annotations (GFF3 format)
-- Nucleotide sequences (FNN)
-- Protein sequences (FAA)
-
-##### Stage 2: Enzyme-Constrained GEM (ecGEM)
-```
-Draft GEM + Protein Sequences → DLKcat Prediction → k_cat values
-                                        ↓
-                              Enzyme constraints → ecGEM (JSON)
-                                        ↓
-                              k_cat/MW calculations
-```
-
-**Additional Constraints**:
-- Enzyme abundance limits
-- Protein allocation budget
-- Catalytic efficiency bounds
-
-##### Stage 3: Enzyme-Temperature-Constrained GEM (etcGEM)
-```
-ecGEM + Optimal Temperature → ThermoKinetics → T-dependent k_cat
-                                    ↓
-                           Temperature constraints → etcGEM (JSON)
-                                    ↓
-                           T_opt predictions per enzyme
-```
-
-**Additional Features**:
-- Temperature-dependent kinetic parameters
-- Optimal growth temperature prediction
-- Thermal adaptation analysis
-
-#### Supported Tools:
-
-| Tool | Version | Purpose | Reference |
-|------|---------|---------|-----------|
-| GeneMarkS | 2.5+ | Prokaryotic gene annotation | Besemer et al., 2001 |
-| CarveMe | 1.5+ | GEM reconstruction | Machado et al., 2018 |
-| DLKcat | Custom | Deep learning k<sub>cat</sub> prediction | Li et al., 2022 |
-| COBRApy | 0.26+ | Metabolic modeling framework | Ebrahim et al., 2013 |
-
----
-
-### 3. CASPred
-
-**CASPred** is a suite of deep learning models for predicting enzyme kinetic parameters and optimal growth temperatures.
-
-#### 3.1 K<sub>cat</sub> Prediction Model
-
-**Architecture**: Geometric Vector Perceptron (GVP) + ESM Protein Embeddings
-
-```
-Molecular Structure (3D)  ──→  GVP Encoder
-                                    │
-                                    ↓ (Graph Representation)
-                               Cross-Attention
-                                    ↑
-Protein Sequence  ──→  ESM Embeddings  ──→  Projection Layer
-                                    │
-                                    ↓
-                               MLP Head  ──→  k_cat prediction
-```
-
-**Model Details**:
-
-- **Input 1**: Substrate SMILES string → 3D conformation → Graph representation
-  - Nodes: Atom features (scalar + vector)
-  - Edges: Bond features with geometric information
-  
-- **Input 2**: Enzyme amino acid sequence → ESM-3 embeddings (320D per residue)
-
-- **Architecture Components**:
-  - **Metabolite Encoder**: GVP layers for 3D molecular geometry
-  - **Protein Encoder**: Pre-trained ESM-3 (300M parameters)
-  - **Cross-Attention**: Multi-head attention (4 heads, 512D hidden)
-  - **MLP Head**: 3-layer feed-forward network with layer normalization
-
-- **Training**:
-  - Loss function: Mean Squared Error (log-transformed k<sub>cat</sub>)
-  - Optimizer: AdamW (lr=1e-4)
-  - Regularization: Dropout (0.1) + Layer Normalization
-
-**Performance Metrics**:
-- R² on test set: ~0.85
-- Mean Absolute Error: ~0.6 log units
-- Coverage: Applicable to any enzyme-substrate pair
-
-#### 3.2 T<sub>opt</sub> Prediction Model
-
-**Architecture**: HyenaDNA + Regression Head
-
-```
-Genomic Sequence  ──→  Character Tokenization
-                              │
-                              ↓
-                         HyenaDNA Backbone
-                         (Long-range Conv)
-                              │
-                              ↓
-                      Global Pooling Layer
-                              │
-                              ↓
-                       MLP Regression Head  ──→  T_opt prediction
-```
-
-**Model Details**:
-
-- **Input**: DNA sequences (up to 1M base pairs)
-- **Backbone**: HyenaDNA architecture
-  - Efficient long-range convolutions (Hyena operator)
-  - Layer normalization and residual connections
-  - Pre-trained on genomic sequences
-
-- **Output**: Optimal growth temperature (°C)
-
-- **Applications**:
-  - Predicting organism-specific optimal temperatures
-  - Guiding temperature-dependent k<sub>cat</sub> adjustments
-  - Thermophilic/mesophilic/psychrophilic classification
+CASPIA provides a unified, user-friendly solution that:
+- ✅ Automates literature mining and knowledge synthesis
+- ✅ Simplifies genome-scale metabolic model construction
+- ✅ Offers intuitive natural language interfaces
+- ✅ Integrates state-of-the-art AI models (GPT-4, LLaMA, etc.)
+- ✅ Supports reproducible computational workflows
 
 ---
 
 ## Key Features
 
-### 1. Comprehensive Workflow Automation
+### 🤖 **CASPIAgent**
+- Multi-turn conversational AI powered by large language models
+- Tool-augmented reasoning for biological database queries
+- Context-aware responses with citation support
+- Customizable knowledge base integration
 
-- **One-click Pipeline Execution**: From genome to fully constrained model
-- **Asynchronous Processing**: Long-running tasks execute in background
-- **Status Monitoring**: Real-time progress tracking via Tasks Monitor
-- **Error Handling**: Automatic retry and detailed error reporting
+### 🧬 **GEMFactory**
+- Automated genome-scale metabolic model (GEM) construction
+- Integration with COBRApy, CarveMe, and other modeling tools
+- Flux balance analysis (FBA) and optimization
+- Model validation and quality assessment
+- Export models in SBML and other standard formats
 
-### 2. State-of-the-Art Machine Learning
+### 🔍 **CASPIA-RAG**
+- Retrieval-Augmented Generation for scientific literature
+- PDF/DOCX document parsing and indexing
+- Multi-modal understanding (text + images)
+- Semantic search with ChromaDB vector store
+- Automatic translation and summarization
 
-- **Geometric Deep Learning**: GVP captures 3D molecular geometry
-- **Transfer Learning**: Pre-trained protein and DNA language models
-- **Cross-Modal Integration**: Combines molecular and protein information
-- **Attention Mechanisms**: Identifies relevant protein-substrate interactions
-
-### 3. User-Friendly Interface
-
-- **Natural Language Interaction**: Ask questions in plain English
-- **File Upload Support**: Drag-and-drop genome and model files
-- **Interactive Visualizations**: Model statistics and prediction results
-- **Responsive Design**: Modern, clean web interface built with Gradio
-
-### 4. Extensible Architecture
-
-- **Modular Design**: Easy integration of new tools and models
-- **API Access**: Programmatic access to all functionalities
-- **Custom Tool Creation**: Add domain-specific tools to CASPIAgent
-- **Plugin System**: Extend capabilities without modifying core code
+### 📊 **Tasks Monitor**
+- Real-time task tracking and visualization
+- Job queue management for long-running computations
+- Resource usage monitoring
+- Results aggregation and export
 
 ---
 
-## Methodology
-
-### Genome-Scale Metabolic Modeling
-
-CASPIA implements constraint-based metabolic modeling using the following mathematical framework:
-
-#### Standard FBA (Flux Balance Analysis)
+## Architecture
 
 ```
-Maximize: v_biomass
-Subject to: S · v = 0
-            v_min ≤ v ≤ v_max
+┌─────────────────────────────────────────────────────────────┐
+│                      CASPIA Platform                         │
+├─────────────────────────────────────────────────────────────┤
+│                                                               │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
+│  │ CASPIAgent   │  │  GEMFactory  │  │ CASPIA-RAG   │      │
+│  │              │  │              │  │              │      │
+│  │ • Chat UI    │  │ • Model Gen  │  │ • Doc Parser │      │
+│  │ • Tools      │  │ • FBA        │  │ • VectorDB   │      │
+│  │ • Memory     │  │ • Optimize   │  │ • Retrieval  │      │
+│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘      │
+│         │                 │                  │               │
+│         └─────────────────┴──────────────────┘               │
+│                           │                                   │
+│                  ┌────────▼────────┐                         │
+│                  │ Tasks Monitor   │                         │
+│                  │ • Queue Mgmt    │                         │
+│                  │ • Progress Track│                         │
+│                  └─────────────────┘                         │
+│                                                               │
+├─────────────────────────────────────────────────────────────┤
+│                    Core Infrastructure                        │
+│  • LLM Backend (vLLM, OpenAI, etc.)                          │
+│  • Vector Database (ChromaDB)                                │
+│  • Web Framework (Gradio)                                    │
+└─────────────────────────────────────────────────────────────┘
 ```
-
-where:
-- `S`: Stoichiometric matrix (m metabolites × n reactions)
-- `v`: Flux vector (n reactions)
-- `v_biomass`: Biomass production rate
-
-#### Enzyme-Constrained FBA (ecFBA)
-
-```
-Maximize: v_biomass
-Subject to: S · v = 0
-            v_min ≤ v ≤ v_max
-            Σ(v_j / k_cat_j · MW_j) ≤ E_total
-```
-
-where:
-- `k_cat_j`: Catalytic constant of enzyme j (predicted by CASPred)
-- `MW_j`: Molecular weight of enzyme j
-- `E_total`: Total protein allocation budget
-
-#### Temperature-Constrained FBA (etcFBA)
-
-```
-Maximize: v_biomass
-Subject to: S · v = 0
-            v_min ≤ v ≤ v_max
-            Σ(v_j / k_cat_j(T) · MW_j) ≤ E_total
-            k_cat_j(T) = k_cat_j(T_opt) · f(T, T_opt)
-```
-
-where:
-- `T`: Operating temperature
-- `T_opt`: Optimal temperature (predicted by CASPred)
-- `f(T, T_opt)`: Temperature-dependent activity function (Arrhenius-based)
-
-### Machine Learning Models
-
-#### K<sub>cat</sub> Prediction
-
-**Problem Formulation**: Given substrate structure `M` and enzyme sequence `E`, predict k<sub>cat</sub>.
-
-**Model**: 
-```
-k_cat = exp(MLP(CrossAttention(GVP(M), ESM(E))))
-```
-
-**Training Data**: Curated k<sub>cat</sub> values from BRENDA, SABIO-RK databases (~50,000 entries)
-
-**Validation**: 5-fold cross-validation with organism-wise splitting
-
-#### T<sub>opt</sub> Prediction
-
-**Problem Formulation**: Given genomic sequence `G`, predict optimal growth temperature.
-
-**Model**:
-```
-T_opt = MLP(Pool(HyenaDNA(Tokenize(G))))
-```
-
-**Training Data**: Organism optimal temperatures from NCBI, DSMZ databases (~10,000 organisms)
-
-**Validation**: Taxonomic hierarchy-aware cross-validation
 
 ---
 
 ## Installation
 
-### System Requirements
+### Requirements
 
-- **Operating System**: Linux (Ubuntu 20.04+), macOS (10.15+), or Windows 10+ with WSL2
-- **RAM**: Minimum 16 GB (32 GB recommended for large models)
-- **Storage**: 50 GB free space
-- **GPU**: NVIDIA GPU with 8+ GB VRAM (optional, recommended for faster predictions)
-- **Python**: Version 3.10 is tested
+**System Requirements:**
+- Operating System: Linux (Ubuntu 20.04+), macOS (10.15+), or WSL2 on Windows
+- Python: 3.9 or higher
+- RAM: 16GB minimum (32GB recommended for large models)
+- GPU: CUDA-compatible GPU with 24GB+ VRAM recommended (for local LLM inference)
+- Storage: 50GB+ free space
 
-### Prerequisites
+**Software Dependencies:**
+- CUDA Toolkit 12.x (for GPU acceleration)
+- Git LFS (for large model files)
 
-1. **Install Python 3.8+**
-   ```bash
-   python --version  # Should be 3.8 or higher
-   ```
-
-2. **Install pip and virtualenv**
-   ```bash
-   pip install virtualenv
-   ```
-
-3. **Install External Dependencies**
-   
-   **GeneMarkS** (for genome annotation):
-   ```bash
-   # Download from: http://exon.gatech.edu/GeneMark/
-   # Follow installation instructions from the official website
-   ```
-
-   **CarveMe** (for GEM reconstruction):
-   ```bash
-   pip install carveme
-   ```
-
-### Installation Steps
+### Setup Instructions
 
 1. **Clone the Repository**
-   ```bash
-   git clone https://github.com/shenmaa233/SJTU-software-CASPIA.git
-   cd SJTU-software-CASPIA
-   ```
-
-2. **Create Virtual Environment**
-   ```bash
-   python -m venv caspia_env
-   source caspia_env/bin/activate  # On Windows: caspia_env\Scripts\activate
-   ```
-
-3. **Install Python Dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. **Download Pre-trained Models**
-   ```bash
-   # K_cat prediction model
-   mkdir -p src/CASPred/src/model/
-   # Download best_model.pth from release page
-   # Place in src/CASPred/src/model/
-   
-   # T_opt prediction model
-   mkdir -p src/CASPred/topt_models/
-   # Download topt_model.ckpt from release page
-   # Place in src/CASPred/topt_models/
-   ```
-
-5. **Configure API Keys**
-   
-   Create a `.env` file in the root directory:
-   ```bash
-   DEEPSEEK_API_KEY=your_deepseek_api_key_here
-   ```
-   
-   Get your DeepSeek API key from: https://platform.deepseek.com/
-
-6. **Verify Installation**
-   ```bash
-   python -c "import torch; import cobra; import gradio; print('Installation successful!')"
-   ```
-
-### Docker Installation (Alternative)
-
-For containerized deployment:
 
 ```bash
-docker build -t caspia:latest .
-docker run -p 7860:7860 -v $(pwd)/data:/app/data caspia:latest
+git clone https://github.com/shenmaa233/SJTU-software-CASPIA.git
+cd SJTU-software-CASPIA
 ```
 
-Access the interface at: `http://localhost:7860`
+2. **Create Virtual Environment**
+
+```bash
+# Using conda (recommended)
+conda create -n caspia python=3.9
+conda activate caspia
+
+# Or using venv
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
+
+3. **Install Dependencies**
+
+```bash
+# Install PyTorch with CUDA support (adjust CUDA version as needed)
+pip install torch==2.7.1 torchvision==0.22.1 torchaudio==2.7.1 --index-url https://download.pytorch.org/whl/cu128
+
+# Install project dependencies
+pip install -r requirements.txt
+```
+
+4. **Configure Environment Variables**
+
+Create a `.env` file in the project root:
+
+```bash
+# OpenAI API (if using GPT models)
+OPENAI_API_KEY=your_openai_api_key_here
+
+# Optional: Other LLM API keys
+DASHSCOPE_API_KEY=your_dashscope_key  # For Qwen models
+
+# Database paths
+CHROMA_DB_PATH=./src/CASPIA_RAG/db
+
+# Model cache directory
+HF_HOME=./models
+TRANSFORMERS_CACHE=./models
+```
+
+5. **Download Required Models** (Optional, for local inference)
+
+```bash
+# Example: Download embedding model
+huggingface-cli download sentence-transformers/all-MiniLM-L6-v2
+
+# Example: Download LLM model (requires significant storage)
+# huggingface-cli download meta-llama/Llama-2-7b-chat-hf
+```
+
+6. **Verify Installation**
+
+```bash
+python -c "import torch; print(f'PyTorch: {torch.__version__}'); print(f'CUDA Available: {torch.cuda.is_available()}')"
+```
 
 ---
 
 ## Usage
 
-### Starting the Platform
+### Quick Start
 
-1. **Activate the Environment**
-   ```bash
-   source caspia_env/bin/activate
-   ```
+Launch the CASPIA web interface:
 
-2. **Launch the Web Interface**
-   ```bash
-   python webui.py
-   ```
-
-3. **Access the Interface**
-   
-   Open your browser and navigate to:
-   ```
-   http://localhost:7860
-   ```
-
-### Quick Start Guide
-
-#### Example 1: Building a Draft GEM
-
-1. Navigate to **CASPIAgent** tab
-2. Upload your genome FASTA file
-3. Type: "Please build a draft GEM from this genome with M9 gap-filling"
-4. Wait for task completion (10-30 minutes)
-5. Check **Tasks Monitor** for results
-
-#### Example 2: Predicting K<sub>cat</sub>
-
-```python
-# Via CASPIAgent:
-User: "Predict the k_cat for enzyme with sequence MSKGEELFT... 
-       and substrate with SMILES CCO"
-
-# Or via Python API:
-from src.CASPred.kcat_predict import KcatPredict
-
-predictor = KcatPredict()
-result = predictor.call({
-    'smiles': 'CCO',
-    'protein_sequence': 'MSKGEELFTGVVPIL...',
-    'log_transform': True
-})
-print(f"Predicted k_cat: {result['predicted_kcat']} s^-1")
+```bash
+python webui.py
 ```
 
-#### Example 3: Building an ecGEM
+The application will start on `http://localhost:7860` (or `http://0.0.0.0:7860` for network access). Open this URL in your web browser to access the interface.
 
-1. Ensure you have a draft GEM model built
-2. In CASPIAgent: "List my draft GEM models"
-3. Choose a model: "Build an ecGEM from model_name"
-4. Monitor progress in Tasks Monitor (30-120 minutes)
+### Module-Specific Usage
 
-#### Example 4: Batch Predictions
+#### Using CASPIAgent
+
+1. Navigate to the **🤖 CASPIAgent** tab
+2. Type your biological question in natural language
+3. The agent will process your query using available tools and knowledge bases
+4. Receive answers with citations and relevant information
+
+**Example queries:**
+- "What is the function of the lacZ gene in E. coli?"
+- "Design a plasmid for expressing GFP in yeast"
+- "Compare the metabolic pathways of glycolysis in prokaryotes and eukaryotes"
+
+#### Using GEMFactory
+
+1. Navigate to the **🧬 GEMFactory** tab
+2. Upload a genome file (FASTA or GenBank format)
+3. Configure model parameters (organism type, biomass function, etc.)
+4. Click "Generate Model" to start automated model construction
+5. Download the resulting SBML model or view analysis results
+
+#### Using CASPIA-RAG
+
+1. Navigate to the **🔍 CASPIA-RAG** tab
+2. Upload scientific papers (PDF, DOCX, TXT)
+3. Wait for documents to be processed and indexed
+4. Ask questions about the uploaded documents
+5. Receive context-aware answers with source citations
+
+#### Monitoring Tasks
+
+1. Navigate to the **📊 Tasks Monitor** tab
+2. View all running and completed tasks
+3. Check progress, logs, and resource usage
+4. Download results when tasks complete
+
+---
+
+## Modules Description
+
+### CASPIAgent
+
+**Purpose**: Intelligent conversational assistant for synthetic biology research
+
+**Components**:
+- `conversation.py`: Multi-turn dialogue management
+- `service.py`: LLM inference service integration
+- `tools.py`: Tool definitions (database queries, calculations, etc.)
+- `utils.py`: Helper functions
+
+**Supported LLMs**:
+- OpenAI GPT-4/GPT-3.5
+- Alibaba Qwen
+- Meta LLaMA
+- Custom vLLM deployments
+
+**Key Capabilities**:
+- Natural language understanding of biological concepts
+- Tool-augmented reasoning (database queries, calculations)
+- Multi-step problem solving
+- Context retention across conversation turns
+
+---
+
+### GEMFactory
+
+**Purpose**: Automated construction and analysis of genome-scale metabolic models
+
+**Workflow**:
+1. Genome annotation (if needed)
+2. Draft model reconstruction
+3. Gap-filling and curation
+4. Biomass function definition
+5. Model validation
+6. Flux analysis and optimization
+
+**Supported Formats**:
+- Input: FASTA, GenBank, SBML
+- Output: SBML, JSON, MAT
+
+**Integration with**:
+- COBRApy
+- CarveMe
+- ModelSEED
+- Reframed
+
+---
+
+### CASPIA-RAG
+
+**Purpose**: Retrieval-Augmented Generation for scientific literature understanding
+
+**Pipeline**:
+1. **Document Parsing**: Extract text and images from PDFs/DOCX
+2. **Chunking**: Split documents into semantic units
+3. **Embedding**: Generate vector embeddings
+4. **Indexing**: Store in ChromaDB vector database
+5. **Retrieval**: Semantic search for relevant passages
+6. **Generation**: LLM-based answer synthesis with citations
+
+**Features**:
+- Multi-modal document understanding
+- Automatic image captioning
+- Cross-lingual support (translation)
+- Citation tracking
+
+---
+
+### Tasks Monitor
+
+**Purpose**: Centralized task management and monitoring
+
+**Features**:
+- Task queue with priority scheduling
+- Real-time progress tracking
+- Resource usage monitoring (CPU, GPU, memory)
+- Error logging and recovery
+- Result aggregation and download
+
+---
+
+## Examples
+
+### Example 1: Metabolic Model Construction
 
 ```python
-import pandas as pd
-from src.CASPIAgent.tools import predict_kcat
+# Example script for programmatic access (advanced users)
+from src.GEMFactory.script.build_model import build_gem
 
-# Load enzyme-substrate pairs
-data = pd.read_csv('enzyme_substrate_pairs.csv')
-
-results = []
-for _, row in data.iterrows():
-    result = predict_kcat(
-        smiles=row['smiles'],
-        protein_sequence=row['sequence'],
-        log_transform=True
-    )
-    results.append(result['predicted_kcat'])
-
-data['predicted_kcat'] = results
-data.to_csv('predictions.csv', index=False)
-```
-
-### Advanced Usage
-
-#### Custom Tool Integration
-
-Add custom tools to CASPIAgent:
-
-```python
-from langchain.tools import tool
-
-@tool
-def my_custom_analysis(model_id: str) -> dict:
-    """Performs custom metabolic analysis on a GEM."""
-    # Your implementation here
-    return {"result": "analysis_output"}
-
-# Register in service.py
-from src.CASPIAgent.service import AgentService
-service = AgentService()
-service.base_tools.append(my_custom_analysis)
-```
-
-#### Programmatic API Access
-
-```python
-from src.CASPIAgent.service import AgentService
-from src.GEMFactory.src.ecGEM.ecgem_service import build_ecgem
-
-# Initialize service
-agent = AgentService()
-
-# Submit GEM building task
-task = submit_gem_build(
-    genome_file_path='/path/to/genome.fna',
-    gapfill='M9',
-    model_name='my_organism'
+# Build a GEM from genome sequence
+model = build_gem(
+    genome_file="data/ecoli_k12.fasta",
+    organism_name="Escherichia coli K-12",
+    gram="negative",
+    output_format="sbml"
 )
 
-# Check status
-status = check_task_status(task['task_id'])
-print(status['status'])  # running/completed/failed
+# Perform flux balance analysis
+from cobra.flux_analysis import flux_variability_analysis
+
+fva_result = flux_variability_analysis(model)
+print(fva_result)
+```
+
+### Example 2: RAG-based Literature Query
+
+```python
+from src.CASPIA_RAG.agent import RAGAgent
+
+# Initialize RAG agent
+agent = RAGAgent(db_path="./src/CASPIA_RAG/db")
+
+# Index documents
+agent.index_documents(["paper1.pdf", "paper2.pdf"])
+
+# Query
+response = agent.query(
+    "What are the latest advances in CRISPR base editing?",
+    top_k=5
+)
+print(response)
+```
+
+### Example 3: Conversational Agent
+
+```python
+from src.CASPIAgent.service import CASPIAgentService
+
+# Initialize agent
+agent = CASPIAgentService(model="gpt-4")
+
+# Interactive conversation
+response = agent.chat("How can I optimize the production of lycopene in E. coli?")
+print(response)
 ```
 
 ---
 
-## Technical Specifications
+## Project Structure
 
-### Model Performance
-
-#### K<sub>cat</sub> Prediction Benchmark
-
-| Metric | Training | Validation | Test |
-|--------|----------|------------|------|
-| R² | 0.91 | 0.87 | 0.85 |
-| RMSE (log) | 0.52 | 0.58 | 0.61 |
-| MAE (log) | 0.38 | 0.44 | 0.47 |
-| Pearson r | 0.95 | 0.93 | 0.92 |
-
-#### T<sub>opt</sub> Prediction Benchmark
-
-| Metric | Training | Validation | Test |
-|--------|----------|------------|------|
-| R² | 0.88 | 0.84 | 0.82 |
-| RMSE (°C) | 3.2 | 4.1 | 4.5 |
-| MAE (°C) | 2.4 | 3.2 | 3.6 |
-
-### Computational Performance
-
-#### Runtime Analysis
-
-| Task | Input Size | Average Time | Hardware |
-|------|-----------|--------------|----------|
-| Gene Annotation | 5 Mb genome | 10-15 min | 8 CPU cores |
-| Draft GEM Build | 5 Mb genome | 20-30 min | 8 CPU cores |
-| ecGEM Build | 1000-reaction model | 30-60 min | 8 CPU cores + GPU |
-| etcGEM Build | 1000-reaction model | 40-90 min | 8 CPU cores + GPU |
-| K<sub>cat</sub> Prediction | Single pair | 5-10 sec | GPU (or 30-60 sec CPU) |
-| Batch K<sub>cat</sub> (100 pairs) | 100 pairs | 2-5 min | GPU (or 30-50 min CPU) |
-
-#### Memory Requirements
-
-| Component | RAM Usage | GPU Memory (if applicable) |
-|-----------|-----------|----------------------------|
-| CASPIAgent | 2-4 GB | N/A |
-| GEMFactory | 4-8 GB | N/A |
-| K<sub>cat</sub> Predictor | 4 GB | 4-6 GB |
-| T<sub>opt</sub> Predictor | 8 GB | 6-8 GB |
-
-### Software Stack
-
-| Layer | Technologies |
-|-------|--------------|
-| **Frontend** | Gradio, HTML/CSS, JavaScript |
-| **Backend** | Python 3.8+, Flask (internal) |
-| **AI/ML** | PyTorch 2.0+, LangChain, Transformers |
-| **Bioinformatics** | COBRApy, BioPython, RDKit |
-| **LLM** | DeepSeek-Chat API |
-| **Deployment** | Docker, Gunicorn |
-
----
-
-## Performance
-
-### Case Studies
-
-#### Case Study 1: E. coli Metabolic Model
-
-**Objective**: Reconstruct and constrain E. coli K-12 MG1655 metabolic model
-
-**Pipeline**: Genome → Draft GEM → ecGEM → etcGEM
-
-**Results**:
-- Draft GEM: 1,366 reactions, 1,136 metabolites, 904 genes
-- ecGEM: 1,241 enzyme-constrained reactions
-- etcGEM: Temperature constraints applied to 1,189 reactions
-- Growth rate prediction accuracy: 18% improvement over draft GEM
-- Correlation with experimental fluxes: R² = 0.78 (vs 0.64 for unconstrained)
-
-#### Case Study 2: Novel Thermophile Characterization
-
-**Objective**: Predict optimal growth temperature and build temperature-aware model
-
-**Organism**: *Thermus thermophilus* HB8
-
-**Results**:
-- Predicted T<sub>opt</sub>: 72.3°C (Experimental: 75°C, error: 2.7°C)
-- etcGEM captures temperature-dependent growth (30-85°C range)
-- Predicted thermal adaptation strategies align with literature
-
-#### Case Study 3: High-Throughput K<sub>cat</sub> Annotation
-
-**Objective**: Complete missing k<sub>cat</sub> values for yeast GEM (Yeast8)
-
-**Dataset**: 3,991 reactions, 2,583 missing k<sub>cat</sub> values
-
-**Results**:
-- Prediction coverage: 89% (2,299 out of 2,583)
-- Processing time: 45 minutes (GPU)
-- Model validation: Predicted k<sub>cat</sub> values within expected physiological range
-- FBA improvement: 23% reduction in flux variability
+```
+SJTU-software-CASPIA/
+│
+├── webui.py                 # Main application entry point
+├── requirements.txt         # Python dependencies
+├── README.md               # This file
+├── LICENSE                 # License information
+│
+├── src/                    # Source code modules
+│   ├── CASPIAgent/        # Conversational AI agent
+│   │   ├── conversation.py
+│   │   ├── service.py
+│   │   ├── tools.py
+│   │   └── utils.py
+│   │
+│   ├── GEMFactory/        # Metabolic model construction
+│   │   ├── data/
+│   │   ├── script/
+│   │   └── src/
+│   │
+│   ├── CASPIA_RAG/        # Retrieval-Augmented Generation
+│   │   ├── agent.py
+│   │   ├── bochaAI.py
+│   │   ├── db/
+│   │   ├── document/
+│   │   ├── image_captioning.py
+│   │   ├── load_split_store.py
+│   │   ├── prompt.py
+│   │   ├── translate.py
+│   │   └── util.py
+│   │
+│   ├── CASPred/           # Prediction modules (if applicable)
+│   │
+│   └── utils/             # Shared utilities
+│
+├── tabs/                  # Gradio UI tab definitions
+│   ├── agent_tab.py
+│   ├── gemfactory_tab.py
+│   ├── rag_tab.py
+│   └── tasks_monitor_tab.py
+│
+├── static/                # Static assets (images, CSS, etc.)
+│   └── logo.png
+│
+├── uploads/               # User uploaded files
+├── logs/                  # Application logs
+│
+└── tests/                # Unit and integration tests (to be added)
+```
 
 ---
 
 ## Contributing
 
-We welcome contributions from the community! Please see our contribution guidelines:
+We welcome contributions from the community! Whether you're fixing bugs, adding new features, or improving documentation, your help is appreciated.
 
 ### How to Contribute
 
 1. **Fork the Repository**
+   ```bash
+   git clone https://github.com/your-username/SJTU-software-CASPIA.git
+   ```
+
 2. **Create a Feature Branch**
    ```bash
    git checkout -b feature/your-feature-name
    ```
-3. **Commit Your Changes**
+
+3. **Make Your Changes**
+   - Follow PEP 8 style guidelines for Python code
+   - Add docstrings to all functions and classes
+   - Include type hints where appropriate
+   - Write unit tests for new features
+
+4. **Run Linting and Tests**
    ```bash
-   git commit -m "Add: description of your changes"
+   # Format code
+   black src/ tabs/
+   
+   # Run linter
+   ruff check src/ tabs/
+   
+   # Run tests (when available)
+   pytest tests/
    ```
-4. **Push to Your Fork**
+
+5. **Commit Your Changes**
+   ```bash
+   git add .
+   git commit -m "Add feature: description of your changes"
+   ```
+
+6. **Push to Your Fork**
    ```bash
    git push origin feature/your-feature-name
    ```
-5. **Open a Pull Request**
 
-### Development Guidelines
+7. **Open a Pull Request**
+   - Go to the original repository on GitHub
+   - Click "New Pull Request"
+   - Provide a clear description of your changes
+   - Reference any related issues
 
-- Follow PEP 8 style guide for Python code
-- Add unit tests for new features
-- Update documentation for API changes
-- Ensure backward compatibility when possible
+### Contribution Guidelines
+
+- **Code Quality**: Maintain high code quality with proper documentation and testing
+- **Modularity**: Keep components modular and reusable
+- **Performance**: Consider computational efficiency, especially for AI/ML operations
+- **Security**: Never commit API keys or sensitive credentials
+- **Documentation**: Update documentation for any user-facing changes
 
 ### Reporting Issues
 
-Please report bugs and feature requests via [GitHub Issues](https://github.com/shenmaa233/SJTU-software-CASPIA/issues).
+If you encounter bugs or have feature requests:
+1. Check existing issues to avoid duplicates
+2. Use our issue templates
+3. Provide detailed descriptions and reproduction steps
+4. Include system information (OS, Python version, GPU, etc.)
 
-Include:
-- Detailed description of the issue
-- Steps to reproduce
-- Expected vs. actual behavior
-- System information (OS, Python version, etc.)
+---
+
+## Testing
+
+### Running Tests
+
+```bash
+# Install testing dependencies
+pip install pytest pytest-cov
+
+# Run all tests
+pytest tests/
+
+# Run with coverage report
+pytest --cov=src tests/
+
+# Run specific test modules
+pytest tests/test_caspiagent.py
+```
+
+### Test Structure
+
+```
+tests/
+├── test_caspiagent.py       # CASPIAgent unit tests
+├── test_gemfactory.py       # GEMFactory unit tests
+├── test_rag.py              # CASPIA-RAG unit tests
+└── integration/             # Integration tests
+    └── test_workflow.py
+```
 
 ---
 
@@ -753,143 +565,96 @@ If you use CASPIA in your research, please cite:
 
 ```bibtex
 @software{caspia2025,
-  author = {{SJTU-Software Team}},
-  title = {CASPIA: Computational-Assisted Synthetic Biology Platform with Intelligent Agent},
+  author = {{Team SJTU-Software}},
+  title = {CASPIA: Comprehensive AI System for Protein and Integrated Analysis},
   year = {2025},
-  publisher = {GitHub},
+  publisher = {iGEM},
   url = {https://github.com/shenmaa233/SJTU-software-CASPIA},
-  organization = {Shanghai Jiao Tong University}
+  note = {iGEM 2025 Software Tool}
 }
 ```
 
-### Related Publications
+---
 
-**Methodology References**:
+## Authors and Acknowledgments
 
-1. **GVP for Molecular Geometry**:
-   ```bibtex
-   @inproceedings{jing2021learning,
-     title={Learning from protein structure with geometric vector perceptrons},
-     author={Jing, Bowen and Eismann, Stephan and Suriana, Patricia and Townshend, Raphael JL and Dror, Ron},
-     booktitle={International Conference on Learning Representations},
-     year={2021}
-   }
-   ```
+### Development Team
 
-2. **ESM Protein Language Models**:
-   ```bibtex
-   @article{hayes2024simulating,
-     title={Simulating 500 million years of evolution with a language model},
-     author={Hayes, Theodore and others},
-     journal={bioRxiv},
-     year={2024}
-   }
-   ```
+**Team SJTU-Software 2025**
+- Principal Investigators: [To be updated]
+- Lead Developers: [To be updated]
+- Contributors: See [CONTRIBUTORS.md](CONTRIBUTORS.md)
 
-3. **HyenaDNA**:
-   ```bibtex
-   @inproceedings{nguyen2023hyenadna,
-     title={HyenaDNA: Long-range genomic sequence modeling at single nucleotide resolution},
-     author={Nguyen, Eric and Poli, Michael and Faizi, Marjan and others},
-     booktitle={Advances in Neural Information Processing Systems},
-     year={2023}
-   }
-   ```
+### Acknowledgments
 
-4. **CarveMe**:
-   ```bibtex
-   @article{machado2018fast,
-     title={Fast automated reconstruction of genome-scale metabolic models for microbial species and communities},
-     author={Machado, Daniel and Andrejev, Sergej and Tramontano, Melanie and Patil, Kiran Raosaheb},
-     journal={Nucleic Acids Research},
-     volume={46},
-     number={15},
-     pages={7542--7553},
-     year={2018}
-   }
-   ```
+We would like to express our gratitude to:
+
+- **iGEM Foundation** for organizing the International Genetically Engineered Machine competition
+- **Shanghai Jiao Tong University** for institutional support
+- **Open Source Community** for the amazing tools and libraries that made this project possible:
+  - [Gradio](https://gradio.app/) for the web interface framework
+  - [Hugging Face](https://huggingface.co/) for transformer models and hosting
+  - [LangChain](https://www.langchain.com/) for LLM orchestration
+  - [COBRApy](https://opencobra.github.io/cobrapy/) for metabolic modeling
+  - [ChromaDB](https://www.trychroma.com/) for vector database capabilities
+  - [PyTorch](https://pytorch.org/) for deep learning infrastructure
+
+### Special Thanks
+
+- Our mentors and advisors for their guidance
+- Beta testers and early users for valuable feedback
+- All contributors who helped improve CASPIA
 
 ---
 
 ## License
 
-CASPIA is released under the **MIT License**. See [LICENSE](LICENSE) file for details.
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
-**Third-party Software**: This project incorporates several open-source tools, each with their own licenses:
-- GeneMarkS: Academic license required
-- CarveMe: Apache License 2.0
-- PyTorch: BSD 3-Clause License
-- LangChain: MIT License
+### Third-Party Licenses
 
-Please ensure compliance with all applicable licenses when using CASPIA.
+This project uses various open-source libraries, each with their own licenses. See [LICENSES_THIRD_PARTY.md](LICENSES_THIRD_PARTY.md) for details.
 
 ---
 
 ## Contact
 
-### Development Team
-
-**SJTU-Software Team**  
-School of Life Sciences and Biotechnology  
-Shanghai Jiao Tong University  
-Shanghai 200240, China
-
-### Communication Channels
-
-- **GitHub Issues**: [https://github.com/shenmaa233/SJTU-software-CASPIA/issues](https://github.com/shenmaa233/SJTU-software-CASPIA/issues)
-- **Email**: [Contact via GitHub profile]
-- **Project Website**: [GitHub Repository](https://github.com/shenmaa233/SJTU-software-CASPIA)
-
-### Acknowledgments
-
-We thank the following projects and teams for their foundational work:
-- The CarveMe team for metabolic reconstruction tools
-- The ESM and HyenaDNA teams for pre-trained models
-- The COBRApy community for constraint-based modeling frameworks
-- The LangChain project for agent development tools
-- OpenAI and DeepSeek for language model APIs
+- **Team Email**: sjtu.software@gmail.com (to be updated)
+- **GitHub Issues**: [Report bugs or request features](https://github.com/shenmaa233/SJTU-software-CASPIA/issues)
+- **iGEM Wiki**: [Visit our team wiki](https://2025.igem.org/teams) (to be updated)
+- **Twitter/X**: [@SJTU_Software](https://twitter.com/SJTU_Software) (to be updated)
 
 ---
 
-## Appendix
+## Project Status
 
-### Glossary
+**Current Version**: 1.0.0-beta  
+**Development Status**: Active Development  
+**Last Updated**: October 2025
 
-- **GEM**: Genome-scale Metabolic Model
-- **ecGEM**: Enzyme-Constrained GEM
-- **etcGEM**: Enzyme-Temperature-Constrained GEM
-- **FBA**: Flux Balance Analysis
-- **K<sub>cat</sub>**: Catalytic constant (turnover number)
-- **T<sub>opt</sub>**: Optimal growth temperature
-- **GVP**: Geometric Vector Perceptron
-- **ESM**: Evolutionary Scale Modeling (protein language model)
-- **HyenaDNA**: Long-range DNA sequence model
-- **SMILES**: Simplified Molecular Input Line Entry System
+### Roadmap
 
-### Frequently Asked Questions (FAQ)
-
-**Q: What organisms does CASPIA support?**  
-A: CASPIA primarily supports prokaryotic organisms (bacteria and archaea) due to GeneMarkS limitations. Eukaryotic support is planned for future releases.
-
-**Q: Can I use CASPIA without a GPU?**  
-A: Yes, but k<sub>cat</sub> and T<sub>opt</sub> predictions will be significantly slower (5-10x). All other functionalities work normally on CPU.
-
-**Q: How accurate are the k<sub>cat</sub> predictions?**  
-A: Our model achieves R² ≈ 0.85 on test data, with typical errors of ~0.5 log units. Predictions should be validated experimentally when possible.
-
-**Q: Is CASPIA suitable for industry applications?**  
-A: Yes, CASPIA can be used for metabolic engineering, strain design, and bioprocess optimization. Contact us for commercial licensing options if needed.
-
-**Q: Can I integrate my own prediction models?**  
-A: Absolutely! CASPIA's modular architecture allows easy integration of custom models. See the Advanced Usage section for examples.
+- [x] Core platform architecture
+- [x] CASPIAgent module
+- [x] GEMFactory module
+- [x] CASPIA-RAG module
+- [x] Tasks Monitor module
+- [ ] Comprehensive unit tests
+- [ ] API documentation
+- [ ] Docker containerization
+- [ ] Cloud deployment support
+- [ ] Multi-language UI support
 
 ---
 
-**Last Updated**: October 6, 2025  
-**Version**: 1.0.0  
-**Documentation Version**: 1.0
+<p align="center">
+  <b>Built with ❤️ by Team SJTU-Software for iGEM 2025</b>
+</p>
 
----
-
-*For the latest updates and news, watch our [GitHub repository](https://github.com/shenmaa233/SJTU-software-CASPIA).*
+<p align="center">
+  <a href="https://2025.igem.org/">iGEM 2025</a> •
+  <a href="https://github.com/shenmaa233/SJTU-software-CASPIA">GitHub</a> •
+  <a href="https://github.com/shenmaa233/SJTU-software-CASPIA/wiki">Wiki</a> •
+  <a href="https://github.com/shenmaa233/SJTU-software-CASPIA/issues">Issues</a>
+</p>
 
