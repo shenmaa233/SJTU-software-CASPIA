@@ -137,13 +137,12 @@ CASPIA provides a unified, user-friendly solution that:
 
 **System Requirements:**
 - Operating System: Linux (Ubuntu 20.04+), macOS (10.15+), or WSL2 on Windows
-- Python: 3.9 or higher
 - RAM: 16GB minimum (32GB recommended for large models)
 - GPU: CUDA-compatible GPU with 24GB+ VRAM recommended (for local LLM inference)
-- Storage: 50GB+ free space
+- Storage: 20GB+ free space
 
 **Software Dependencies:**
-- CUDA Toolkit 12.x (for GPU acceleration)
+- CUDA Toolkit 12.8 (for GPU acceleration)
 - Git LFS (for large model files)
 
 ### Setup Instructions
