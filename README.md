@@ -158,7 +158,7 @@ cd SJTU-software-CASPIA
 
 ```bash
 # Using conda (recommended)
-conda create -n caspia python=3.9
+conda create -n caspia python=3.10
 conda activate caspia
 
 # Or using venv
@@ -170,7 +170,14 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 ```bash
 # Install PyTorch with CUDA support (adjust CUDA version as needed)
-pip install torch==2.7.1 torchvision==0.22.1 torchaudio==2.7.1 --index-url https://download.pytorch.org/whl/cu128
+
+pip install torch==2.7.1 torchvision==0.22.1 --index-url https://download.pytorch.org/whl/cu128
+pip install torch-scatter -f https://data.pyg.org/whl/torch-2.7.1+cu128.html
+pip install torch-cluster -f https://data.pyg.org/whl/torch-2.7.1+cu128.html
+pip install torch-geometric
+
+# diamond
+conda install -c bioconda -c conda-forge diamond=2.1.13
 
 # Install project dependencies
 pip install -r requirements.txt
