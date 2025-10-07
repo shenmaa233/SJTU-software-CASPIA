@@ -495,8 +495,11 @@ def draft_gem_tab():
                     
                     def on_model_select(evt: gr.SelectData):
                         """When a user selects a row in the table, get the model ID"""
-                        if evt and evt.value:
-                            return evt.value
+                        if evt and evt.index[0] is not None:
+                            # Get the model ID from the first column (index 0) of the selected row
+                            row_data = models_table.data[evt.index[0]]
+                            if row_data and len(row_data) > 0:
+                                return row_data[0]  # Return the model ID from column 0
                         return ""
                     
                     models_table.select(
