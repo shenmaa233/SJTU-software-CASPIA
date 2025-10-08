@@ -10,14 +10,56 @@ import json
 from src.CASPred.src.model.kcat_model import KcatPredictionModel
 import numpy as np
 from typing import List
+import math
+
+def is_valid_smiles(smiles):
+    """
+    Check if a SMILES string is valid (not None, not empty, not nan).
+    
+    Args:
+        smiles: SMILES string or value to check
+        
+    Returns:
+        bool: True if valid, False otherwise
+    """
+    if smiles is None:
+        return False
+    if isinstance(smiles, float) and math.isnan(smiles):
+        return False
+    if pd.isna(smiles):
+        return False
+    if isinstance(smiles, str):
+        smiles_lower = smiles.strip().lower()
+        if smiles_lower == '' or smiles_lower == 'nan' or smiles_lower == 'none':
+            return False
+    return True
+
 
 def silent_smiles_to_3d(smiles):
+    """
+    Convert SMILES to 3D conformer silently (suppress output).
+    
+    Args:
+        smiles: SMILES string
+        
+    Returns:
+        mol: RDKit molecule object or None if failed
+    """
     import os
     from contextlib import redirect_stdout, redirect_stderr
-    with open(os.devnull, "w") as fnull:
-        with redirect_stdout(fnull), redirect_stderr(fnull):
-            mol = smiles_to_3d_conformer(smiles)
-    return mol
+    
+    # Check if SMILES is valid before processing
+    if not is_valid_smiles(smiles):
+        return None
+        
+    try:
+        with open(os.devnull, "w") as fnull:
+            with redirect_stdout(fnull), redirect_stderr(fnull):
+                mol = smiles_to_3d_conformer(smiles)
+        return mol
+    except Exception:
+        # Return None for any conversion errors
+        return None
 
 
 def prepare_inference_batch(smiles_list: List[str], protein_list: List[str], esm_model) -> dict:
@@ -31,6 +73,10 @@ def prepare_inference_batch(smiles_list: List[str], protein_list: List[str], esm
 
     Returns:
         dict: Batched tensors containing node/edge features, protein embeddings, and batch mapping.
+        
+    Note:
+        This function expects all inputs to be valid. Invalid SMILES should be filtered
+        before calling this function (e.g., in precompute_batch).
     """
     node_s_list, node_v_list = [], []
     edge_index_list, edge_s_list, edge_v_list = [], [], []
@@ -85,7 +131,20 @@ def prepare_inference_batch(smiles_list: List[str], protein_list: List[str], esm
 
 def precompute_batch(smiles, proteins, esm_model, device, batch_size=32):
     """
-    一次性预处理所有分子和蛋白质，供多模型复用
+    Preprocess all molecules and proteins in batches for multi-model reuse.
+    
+    Invalid SMILES (None, empty, nan, etc.) are automatically filtered out
+    and will receive a default kcat value of 10.0 in downstream processing.
+    
+    Args:
+        smiles: List of SMILES strings
+        proteins: List of protein sequences
+        esm_model: ESM model for protein embedding
+        device: Torch device
+        batch_size: Batch size for processing
+        
+    Returns:
+        List of tuples (valid_indices, invalid_indices, batch)
     """
     results = []
 
@@ -97,15 +156,27 @@ def precompute_batch(smiles, proteins, esm_model, device, batch_size=32):
         batch_smiles = smiles[start:end]
         batch_proteins = proteins[start:end]
 
-        valid_indices = [i for i, (s, p) in enumerate(zip(batch_smiles, batch_proteins)) if s and p]
+        # Filter out invalid SMILES and proteins
+        # Use is_valid_smiles to check for nan, None, empty strings, etc.
+        valid_indices = [
+            i for i, (s, p) in enumerate(zip(batch_smiles, batch_proteins))
+            if is_valid_smiles(s) and p and (isinstance(p, str) and len(p.strip()) > 0)
+        ]
         invalid_indices = [i for i in range(len(batch_smiles)) if i not in valid_indices]
 
         if valid_indices:
             valid_smiles = [batch_smiles[i] for i in valid_indices]
             valid_proteins = [batch_proteins[i] for i in valid_indices]
 
-            batch = prepare_inference_batch(valid_smiles, valid_proteins, esm_model)
-            batch = {k: v.to(device) for k, v in batch.items()}
+            try:
+                batch = prepare_inference_batch(valid_smiles, valid_proteins, esm_model)
+                batch = {k: v.to(device) for k, v in batch.items()}
+            except Exception as e:
+                # If batch preparation fails, treat all as invalid
+                print(f"Warning: Batch preparation failed: {e}. Treating batch as invalid.")
+                invalid_indices = list(range(len(batch_smiles)))
+                valid_indices = []
+                batch = None
         else:
             batch = None
 
@@ -175,6 +246,22 @@ def run_in_batches_precomputed(precomputed_batches, model, device, log_transform
 
 
 def ensemble_inference(smiles, proteins, model_paths, config_path, batch_size=32, log_transform=True):
+    """
+    Perform ensemble inference using multiple models.
+    
+    Invalid SMILES (None, empty, nan, etc.) will automatically receive kcat=10.0.
+    
+    Args:
+        smiles: List of SMILES strings
+        proteins: List of protein sequences
+        model_paths: List of paths to model checkpoints
+        config_path: Path to model config file
+        batch_size: Batch size for processing
+        log_transform: Whether to apply log transformation to predictions
+        
+    Returns:
+        Dictionary with keys "mean", "std", and "95CI" containing prediction statistics
+    """
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     esm_model = ESMC.from_pretrained("esmc_300m").to(device)
 
@@ -192,7 +279,9 @@ def ensemble_inference(smiles, proteins, model_paths, config_path, batch_size=32
     num_models = len(model_paths)
 
     for i, (s, p) in enumerate(zip(smiles, proteins)):
-        if s is None or p is None:
+        # Check if SMILES or protein is invalid
+        if not is_valid_smiles(s) or p is None or (isinstance(p, str) and len(p.strip()) == 0):
+            # Default kcat=10.0 for invalid entries
             mean_preds.append(10.0)
             std_preds.append(None)
             ci95.append((None, None))
@@ -237,5 +326,4 @@ def get_kcat_mw(gprdf, result_folder):
     reaction_kcat_mw.reset_index(drop=True, inplace=True)
     reaction_kcat_mw_file=f'{result_folder}/reaction_kcat_mw.csv'
     reaction_kcat_mw.to_csv(reaction_kcat_mw_file, index=False)
-    # Removed print statement to avoid I/O errors in daemon threads
     return reaction_kcat_mw
