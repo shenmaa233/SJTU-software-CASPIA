@@ -17,17 +17,17 @@ def index_tab():
             """
             # 🎉 Welcome to CASPIA
             
-            ## Cell Automated Synthetic Pathway Intelligent Architecture
+            ## Cell-Automated Synthetic Pathway Intelligent Architecture
             
-            **CASPIA** is an advanced, modular AI-powered platform designed to revolutionize synthetic biology research. 
-            Developed by Team SJTU-Software for iGEM 2025, CASPIA integrates cutting-edge artificial intelligence 
-            technologies with synthetic biology workflows to accelerate scientific discovery.
+            **CASPIA** is an integrated, AI-native platform developed by Team **SJTU-Software** for iGEM 2025.  
+            It unifies genome-scale modeling, parameter prediction, intelligent agent orchestration, 
+            and vision-enhanced literature retrieval to accelerate synthetic biology research.
             
             ---
             
             ## 🌟 What Can CASPIA Do?
             
-            CASPIA provides four powerful modules to support your synthetic biology research:
+            CASPIA provides five powerful modules to support your synthetic biology research:
             """
         )
         
@@ -38,18 +38,17 @@ def index_tab():
                     """
                     ### 🤖 CASPIAgent
                     
-                    **Intelligent Conversational Assistant**
+                    **Intelligent Conversational Agent**
                     
-                    - Natural language interface for complex biological queries
-                    - Tool-augmented reasoning with database integration
-                    - Multi-turn dialogue with context awareness
-                    - Powered by state-of-the-art LLMs (GPT-4, LLaMA, Qwen)
+                    - Natural language interface for complex workflows  
+                    - Automated planning & execution of bioinformatics tools  
+                    - Tool-augmented reasoning with database integration  
+                    - Full traceability of results and data sources  
                     
                     **Use Cases:**
-                    - Literature review and knowledge synthesis
-                    - Experimental design assistance
-                    - Biological concept explanation
-                    - Hypothesis generation and validation
+                    - End-to-end genome-to-model automation  
+                    - Interactive strain design recommendations  
+                    - Workflow simplification for non-experts  
                     """
                 )
             
@@ -58,18 +57,17 @@ def index_tab():
                     """
                     ### 🧬 GEMFactory
                     
-                    **Automated Metabolic Model Construction**
+                    **Automated GEM Construction**
                     
-                    - Genome-scale metabolic model (GEM) generation
-                    - Flux balance analysis (FBA) and optimization
-                    - Integration with COBRApy, CarveMe, and ModelSEED
-                    - Model validation and quality assessment
+                    - Raw genome → parameterized GEM (ecGEM / etcGEM)  
+                    - Genome annotation (GeneMarkS), protein alignment (Diamond), network reconstruction (CarveMe)  
+                    - Parameter injection (*kcat*, *Topt*) via database + CASPred  
+                    - Gene-level (FBA, FSEOF, OptKnock) & protein-level (DMS mutation) design  
                     
                     **Use Cases:**
-                    - Metabolic engineering design
-                    - Strain optimization
-                    - Pathway analysis and prediction
-                    - Biomass production simulation
+                    - Metabolic engineering design  
+                    - Strain optimization and pathway tuning  
+                    - High-fidelity digital cell twin construction  
                     """
                 )
         
@@ -77,23 +75,42 @@ def index_tab():
             with gr.Column(scale=1):
                 gr.Markdown(
                     """
-                    ### 🔍 CASPIA-RAG
+                    ### 🔬 CASPred
                     
-                    **Knowledge Retrieval and Understanding**
+                    **High-Precision Parameter Prediction**
                     
-                    - Retrieval-Augmented Generation for scientific literature
-                    - PDF/DOCX document parsing and indexing
-                    - Multi-modal understanding (text + images)
-                    - Semantic search with citation tracking
+                    - Predicts missing kinetic/thermodynamic parameters (*kcat*, *Topt*)  
+                    - Multimodal model: sequence (ESMC-300M) + structure (GVP)  
+                    - Cross-attention fusion for enzyme–substrate interactions  
+                    - Ensemble learning with uncertainty quantification  
                     
                     **Use Cases:**
-                    - Automated literature review
-                    - Document-based question answering
-                    - Knowledge extraction from papers
-                    - Cross-document information synthesis
+                    - Completing parameter gaps in GEMs  
+                    - Improving predictive accuracy of metabolic simulations  
+                    - Supporting rational enzyme design  
                     """
                 )
             
+            with gr.Column(scale=1):
+                gr.Markdown(
+                    """
+                    ### 🔍 CASPIA-RAG
+                    
+                    **Vision-Enhanced Knowledge Retrieval**
+                    
+                    - Parses PDFs into structured Markdown with image captions  
+                    - Multi-modal indexing (text + figures + tables) in ChromaDB  
+                    - Expert Mode: cross-attention re-ranking for precise retrieval  
+                    - Cited answers grounded in both text and visuals  
+                    
+                    **Use Cases:**
+                    - Literature-driven design insights  
+                    - Automated figure/table interpretation  
+                    - Evidence-based Q&A for synthetic biology  
+                    """
+                )
+        
+        with gr.Row():
             with gr.Column(scale=1):
                 gr.Markdown(
                     """
@@ -101,16 +118,16 @@ def index_tab():
                     
                     **Workflow Management and Monitoring**
                     
-                    - Real-time task tracking and visualization
-                    - Job queue management for long computations
-                    - Resource usage monitoring (CPU, GPU, memory)
-                    - Results aggregation and export
+                    - Real-time tracking of multi-step jobs  
+                    - Task queue with scheduling and recovery  
+                    - Resource usage monitoring (CPU/GPU/Memory)  
+                    - Result aggregation and export  
                     
                     **Use Cases:**
-                    - Batch job management
-                    - Computational workflow orchestration
-                    - Performance monitoring
-                    - Result tracking and organization
+                    - Batch job management  
+                    - Computational workflow orchestration  
+                    - Performance monitoring and debugging  
+                    - Ensuring reproducibility of experiments  
                     """
                 )
         
