@@ -139,16 +139,9 @@ By compressing the **Design-Build-Test-Learn (DBTL)** cycle into an end-to-end d
 
 ### Setup Instructions
 
-1. **Clone the Repository**
+First, install Miniconda by following the official guide: [Installing Miniconda - Anaconda](https://www.anaconda.com/docs/getting-started/miniconda/install). Then create and configure a virtual environment. The following steps use a **Linux system** as an example:
 
-```bash
-git clone https://github.com/shenmaa233/SJTU-software-CASPIA.git
-cd SJTU-software-CASPIA
-```
-
-2. **Create Virtual Environment**
-
-```bash
+```shell
 # Using conda (recommended)
 conda create -n caspia python=3.10
 conda activate caspia
@@ -156,13 +149,8 @@ conda activate caspia
 # Or using venv
 python3 -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
 
-3. **Install Dependencies**
-
-```bash
 # Install PyTorch with CUDA support (adjust CUDA version as needed)
-
 pip install torch==2.7.1 torchvision==0.22.1 --index-url https://download.pytorch.org/whl/cu128
 pip install torch-scatter -f https://data.pyg.org/whl/torch-2.7.1+cu128.html
 pip install torch-cluster -f https://data.pyg.org/whl/torch-2.7.1+cu128.html
@@ -171,43 +159,163 @@ pip install torch-geometric
 # diamond
 conda install -c bioconda -c conda-forge diamond=2.1.13
 
+# git clone
+git clone git@gitlab.igem.org:2025/software-tools/sjtu-software.git
+cd sjtu-software
+
 # Install project dependencies
 pip install -r requirements.txt
+
 ```
 
-4. **Configure Environment Variables**
+**Note:** For CUDA version compatibility, download the matching PyTorch version from the official archive: [Previous PyTorch Versions](https://pytorch.org/get-started/previous-versions/).
 
-Create a `.env` file in the project root:
+###  Download Model from our own training on Hugging Face
 
-```bash
-# OpenAI API (if using GPT models)
-OPENAI_API_KEY=your_openai_api_key_here
+1. Visit https://huggingface.co/victorzhu30/CASPred/tree/main.
+2. Download the model folder to your local machine.
+3. Move it into the src/CASPred/ directory.
 
-# Optional: Other LLM API keys
-DASHSCOPE_API_KEY=your_dashscope_key  # For Qwen models
-
-# Database paths
-CHROMA_DB_PATH=./src/CASPIA_RAG/db
-
-# Model cache directory
-HF_HOME=./models
-TRANSFORMERS_CACHE=./models
+```
+huggingface-cli download victorzhu30/CASPred
 ```
 
-5. **Download Required Models** (Optional, for local inference)
+###  Java Installation
 
-```bash
-# Example: Download embedding model
-huggingface-cli download sentence-transformers/all-MiniLM-L6-v2
+Download the Java JDK compatible with your OS from the official site: [Java Downloads | Oracle](https://www.oracle.com/java/technologies/downloads/). The following steps use **JDK 25** as an example:
 
-# Example: Download LLM model (requires significant storage)
-# huggingface-cli download meta-llama/Llama-2-7b-chat-hf
+```shell
+# 1. Navigate to your home directory
+cd ~
+# 2. Download the JDK 25 archive
+wget https://download.oracle.com/java/25/latest/jdk-25_linux-x64_bin.tar.gz
+# 3. Extract the archive
+tar -zxvf jdk-25_linux-x64_bin.tar.gz
+# 4. Edit the .bashrc file to configure environment variables
+vim ~/.bashrc
+# 5. Add the following lines to .bashrc (set JAVA_HOME to your JDK path)
+export JAVA_HOME=~/jdk-25
+export PATH=$JAVA_HOME/bin:$PATH
+# 6. Save and exit Vim: Press "Esc" → type ":wq" → press "Enter"
+# 7. Apply the configuration changes
+source ~/.bashrc
 ```
 
-6. **Verify Installation**
+#### Verify Java Installation
+
+Check if Java is installed correctly by running:
 
 ```bash
-python -c "import torch; print(f'PyTorch: {torch.__version__}'); print(f'CUDA Available: {torch.cuda.is_available()}')"
+java -version
+```
+
+A successful installation will return output similar to:
+
+```bash
+java 25 2025-09-16 LTS
+Java(TM) SE Runtime Environment (build 25+37-LTS-3491)
+Java HotSpot(TM) 64-Bit Server VM (build 25+37-LTS-3491, mixed mode, sharing)
+```
+
+### GeneMarkS Installation
+
+GeneMarkS requires an official download link (obtained by filling out a form on the website). Follow these steps:
+
+1. Visit the GeneMark download page: [GeneMark™ download](https://genemark.bme.gatech.edu/GeneMark/license_download.cgi).
+2. Select **GeneMarkS-2 version 1.15_1.25_lic** (choose the OS matching your system).
+3. Fill in the required personal information at the bottom of the page to generate download links.
+4. Right-click the links for the **software package** and **license key**, then select "Copy link address" to download them to your server.
+
+![](https://static.igem.wiki/teams/5711/software/genemarks.webp)
+
+```bash
+# 1. Navigate to your home directory
+cd ~
+# 2. Download the GeneMarkS package and license key (replace links with your copied ones)
+wget http://genemark.bme.gatech.edu/tmp/GMtool_6ghoQ/gms2_linux_64.tar.gz
+wget http://genemark.bme.gatech.edu/tmp/GMtool_6ghoQ/gm_key.gz
+# 3. Extract the software package
+tar -zxvf gms2_linux_64.tar.gz
+# 4. Install the license key (required for GeneMarkS to run)
+gunzip -c gm_key.gz > ~/.gmhmmp2_key
+# 5. Add GeneMarkS to system PATH (edit .bashrc)
+vim ~/.bashrc
+# 6. Add the following line to .bashrc (update path if needed)
+PATH=$PATH:~/gms2_linux_64
+# 7. Apply the PATH configuration
+source ~/.bashrc
+```
+
+### ESMC-300M Download
+
+Ensure the target directory has **at least 2GB of free space** (the model size is ~1.33GB). Follow these steps:
+
+```shell
+# Set the Hugging Face cache directory (store model here; update path as needed)
+export HF_HOME=/home/shenmaa/huggingface_cache
+```
+
+1. Create a Python script named \`download_esmc_300m.py\` with the following content:
+
+```python
+from esm.models.esmc import ESMC
+
+# Download and load the ESMC-300M model (saved to HF_HOME)
+model = ESMC.from_pretrained("esmc_300m")
+```
+
+2. Run the script to start the download:
+
+   ```python
+   python download_esmc_300m.py
+   ```
+
+**Download Notes:** The model size is 1.33GB. Estimated download time: 5–10 minutes (varies by network speed). A successful download will show progress like this:
+
+```bash
+Fetching 4 files: 100%|██████████████████████████████████████████| 4/4 [05:45<00:00, 115.30s/it]
+```
+
+### Create a .env File
+
+Create a \`.env\` file in the **project root directory** to store environment-specific variables (e.g., API keys, custom file paths, or model cache directories). Example content:
+
+```env
+# Path to the GeneMarkS Perl script (used for gene prediction)
+GMS_SCRIPT_PATH="/home/shenmaa/gms2_linux_64/gms2.pl"
+
+# Path to the Java Development Kit (JDK) installation
+JAVA_HOME=/data/zhurongpeng-20250919/jdk-25
+
+# OpenAI API key for accessing OpenAI models
+OPENAI_API_KEY='sk-xxx'
+
+# Large language model (LLM) used in the RAG pipeline
+LLM_MODEL='gpt-4o'
+
+# Embedding model used to generate vector representations of text chunks
+EMBEDDING_MODEL='text-embedding-3-small'
+
+# ReRank model used to re-score and reorder retrieved results
+RERANK_MODEL='gte-rerank-v2'
+
+# Sampling temperature for LLM responses (lower = more deterministic)
+TEMPERATURE=0.3
+
+# Maximum number of tokens allowed in the LLM's response
+MAX_TOKENS=2048
+
+# API key for DashScope (Alibaba Cloud) services, used by the ReRank model
+DASHSCOPE_API_KEY_ENV='sk-xxx'
+
+# API key for DeepSeek LLM service (alternative or additional LLM provider)
+DEEPSEEK_API_KEY='sk-xxx'
+
+# Chunk size (in characters or tokens) for splitting documents in RAG
+CHUNK_SIZE=800
+
+# Overlap size between consecutive chunks to preserve context
+CHUNK_OVERLAP=120
 ```
 
 ---
