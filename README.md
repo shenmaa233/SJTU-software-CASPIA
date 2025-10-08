@@ -1,4 +1,4 @@
-# CASPIA: Cell Automated Synthetic Pathway Intelligent Architecture
+# CASPIA: Cell-Automated Synthetic Pathway Intelligent Architecture
 
 <p align="center">
   <img src="static/banner.png" alt="CASPIA Banner" width="80%"/>
@@ -53,67 +53,67 @@
 
 CASPIA enables researchers to move beyond fragmented trial-and-error workflows by providing:  
 
-- **GEMFactory**: An automated pipeline that transforms raw genomes into parameter-enriched genome-scale metabolic models (ecGEMs / etcGEMs), incorporating kinetic and thermodynamic parameters such as *kcat* and *Topt*.  
-- **CASPred**: A multimodal predictive engine that integrates protein sequence and structure representations to complete missing kinetic parameters with quantified uncertainty.  
-- **CASPIAgent**: A natural-language-driven AI agent that plans and executes complex toolchains for gene annotation, model construction, parameter completion, and strain design optimization.  
+- **GEMFactory**: An automated pipeline that transforms raw genomes into parameter-enriched genome-scale metabolic models (ecGEMs/etcGEMs), incorporating kinetic and thermodynamic parameters such as *kcat* and *Topt*.
+- **CASPred**: A multimodal predictive engine that integrates protein sequence and structure representations to complete missing kinetic parameters with quantified uncertainty.
+- **CASPIAgent**: A natural-language-driven AI agent that plans and executes complex toolchains for gene annotation, model construction, parameter completion, and strain design optimization.
 - **CASPIA-RAG**: A vision-augmented Retrieval-Augmented Generation system capable of analyzing both text and figures from scientific literature to provide accurate, evidence-grounded answers.  
 
 ### Why CASPIA?  
 
-Conventional synthetic biology workflows face major limitations:  
-- Fragmented toolchains with inconsistent interfaces  
-- Manual, error-prone curation of missing kinetic parameters  
-- Difficulty in integrating knowledge hidden in figures, tables, and large literature corpora  
-- High technical barriers for non-expert users  
+Conventional synthetic biology workflows face major limitations:
+- Fragmented toolchains with inconsistent interfaces
+- Manual, error-prone curation of missing kinetic parameters
+- Difficulty in integrating knowledge hidden in figures, tables, and large literature corpora
+- High technical barriers for non-expert users
 
-CASPIA addresses these challenges by delivering a unified and intelligent framework that:  
-- ✅ Automates genome-to-model pipelines with standardized interfaces  
-- ✅ Completes missing parameters using cutting-edge predictive models  
-- ✅ Provides intuitive natural language interaction through an AI agent  
-- ✅ Preserves and interprets visual data from scientific publications  
-- ✅ Supports reproducible, traceable, and scalable metabolic engineering workflows  
+CASPIA addresses these challenges by delivering a unified and intelligent framework that:
+- ✅ Automates genome-to-model pipelines with standardized interfaces
+- ✅ Completes missing parameters using cutting-edge predictive models
+- ✅ Provides intuitive natural language interaction through an AI agent
+- ✅ Preserves and interprets visual data from scientific publications
+- ✅ Supports reproducible, traceable, and scalable metabolic engineering workflows
 
-By compressing the **Design–Build–Test–Learn (DBTL)** cycle into an end-to-end digital workflow, CASPIA empowers researchers to achieve predictive, high-precision strain design and accelerates the realization of digital cell twins in synthetic biology.  
+By compressing the **Design-Build-Test-Learn (DBTL)** cycle into an end-to-end digital workflow, CASPIA empowers researchers to achieve predictive, high-precision strain design and accelerates the realization of digital cell twins in synthetic biology.  
 
 ---
 
 ## Key Features
 
 ### 🤖 **CASPIAgent**
-- Natural language interface for complex synthetic biology tasks  
-- Automated orchestration of toolchains for gene annotation, GEM construction, parameter completion, and strain design  
-- Task planning → execution → verification workflow with exception rollback  
-- Context-aware reporting with full traceability of inputs, outputs, and data sources  
+- Natural language interface for complex synthetic biology tasks
+- Automated orchestration of toolchains for gene annotation, GEM construction, parameter completion, and strain design
+- Task planning → execution → verification workflow with exception rollback
+- Context-aware reporting with full traceability of inputs, outputs, and data sources
 
 ### 🧬 **GEMFactory**
-- End-to-end automated pipeline: **raw genome → parameterized GEM (ecGEM / etcGEM)**  
-- Integration of gene annotation (GeneMarkS), protein alignment (Diamond), and metabolic network reconstruction (CarveMe)  
-- Automated parameter injection through database retrieval (BRENDA, KEGG, BiGG) and CASPred predictions  
-- Multi-scale optimization:  
-  - Gene-level strategies (FBA, FSEOF, OptKnock)  
-  - Protein-level mutation design (Deep Mutational Scanning with MoE PLMs: ProSST, ESM2, ProtSSN, SaProt)  
-- Standardized outputs in SBML and traceable reports for reproducibility  
+- End-to-end automated pipeline: **raw genome → parameterized GEM (ecGEM/etcGEM)**
+- Integration of gene annotation (GeneMarkS), protein alignment (Diamond), and metabolic network reconstruction (CarveMe)
+- Automated parameter injection through database retrieval (BRENDA, KEGG, BiGG) and CASPred predictions
+- Multi-scale optimization:
+  - Gene-level strategies (FBA, FSEOF, OptKnock)
+  - Protein-level mutation design (Deep Mutational Scanning with MoE PLMs: ProSST, ESM2, ProtSSN, SaProt)
+- Standardized outputs in SBML and traceable reports for reproducibility
 
 ### 🔬 **CASPred**
-- High-precision predictive engine for missing kinetic and thermodynamic parameters (*kcat*, *Topt*)  
-- Multimodal architecture combining **protein sequence embeddings (ESMC-300M)** and **structural features (GVP)**  
-- Cross-attention fusion of sequence and structure for accurate enzyme–substrate interaction modeling  
-- Ensemble learning with uncertainty quantification, providing both predicted values and confidence intervals  
-- Continuously improved by incorporating new wet-lab data into training sets  
+- High-precision predictive engine for missing kinetic and thermodynamic parameters (*kcat*, *Topt*)
+- Multimodal architecture combining **protein sequence embeddings (ESMC-300M)** and **structural features (GVP)**
+- Cross-attention fusion of sequence and structure for accurate enzyme–substrate interaction modeling
+- Ensemble learning with uncertainty quantification, providing both predicted values and confidence intervals
+- Continuously improved by incorporating new wet-lab data into training sets
 
 ### 🔍 **CASPIA-RAG**
-- **Vision-enhanced Retrieval-Augmented Generation** for scientific literature  
-- PDF → Markdown structured parsing with figure/table extraction  
-- Image-to-text semantic captioning using vision models  
-- Context-preserving segmentation and embedding into Chroma vector database  
-- Expert Mode with cross-attention re-ranking for precise, evidence-grounded retrieval  
-- Accurate, cited answers integrating both textual and visual evidence  
+- **Vision-enhanced Retrieval-Augmented Generation** for scientific literature
+- PDF → Markdown structured parsing with figure/table extraction
+- Image-to-text semantic captioning using vision models
+- Context-preserving segmentation and embedding into Chroma vector database
+- Expert Mode with cross-attention re-ranking for precise, evidence-grounded retrieval
+- Accurate, cited answers integrating both textual and visual evidence
 
 ### 📊 **Tasks Monitor**
-- Real-time monitoring of CASPIA computational workflows  
-- Visualization of job progress, status, and error recovery  
-- Centralized log collection for reproducibility and debugging  
-- Result aggregation and export for downstream analysis  
+- Real-time monitoring of CASPIA computational workflows
+- Visualization of job progress, status, and error recovery
+- Centralized log collection for reproducibility and debugging
+- Result aggregation and export for downstream analysis
 
 ---
 
@@ -265,123 +265,97 @@ The application will start on `http://localhost:7860` (or `http://0.0.0.0:7860` 
 
 ## Modules Description
 
-### CASPIAgent
-
-**Purpose**: Intelligent conversational assistant for synthetic biology research
-
-**Components**:
-- `conversation.py`: Multi-turn dialogue management
-- `service.py`: LLM inference service integration
-- `tools.py`: Tool definitions (database queries, calculations, etc.)
-- `utils.py`: Helper functions
-
-**Supported LLMs**:
-- OpenAI GPT-4/GPT-3.5
-- Alibaba Qwen
-- Meta LLaMA
-- Custom vLLM deployments
-
-**Key Capabilities**:
-- Natural language understanding of biological concepts
-- Tool-augmented reasoning (database queries, calculations)
-- Multi-step problem solving
-- Context retention across conversation turns
-
----
-
-## Modules Description
-
 ### 🤖 CASPIAgent
 
-**Purpose**: AI-driven expert agent that orchestrates toolchains for metabolic modeling and strain design.  
+**Purpose**: AI-driven expert agent that orchestrates toolchains for metabolic modeling and strain design.
 
 **Core Components**:
-- `conversation.py`: Multi-turn dialogue and context management  
-- `service.py`: Agent planning and task execution logic  
-- `tools/`: Encapsulated tool definitions (e.g., gene annotation, model construction, FBA optimization)  
-- `utils.py`: Utility functions for data handling and logging  
+- `conversation.py`: Multi-turn dialogue and context management
+- `service.py`: Agent planning and task execution logic
+- `tools/`: Encapsulated tool definitions (e.g., gene annotation, model construction, FBA optimization)
+- `utils.py`: Utility functions for data handling and logging
 
 **Supported Backends**:
-- vLLM-based deployments (Qwen, DeepSeek, OpenAI-compatible models)  
-- Configurable custom LLM backends  
+- vLLM-based deployments (Qwen, DeepSeek, OpenAI-compatible models)
+- Configurable custom LLM backends
 
 **Key Capabilities**:
-- Natural language interface for complex workflows  
-- Automated task planning → execution → verification  
-- Tool-augmented reasoning (e.g., database queries, model optimization)  
-- Traceable and reproducible report generation  
+- Natural language interface for complex workflows
+- Automated task planning → execution → verification
+- Tool-augmented reasoning (e.g., database queries, model optimization)
+- Traceable and reproducible report generation
 
 ---
 
 ### 🧬 GEMFactory
 
-**Purpose**: End-to-end automated pipeline for constructing parameter-enriched genome-scale metabolic models (ecGEM / etcGEM).  
+**Purpose**: End-to-end automated pipeline for constructing parameter-enriched genome-scale metabolic models (ecGEM/etcGEM).
 
 **Workflow**:
-1. **Genome Annotation**: GeneMarkS for ORF prediction → proteome extraction  
-2. **Functional Annotation**: Protein alignment with Diamond  
-3. **Draft Model Construction**: CarveMe builds initial stoichiometric GEM  
-4. **Parameter Injection**: Retrieval from KEGG/BRENDA/BiGG + CASPred predictions (*kcat*, *Topt*)  
-5. **Validation**: Mass-balance, thermodynamic consistency, growth benchmarking  
-6. **Optimization**:  
-   - Gene-level: FBA, FSEOF, OptKnock strategies  
-   - Protein-level: DMS-based mutation design (MoE PLMs: ProSST, ESM2, ProtSSN, SaProt)  
+1. **Genome Annotation**: GeneMarkS for ORF prediction → proteome extraction
+2. **Functional Annotation**: Protein alignment with Diamond
+3. **Draft Model Construction**: CarveMe builds initial stoichiometric GEM
+4. **Parameter Injection**: Retrieval from KEGG/BRENDA/BiGG + CASPred predictions (*kcat*, *Topt*)
+5. **Validation**: Mass-balance, thermodynamic consistency, growth benchmarking
+6. **Optimization**:
+   - Gene-level: FBA, FSEOF, OptKnock strategies
+   - Protein-level: DMS-based mutation design (MoE PLMs: ProSST, ESM2, ProtSSN, SaProt)
 
 **Supported Formats**:
-- **Input**: FASTA, GenBank  
-- **Output**: SBML, JSON (COBRA standards)  
+- **Input**: FASTA, GenBank
+- **Output**: SBML, JSON (COBRA standards)
 
 ---
 
 ### 🔬 CASPred
 
-**Purpose**: High-precision predictive engine for kinetic and thermodynamic parameters missing in GEMs.  
+**Purpose**: High-precision predictive engine for kinetic and thermodynamic parameters missing in GEMs.
 
 **Architecture**:
-- Sequence encoder: ESMC-300M (evolutionary context)  
-- Structure encoder: Geometric Vector Perceptron (GVP)  
-- Cross-attention fusion for enzyme–substrate interactions  
+- Sequence encoder: ESMC-300M (evolutionary context)
+- Structure encoder: Geometric Vector Perceptron (GVP)
+- Cross-attention fusion for enzyme–substrate interactions
 
 **Key Capabilities**:
-- Predicts *kcat*, *Topt* with uncertainty intervals  
-- Ensemble learning for confidence estimation  
-- Continuously updated via wet-lab feedback loop  
+- Predicts *kcat*, *Topt* with uncertainty intervals
+- Ensemble learning for confidence estimation
+- Continuously updated via wet-lab feedback loop
 
 **Integration**:
-- Called automatically within GEMFactory during parameter completion  
-- Outputs standardized reports with both values and confidence scores  
+- Called automatically within GEMFactory during parameter completion
+- Outputs standardized reports with both values and confidence scores
 
 ---
 
 ### 🔍 CASPIA-RAG
 
-**Purpose**: Vision-enhanced Retrieval-Augmented Generation system for scientific literature.  
+**Purpose**: Vision-enhanced Retrieval-Augmented Generation system for scientific literature.
 
 **Pipeline**:
-1. **Parsing**: PDFs → structured Markdown via MinerU  
-2. **Vision Enhancement**: Image captioning via vision models (charts, figures, tables)  
-3. **Chunking & Embedding**: Semantic segmentation + vectorization  
-4. **Indexing**: Stored in ChromaDB for efficient retrieval  
-5. **Retrieval**: Semantic search + cross-attention re-ranking (Expert Mode)  
-6. **Answer Generation**: LLM synthesis with citations from both text and images  
+1. **Parsing**: PDFs → structured Markdown via MinerU
+2. **Vision Enhancement**: Image captioning via vision models (charts, figures, tables)
+3. **Chunking & Embedding**: Semantic segmentation + vectorization
+4. **Indexing**: Stored in ChromaDB for efficient retrieval
+5. **Retrieval**: Semantic search + cross-attention re-ranking (Expert Mode)
+6. **Answer Generation**: LLM synthesis with citations from both text and images
 
 **Features**:
-- Multi-modal understanding (text + figures + tables)  
-- Vision-grounded QA with precise references  
-- Domain-specific optimization for synthetic biology  
+- Multi-modal understanding (text + figures + tables)
+- Vision-grounded QA with precise references
+- Domain-specific optimization for synthetic biology
 
 ---
 
 ### 📊 Tasks Monitor
 
-**Purpose**: Centralized dashboard for tracking and managing CASPIA workflows.  
+**Purpose**: Centralized dashboard for tracking and managing CASPIA workflows.
 
 **Features**:
-- Task queue with scheduling and recovery  
-- Real-time progress visualization for multi-step jobs  
-- Resource monitoring (CPU, GPU, memory usage)  
-- Centralized logging for reproducibility and debugging  
-- Result aggregation and export for downstream analysis  
+- Task queue with scheduling and recovery
+- Real-time progress visualization for multi-step jobs
+- Resource monitoring (CPU, GPU, memory usage)
+- Centralized logging for reproducibility and debugging
+- Result aggregation and export for downstream analysis
 
 ---
 
@@ -559,14 +533,14 @@ We welcome contributions from the community! To maintain the reliability and sci
 
 ### Reporting Issues
 
-If you encounter bugs, inconsistencies, or have feature requests:  
+If you encounter bugs, inconsistencies, or have feature requests:
 
-1. **Search first**: Check existing issues to avoid duplicates.  
-2. **Use templates**: Follow the provided GitHub issue templates for bug reports and feature requests.  
-3. **Provide details**: Include a clear description, minimal reproduction steps, and expected vs. actual behavior.  
-4. **System information**: Always specify OS, Python version, CUDA version, and GPU model.  
-5. **Logs & errors**: Paste relevant error messages or stack traces. For long logs, attach as a file or use code blocks.  
-6. **Data considerations**: If reporting bugs involving biological data, please **redact sensitive sequences or genomes** and provide synthetic or public test data when possible.  
+1. **Search first**: Check existing issues to avoid duplicates.
+2. **Use templates**: Follow the provided GitHub issue templates for bug reports and feature requests.
+3. **Provide details**: Include a clear description, minimal reproduction steps, and expected vs. actual behavior.
+4. **System information**: Always specify OS, Python version, CUDA version, and GPU model.
+5. **Logs & errors**: Paste relevant error messages or stack traces. For long logs, attach as a file or use code blocks.
+6. **Data considerations**: If reporting bugs involving biological data, please **redact sensitive sequences or genomes** and provide synthetic or public test data when possible.
 
 ---
 
@@ -584,7 +558,6 @@ If you use CASPIA in your research, please cite:
   version   = {v1.0.0-beta},
   note      = {iGEM 2025 Competition Software Tool}
 }
-
 ```
 
 ---
