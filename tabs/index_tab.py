@@ -17,7 +17,7 @@ def index_tab():
             """
             # 🎉 Welcome to CASPIA
             
-            ## Comprehensive AI System for Protein and Integrated Analysis
+            ## Cell Automated Synthetic Pathway Intelligent Architecture
             
             **CASPIA** is an advanced, modular AI-powered platform designed to revolutionize synthetic biology research. 
             Developed by Team SJTU-Software for iGEM 2025, CASPIA integrates cutting-edge artificial intelligence 

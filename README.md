@@ -1,4 +1,4 @@
-# CASPIA: Comprehensive AI System for Protein and Integrated Analysis
+# CASPIA: Cell Automated Synthetic Pathway Intelligent Architecture
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
@@ -42,7 +42,7 @@
 
 ## Overview
 
-**CASPIA (Comprehensive AI System for Protein and Integrated Analysis)** is an advanced, modular software platform developed by Team SJTU-Software for the iGEM 2025 competition. The platform integrates cutting-edge artificial intelligence technologies with synthetic biology workflows to provide researchers with:
+**CASPIA (Cell Automated Synthetic Pathway Intelligent Architecture)** is an advanced, modular software platform developed by Team SJTU-Software for the iGEM 2025 competition. The platform integrates cutting-edge artificial intelligence technologies with synthetic biology workflows to provide researchers with:
 
 - **Intelligent Conversational Agent**: Natural language interface for complex biological queries
 - **Automated Metabolic Modeling**: Genome-scale metabolic model (GEM) construction and analysis
@@ -572,7 +572,7 @@ If you use CASPIA in your research, please cite:
 ```bibtex
 @software{caspia2025,
   author = {{Team SJTU-Software}},
-  title = {CASPIA: Comprehensive AI System for Protein and Integrated Analysis},
+  title = {CASPIA: Cell Automated Synthetic Pathway Intelligent Architecture},
   year = {2025},
   publisher = {iGEM},
   url = {https://github.com/shenmaa233/SJTU-software-CASPIA},
